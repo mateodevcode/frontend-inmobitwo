@@ -22,10 +22,10 @@ jobs:
 
             git pull origin main
 
-            echo "→ Instalando dependencias..."
-            npm ci --omit=dev
+            echo "→ Instalando dependencias (incluyendo dev)..."
+            npm ci
 
             echo "→ Construyendo aplicación..."
             npm run build
 
-            echo "→ Frontend desplegado correctamente!.g"
+            echo "→ Frontend desplegado correctamente!"

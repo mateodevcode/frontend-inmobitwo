@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+    /* Estilos para las flechas entre los pasos */
+        .arrow-step {
+            position: relative;
+            background: #1e293b; /* Color de fondo */
+            padding: 1rem 2.5rem 1rem 2rem;
+            clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.125rem;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        /* Ajuste para que la última no tenga flecha */
+        .arrow-step:last-child {
+            clip-path: polygon(0% 0%, 95% 0%, 95% 100%, 0% 100%);
+            padding-right: 2rem;
+        }
+
+        /* Versión más estilizada */
+        .arrow-step-modern {
+            position: relative;
+            background: #3b82f6;
+            padding: 0.75rem 2.5rem 0.75rem 2rem;
+            clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+            color: white;
+            font-weight: 500;
+            min-width: 150px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .arrow-step-modern:last-child {
+            clip-path: polygon(0% 0%, 95% 0%, 95% 100%, 0% 100%);
+            padding-right: 2rem;
+        }
+
+        .arrow-step-modern:hover {
+            transform: scale(1.05);
+            background: #2563eb;
+        }
+
+        /* Flecha con borde/efecto más elaborado */
+        .arrow-step-outline {
+            position: relative;
+            background: white;
+            padding: 0.75rem 2.5rem 0.75rem 2rem;
+            clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+            color: #1e293b;
+            font-weight: 600;
+            min-width: 150px;
+            text-align: center;
+            border: 2px solid #3b82f6;
+            border-right: none;
+        }
+
+        .arrow-step-outline:last-child {
+            clip-path: polygon(0% 0%, 95% 0%, 95% 100%, 0% 100%);
+            padding-right: 2rem;
+            border-right: 2px solid #3b82f6;
+        }

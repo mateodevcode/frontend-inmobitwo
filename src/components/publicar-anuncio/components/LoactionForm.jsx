@@ -7,8 +7,8 @@
 
 import { useState } from "react";
 import { Field, Label, Input } from "@headlessui/react";
-import LocationCascadeSelect from "./LocationCascadeSelect.jsx";
-import AddressMapModal from "./AddressMapModal.jsx";
+import LocationCascadeSelect from "./Locationcascadeselect.jsx";
+import AddressMapModal from "./Addressmapmodal.jsx";
 import { apiBackend } from "@/api/apiBackend.js";
 import { useAppContext } from "@/context/AppContext.js";
 

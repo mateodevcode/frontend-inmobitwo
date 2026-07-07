@@ -1,11 +1,4 @@
 // src/components/LocationCascadeSelect.jsx
-//
-// 3 selects en cascada: País → Provincia/Departamento → Ciudad.
-// Usa el mismo patrón de Listbox (Headless UI v2) que ya usamos en
-// "Tipo de inmueble", "Planta", "Puerta".
-//
-// Al cambiar País, se resetean Provincia y Ciudad (decisión confirmada).
-// Al cambiar Provincia, se resetea Ciudad.
 
 import { useState, useEffect } from "react";
 import {

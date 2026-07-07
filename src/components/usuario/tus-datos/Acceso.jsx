@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { GoAlert } from "react-icons/go";
 import { apiBackend } from "@/api/apiBackend.js";
 import useUsuarios from "@/hooks/useUsuarios";
-import { phoneFormatter } from "../../../lib/PhoneFormatter";
+import { phoneFormatter } from "@/lib/phoneFormatter";
 
 const Acceso = () => {
   const {

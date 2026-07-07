@@ -2,7 +2,7 @@ name: Deploy Frontend
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy:
@@ -17,15 +17,15 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "🚀 Desplegando Frontend..."
-            
+
             cd /var/www/inmobitwo/frontend-inmobitwo
-            
+
             git pull origin main
-            
+
             echo "→ Instalando dependencias..."
             npm ci --omit=dev
-            
+
             echo "→ Construyendo aplicación..."
             npm run build
-            
-            echo "→ Frontend desplegado correctamente!"
+
+            echo "→ Frontend desplegado correctamente!.g"

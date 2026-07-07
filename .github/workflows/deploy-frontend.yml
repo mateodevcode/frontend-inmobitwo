@@ -1,0 +1,31 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Frontend to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "🚀 Desplegando Frontend..."
+            
+            cd /var/www/inmobitwo/frontend-inmobitwo
+            
+            git pull origin main
+            
+            echo "→ Instalando dependencias..."
+            npm ci --omit=dev
+            
+            echo "→ Construyendo aplicación..."
+            npm run build
+            
+            echo "→ Frontend desplegado correctamente!"

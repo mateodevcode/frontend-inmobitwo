@@ -1,5 +1,5 @@
 // src/api/apiBackendFormData.js
-const URL_BACKEND = import.meta.env.VITE_API_URL || "http://localhost:3001";
+import { URL_BACKEND } from "@/config/config.js";
 
 export async function apiBackendFormData(endpoint, formData, method = "POST") {
   try {

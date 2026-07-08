@@ -1,6 +1,6 @@
 // src/api/apiServerBackend.js
 
-import { API_SECRET_KEY, URL_BACKEND } from "@/config/config.js";
+import { URL_BACKEND } from "@/config/config.js";
 
 export async function apiServerBackend(endpoint, metodo = "GET", datos = null) {
   try {

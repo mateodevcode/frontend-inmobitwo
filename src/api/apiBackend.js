@@ -1,8 +1,6 @@
 // src/api/apiBackend.js
-// Equivalente al apiServerBackend.js de Next.js
-// Centraliza todas las peticiones al backend con el mismo formato de respuesta
 
-const URL_BACKEND = import.meta.env.VITE_API_URL || "http://localhost:3001";
+import { URL_BACKEND } from "@/config/config.js";
 
 export async function apiBackend(endpoint, metodo = "GET", datos = null) {
   try {
@@ -65,7 +63,6 @@ export async function apiBackend(endpoint, metodo = "GET", datos = null) {
 // ─────────────────────────────────────────────
 async function renovarToken() {
   try {
-    const URL_BACKEND = import.meta.env.VITE_API_URL || "http://localhost:3001";
     const res = await fetch(`${URL_BACKEND}/auth/refresh`, {
       method: "POST",
       credentials: "include", // envía la cookie httpOnly automáticamente

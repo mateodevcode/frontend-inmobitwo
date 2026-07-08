@@ -1,2 +1,1 @@
-export const API_SECRET_KEY = import.meta.API_SECRET_KEY;
-export const URL_BACKEND = import.meta.URL_BACKEND || "http://localhost:3001";
+export const URL_BACKEND = import.meta.env.VITE_API_URL;

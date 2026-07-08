@@ -142,8 +142,6 @@ const PropiedadId = () => {
     dispararEventoYRevisar(id, "click_telefono");
   };
 
-  console.log(propiedad);
-
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-end bg-black font-poppins backdrop-blur-sm">
       <div className="w-full h-svh flex flex-col overflow-hidden relative">

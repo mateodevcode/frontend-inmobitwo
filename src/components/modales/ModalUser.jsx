@@ -7,11 +7,13 @@ import { MdLogout } from "react-icons/md";
 import { CiCircleCheck } from "react-icons/ci";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const ModalUser = () => {
   const { openModalUser, setOpenModalUser, usuario } = useAppContext();
   const { name, email } = usuario;
   const { handleCerrarSesion } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (openModalUser) {
@@ -38,11 +40,9 @@ const ModalUser = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -400, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            // onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div
-              className="absolute bg-white w-60 rounded-md border border-black/30 bottom-6 left-6 md:left-80 z-50"
+              className="absolute bg-white w-64 rounded-md border border-black/30 bottom-6 left-6 md:left-80 z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col justify-between h-full p-1">
@@ -57,13 +57,25 @@ const ModalUser = () => {
                     <p className="text-xs -mt-1 lowercase">{email}</p>
                   </div>
                 </div>
-                {/* <div className="bg-black/10 w-full h-px mb-1" /> */}
                 <div>
-                  <div className="flex items-center gap-2 p-3 rounded-md hover:bg-black/5 text-black cursor-pointer select-none text-sm">
-                    <CiCircleCheck /> <span>Cuenta</span>
+                  <div
+                    className="flex items-center gap-2 p-3 rounded-md hover:bg-black/5 text-black cursor-pointer select-none text-sm"
+                    onClick={() => {
+                      setOpenModalUser(false);
+                      navigate("/usuario/tus-datos/perfil");
+                    }}
+                  >
+                    <CiCircleCheck className="text-lg" /> <span>Cuenta</span>
                   </div>
-                  <div className="flex items-center gap-2 p-3 rounded-md hover:bg-black/5 text-black cursor-pointer select-none text-sm">
-                    <IoMdNotificationsOutline /> <span>Notificaciones</span>
+                  <div
+                    className="flex items-center gap-2 p-3 rounded-md hover:bg-black/5 text-black cursor-pointer select-none text-sm"
+                    onClick={() => {
+                      setOpenModalUser(false);
+                      navigate("/usuario/tus-datos/notificaciones");
+                    }}
+                  >
+                    <IoMdNotificationsOutline className="text-lg" />
+                    <span>Notificaciones</span>
                   </div>
                 </div>
                 <div className="bg-black/10 w-full h-px my-1" />
@@ -74,12 +86,10 @@ const ModalUser = () => {
                     handleCerrarSesion();
                   }}
                 >
-                  <MdLogout /> <span>Cerrar sesión</span>
+                  <MdLogout className="text-lg" /> <span>Cerrar sesión</span>
                 </div>
               </div>
             </div>
-
-            {/* Contenido scrolleable */}
           </motion.div>
         </motion.div>
       )}

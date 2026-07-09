@@ -6,14 +6,21 @@ import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 import SinAnuncios from "@/components/usuario/tus-anuncios/SinAnuncios";
+import { useEffect } from "react";
+import usePropiedades from "../hooks/usePropiedades";
 
 const MisAnuncios = () => {
   const navigate = useNavigate();
   const { propiedades, cargandoGlobal, usuario } = useAppContext();
+  const { cargarPropiedadesMisAnuncios } = usePropiedades();
 
   const mis_propiedades = propiedades?.filter(
     (pro) => pro.publicado_por_id === usuario?.id,
   );
+
+  useEffect(() => {
+    cargarPropiedadesMisAnuncios();
+  }, []);
 
   return (
     <div className="flex flex-col font-montserrat relative">
@@ -39,9 +46,9 @@ const MisAnuncios = () => {
         </button>
       </div>
 
-      {mis_propiedades.length === 0 ? (
-        <SinAnuncios />
-      ) : (
+      {mis_propiedades.length === 0 && <SinAnuncios />}
+
+      {mis_propiedades.length > 0 && (
         <ListaAnuncios propiedades={mis_propiedades} />
       )}
 

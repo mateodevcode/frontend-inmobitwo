@@ -9,7 +9,6 @@ import { apiBackendFormData } from "@/api/apiBackendFormData.js";
 const usePropiedades = () => {
   const {
     setPropiedades,
-    // refreshPropiedades,
     formDataPropiedad,
     usuario,
     setFormDataPropiedad,
@@ -222,7 +221,7 @@ const usePropiedades = () => {
       const { success, message, error } = data;
 
       if (success) {
-        // await refreshPropiedades();
+        await cargarPropiedadesMisAnuncios();
         toast.success(message);
         resetFormDataPropiedad();
       } else {
@@ -473,6 +472,14 @@ const usePropiedades = () => {
     }
   };
 
+  // Limpiar pripiedades
+
+  const limpiarPropiedades = () => {
+    setPropiedades([]);
+    setCursor(null);
+    setHasMore(true);
+  };
+
   // --------------------------------
   // cargar propiedades home
   // --------------------------------
@@ -485,7 +492,6 @@ const usePropiedades = () => {
         ? `/propiedades/inicio?limit=10&cursor=${encodeURIComponent(cursor)}`
         : `/propiedades/inicio?limit=10`;
 
-      // const res = await fetch(url);
       const res = await apiBackend(url);
 
       if (res.success) {
@@ -493,6 +499,44 @@ const usePropiedades = () => {
         setPropiedades((prev) => [...prev, ...res.data.data]); // se acumulan
         setCursor(res.data.pagination.nextCursor);
         setHasMore(res.data.pagination.hasMore);
+      }
+    } catch (error) {
+      console.error("Error cargando propiedades:", error);
+    } finally {
+      terminarCarga();
+    }
+  };
+
+  const cargarPropiedadesInicio = async () => {
+    iniciarCarga();
+
+    try {
+      const url = `/propiedades/inicio?limit=10`;
+
+      const res = await apiBackend(url);
+
+      if (res.success) {
+        setLoadingPropiedades(false);
+        setPropiedades((prev) => [...prev, ...res.data.data]);
+      }
+    } catch (error) {
+      console.error("Error cargando propiedades:", error);
+    } finally {
+      terminarCarga();
+    }
+  };
+
+  const cargarPropiedadesMisAnuncios = async () => {
+    iniciarCarga();
+
+    try {
+      const url = `/propiedades/mis-anuncios?id=${usuario.id}`;
+
+      const res = await apiBackend(url);
+
+      if (res.success) {
+        setLoadingPropiedades(false);
+        setPropiedades(res.data);
       }
     } catch (error) {
       console.error("Error cargando propiedades:", error);
@@ -518,6 +562,9 @@ const usePropiedades = () => {
     // Cargar propiedad
     cargarPropiedad,
     cargarPropiedades,
+    cargarPropiedadesInicio,
+    cargarPropiedadesMisAnuncios,
+    limpiarPropiedades,
   };
 };
 

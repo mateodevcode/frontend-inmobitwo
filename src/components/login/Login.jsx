@@ -8,6 +8,7 @@ import { useAppContext } from "@/context/AppContext";
 import { SlSocialGoogle } from "react-icons/sl";
 import { FiFacebook } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 
 const Login = () => {
   const { handleLogin, handleChange, formDataUsuario } = useAuth();
@@ -63,9 +64,9 @@ const Login = () => {
           </p>
         </div>
 
-        <div className="animate-bounce flex items-center justify-center md:hidden absolute bottom-40 left-36">
+        <div className="animate-bounce flex items-center justify-center md:hidden absolute bottom-40 left-1/2 -translate-x-1/2">
           <a
-            className="px-4 py-1 rounded-md bg-white text-lg md:text-lg font-semibold text-black hover:bg-white/80 active:scale-[0.99] cursor-pointer select-none flex items-center gap-2 border border-rose-600/10"
+            className="px-4 py-1 rounded-md bg-white text-lg font-semibold text-black hover:bg-white/80 active:scale-[0.99] cursor-pointer select-none flex items-center gap-2 border border-rose-600/10"
             href="#form-login"
           >
             <span>Ingresar</span>
@@ -177,6 +178,8 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <style>{scrollbarStyles.default}</style>
     </div>
   );
 };

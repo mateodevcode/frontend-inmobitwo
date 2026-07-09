@@ -21,10 +21,6 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem("access_token", accessToken);
     setUsuario(usuarioData);
 
-    // Re-enviamos /tracking/sesion ahora que el token ya está en localStorage,
-    // para que verificarTokenOpcional decodifique req.usuario y el backend
-    // actualice sesiones_tracking.usuario_id (vía el ON CONFLICT ... COALESCE
-    // que ya tiene registrarSesion).
     if (consentimientoTracking === true) {
       try {
         const session_id = getSessionId();

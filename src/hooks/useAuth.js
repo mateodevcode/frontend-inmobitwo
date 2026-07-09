@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
-import usePropiedades from "./usePropiedades";
+import usePropiedades from "@/hooks/usePropiedades";
+import useResetForm from "./useResetForm";
 
 const useAuth = () => {
   const {
@@ -18,7 +19,8 @@ const useAuth = () => {
     iniciarCarga,
     terminarCarga,
   } = useContext(AppContext);
-  const { cargarPropiedades } = usePropiedades();
+  const { cargarPropiedades, limpiarPropiedades } = usePropiedades();
+  const { resetFormDataPropiedad } = useResetForm();
 
   const navigate = useNavigate();
 
@@ -51,10 +53,9 @@ const useAuth = () => {
         return;
       }
 
+      await cargarPropiedades();
       guardarSesion(res.data.usuario, res.data.accessToken);
       resetFormDataUsuario();
-
-      await cargarPropiedades();
 
       toast.success("¡Inicio de sesión exitoso!", { position: "bottom-right" });
 
@@ -119,6 +120,9 @@ const useAuth = () => {
   const handleCerrarSesion = async () => {
     await cerrarSesion();
     toast.success("Sesión cerrada", { position: "bottom-right" });
+
+    resetFormDataPropiedad();
+    limpiarPropiedades();
     navigate("/");
   };
 

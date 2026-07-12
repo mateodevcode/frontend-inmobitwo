@@ -35,6 +35,8 @@ const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usuario]);
 
+  console.log(organizaciones);
+
   if (cargando) {
     return <div className="px-2.5 py-4 text-xs text-black/40">Cargando...</div>;
   }

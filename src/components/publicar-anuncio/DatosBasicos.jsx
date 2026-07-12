@@ -10,7 +10,22 @@ import { useAppContext } from "@/context/AppContext";
 
 const DatosBasicos = () => {
   const [selected, setSelected] = useState(null);
-  const { comprobarDireccion } = useAppContext();
+  const {
+    comprobarDireccion,
+    organizaciones,
+    formDataPropiedad,
+    setFormDataPropiedad,
+  } = useAppContext();
+
+  const esDeOrganizacion = !!formDataPropiedad?.es_de_organizacion;
+
+  const handleToggleOrganizacion = (checked) => {
+    setFormDataPropiedad((prev) => ({
+      ...prev,
+      es_de_organizacion: checked,
+      organizacion_id: checked ? (organizaciones[0]?.id ?? null) : null,
+    }));
+  };
 
   return (
     <div className="flex items-start mb-40">
@@ -25,6 +40,27 @@ const DatosBasicos = () => {
               options={PROPERTY_TYPES}
             />
           </div>
+
+          {/* Publicar como inmobiliaria — solo si el usuario pertenece a una */}
+          {organizaciones.length > 0 && (
+            <label className="flex items-center gap-3 mt-4 p-3 rounded-lg border border-black/10 cursor-pointer select-none hover:bg-stone-50">
+              <input
+                type="checkbox"
+                checked={esDeOrganizacion}
+                onChange={(e) => handleToggleOrganizacion(e.target.checked)}
+                className="w-4 h-4 accent-rose-600"
+              />
+              <div>
+                <p className="text-sm font-medium">
+                  Publicar como {organizaciones[0]?.nombre}
+                </p>
+                <p className="text-xs text-black/50">
+                  El anuncio aparecerá bajo el sello de tu inmobiliaria en vez
+                  de a título personal
+                </p>
+              </div>
+            </label>
+          )}
 
           {/* Checkboxs */}
           <OperationForm />

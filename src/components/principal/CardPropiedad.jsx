@@ -29,6 +29,15 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
     setPropiedadAEliminar,
     favoritos,
   } = useAppContext();
+
+  const esOrganizacion = publicador?.tipo === "organizacion";
+  // usuario -> "name" | organizacion -> "nombre"
+  const nombrePublicador = esOrganizacion ? publicador.nombre : publicador.name;
+  // usuario -> "image_url" | organizacion -> "logo_url"
+  const imagenPublicador = esOrganizacion
+    ? publicador.logo_url
+    : publicador.image_url;
+
   const color = getColorForOrg(publicador.id);
   const isFavorited = estaEnFavoritos(favoritos, id);
 
@@ -46,15 +55,35 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
       {/* Header */}
       <div className="flex items-start justify-between gap-2 p-4">
         <div className="flex gap-2">
-          <div
-            className={`flex items-center justify-center p-2 w-10 h-10 rounded-md font-semibold uppercase ${color.text} ${color.bg}`}
-          >
-            {getInitials(publicador.name)}
-          </div>
+          {imagenPublicador ? (
+            <img
+              src={imagenPublicador}
+              alt={nombrePublicador}
+              className={`w-10 h-10 rounded-md object-cover ${
+                esOrganizacion ? "" : "rounded-full"
+              }`}
+            />
+          ) : (
+            <div
+              className={`flex items-center justify-center p-2 w-10 h-10 rounded-md font-semibold uppercase ${color.text} ${color.bg}`}
+            >
+              {getInitials(nombrePublicador)}
+            </div>
+          )}
           <div className="flex flex-col">
-            <p className="font-semibold text-black">
-              {formatFirstTwoNames(publicador.name)}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p className="font-semibold text-black">
+                {esOrganizacion
+                  ? nombrePublicador
+                  : formatFirstTwoNames(nombrePublicador)}
+              </p>
+              {esOrganizacion && (
+                <FaRegBuilding
+                  className="text-black/40 text-xs"
+                  title="Inmobiliaria"
+                />
+              )}
+            </div>
             <div className="flex text-xs gap-1 items-center justify-center">
               <span>{tiempo}</span>
               <TbPointFilled />

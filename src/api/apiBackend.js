@@ -1,20 +1,28 @@
 // src/api/apiBackend.js
-
 import { URL_BACKEND } from "@/config/config.js";
 
 export async function apiBackend(endpoint, metodo = "GET", datos = null) {
   try {
     const url = `${URL_BACKEND}${endpoint}`;
-
     // Leer access token del localStorage
     const token = localStorage.getItem("access_token");
 
+    // ────────────────────────────────────────────────────────────
+    // NUEVO: mandamos siempre el host actual del navegador.
+    // El backend lo usa (middleware resolverTenant) para saber si
+    // esta petición viene del dominio propio de una organización.
+    // Si venimos del dominio principal, el backend simplemente no
+    // encuentra coincidencia y sigue como "sin tenant".
+    // ────────────────────────────────────────────────────────────
+    const headers = {
+      "Content-Type": "application/json",
+      "X-Tenant-Host": window.location.host,
+      ...(token && { Authorization: `Bearer ${token}` }),
+    };
+
     const res = await fetch(url, {
       method: metodo,
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
+      headers,
       credentials: "include", // ← necesario para enviar/recibir cookies (refresh_token)
       body: metodo !== "GET" && datos !== null ? JSON.stringify(datos) : null,
     });
@@ -27,14 +35,13 @@ export async function apiBackend(endpoint, metodo = "GET", datos = null) {
         const reintento = await fetch(url, {
           method: metodo,
           headers: {
-            "Content-Type": "application/json",
+            ...headers,
             Authorization: `Bearer ${nuevoToken}`,
           },
           credentials: "include",
           body:
             metodo !== "GET" && datos !== null ? JSON.stringify(datos) : null,
         });
-
         const data = await reintento.json();
         return formatearRespuesta(data, reintento.status);
       } else {
@@ -67,9 +74,7 @@ async function renovarToken() {
       method: "POST",
       credentials: "include", // envía la cookie httpOnly automáticamente
     });
-
     if (!res.ok) return false;
-
     const data = await res.json();
     if (data.success && data.data?.accessToken) {
       localStorage.setItem("access_token", data.data.accessToken);

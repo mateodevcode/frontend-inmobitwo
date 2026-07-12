@@ -19,9 +19,9 @@ const Actividad = () => {
     (pro) => pro.publicador.id === usuario.id,
   );
 
-  useEffect(() => {
-    cargarOrganizaciones();
-  }, []);
+  // useEffect(() => {
+  //   cargarOrganizaciones();
+  // }, []);
 
   return (
     <div className="bg-white w-full md:w-96 h-svh font-poppins border-l border-black/20 fixed right-0 overflow-y-auto">

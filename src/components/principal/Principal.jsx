@@ -9,6 +9,7 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import usePropiedades from "@/hooks/usePropiedades";
 import { useRef } from "react";
 import InputSearchPrincipal from "./InputSearchPrincipal";
+import useFavoritos from "../../hooks/useFavoritos";
 
 const Principal = () => {
   const {
@@ -27,6 +28,7 @@ const Principal = () => {
   const navigate = useNavigate();
   const cargaInicialHecha = useRef(false); // 👈 nuevo
   const ultimaCardRef = useRef(null);
+  const { cargarMisFavoritos } = useFavoritos();
 
   const propiedades_publicadas = propiedades?.filter(
     (pro) => pro.estado === "publicado",
@@ -36,6 +38,7 @@ const Principal = () => {
     if (cargaInicialHecha.current) return; // 👈 nuevo
     cargaInicialHecha.current = true; // 👈 nuevo
     cargarPropiedades();
+    cargarMisFavoritos();
   }, []);
 
   // 👇 Observer que detecta cuándo la última card entra en pantalla

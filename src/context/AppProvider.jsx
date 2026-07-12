@@ -141,6 +141,7 @@ export const AppProvider = ({ children }) => {
   const [loadingLogsTracking, setLoadingLogsTracking] = useState(false);
   const [openModalContactoLead, setOpenModalContactoLead] = useState(false);
   const [leadPendienteContacto, setLeadPendienteContacto] = useState(null);
+  const [favoritos, setFavoritos] = useState([]);
 
   // Se llama AL INICIO de cualquier petición
   const iniciarCarga = useCallback(() => {
@@ -274,6 +275,10 @@ export const AppProvider = ({ children }) => {
         setLoadingLogsTracking,
         leadPendienteContacto,
         setLeadPendienteContacto,
+
+        // Favoritos
+        favoritos,
+        setFavoritos,
       }}
     >
       {children}

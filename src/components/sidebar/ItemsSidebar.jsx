@@ -1,6 +1,9 @@
 import { items_sidebar } from "@/data/items_sidebar";
+import { useNavigate } from "react-router-dom";
 
 const ItemsSidebar = ({ itemSelect, setItemSelect }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="p-2.5">
       {items_sidebar.map((item, i) => (
@@ -11,7 +14,10 @@ const ItemsSidebar = ({ itemSelect, setItemSelect }) => {
               : "border-transparent hover:bg-stone-100 hover:border-black/10"
           }`}
           key={i}
-          onClick={() => setItemSelect(item.label)}
+          onClick={() => {
+            setItemSelect(item.label);
+            navigate(item.url);
+          }}
         >
           <div className="text-xl">{item.icon}</div>
           {item.name}

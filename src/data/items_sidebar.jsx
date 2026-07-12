@@ -11,31 +11,31 @@ export const items_sidebar = [
   {
     label: "feed",
     icon: <TbLayoutDashboard />,
-    url: "#",
+    url: "/",
     name: "Feed",
   },
   {
     label: "propiedades",
     icon: <FaRegBuilding />,
-    url: "#",
+    url: "/lista-propiedades",
     name: "Propiedades",
   },
   {
     label: "guardados",
     icon: <TiHeartOutline />,
-    url: "#",
+    url: "/usuario/favoritos",
     name: "Guardados",
   },
   {
     label: "mensajes",
     icon: <BsChatSquareText />,
-    url: "#",
+    url: "/usuario/mis-mensajes",
     name: "Mensajes",
   },
   {
     label: "alertas",
     icon: <IoIosNotificationsOutline />,
-    url: "#",
+    url: "/usuarios/notificaciones",
     name: "Alertas",
   },
 ];
@@ -44,19 +44,19 @@ export const items_organizacion = [
   {
     label: "agentes",
     icon: <LiaUserFriendsSolid />,
-    url: "#",
+    url: "/organizaciones/agentes",
     name: "Agentes",
   },
   {
     label: "estadisticas",
     icon: <FaChartBar />,
-    url: "#",
+    url: "/organizaciones/estadisticas/id",
     name: "Estadísticas",
   },
   {
     label: "ajustes",
     icon: <CiSettings />,
-    url: "#",
+    url: "/organizaciones/ajustes",
     name: "Ajustes",
   },
 ];

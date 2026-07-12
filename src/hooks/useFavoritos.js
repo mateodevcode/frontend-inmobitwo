@@ -1,0 +1,101 @@
+import { toast } from "sonner";
+import { apiBackend } from "@/api/apiBackend.js";
+import { useAppContext } from "@/context/AppContext.js";
+import useTracking from "./useTracking";
+
+const useFavoritos = () => {
+  const { iniciarCarga, terminarCarga, setFavoritos } = useAppContext();
+  const { dispararEventoYRevisar } = useTracking();
+
+  // ─────────────────────────────────────────────
+  // Toggle favorito (agregar o quitar)
+  // ─────────────────────────────────────────────
+  const toggleFavorito = async (propiedadId) => {
+    if (!propiedadId) {
+      toast.error("ID de propiedad no válido");
+      return { success: false };
+    }
+
+    try {
+      iniciarCarga();
+
+      const res = await apiBackend("/favoritos/toggle", "POST", {
+        propiedadId,
+      });
+
+      if (res.success) {
+        const accion =
+          res.data?.action === "agregado" ? "agregado" : "eliminado";
+        toast.success(`Propiedad ${accion} de favoritos`, {
+          position: "bottom-right",
+        });
+        cargarMisFavoritos();
+      } else {
+        toast.error(
+          res.error || res.message || "Error al actualizar favorito",
+          {
+            position: "bottom-right",
+          },
+        );
+      }
+
+      return res;
+    } catch (error) {
+      console.error("Error toggle favorito:", error);
+      toast.error("Error al actualizar favoritos");
+      return { success: false };
+    } finally {
+      terminarCarga();
+    }
+  };
+
+  // ─────────────────────────────────────────────
+  // Obtener todos los favoritos del usuario
+  // ─────────────────────────────────────────────
+
+  const cargarMisFavoritos = async () => {
+    try {
+      iniciarCarga();
+      const url = `/favoritos/mis-favoritos`;
+
+      const res = await apiBackend(url);
+      console.log(res.data);
+      if (res.success) {
+        setFavoritos(res.data);
+      }
+    } catch (error) {
+      console.error("Error cargando propiedades:", error);
+    } finally {
+      terminarCarga();
+    }
+  };
+
+  // ─────────────────────────────────────────────
+  // Verificar si una propiedad está en favoritos
+  // (útil para pintar el botón de corazón lleno o vacío)
+  // ─────────────────────────────────────────────
+  const estaEnFavoritos = (favoritos, propiedadId) => {
+    if (!favoritos || !Array.isArray(favoritos)) return false;
+    return favoritos.some((fav) => fav.id === propiedadId);
+  };
+
+  // ─────────────────────────────────────────────
+  // Manejar evento
+  // ─────────────────────────────────────────────
+  const handleFavorito = async (e, id) => {
+    e.stopPropagation();
+    const res = await toggleFavorito(id);
+    if (res.success) {
+      dispararEventoYRevisar(id, "favorito_agregado");
+    }
+  };
+
+  return {
+    toggleFavorito,
+    cargarMisFavoritos,
+    estaEnFavoritos,
+    handleFavorito,
+  };
+};
+
+export default useFavoritos;

@@ -242,7 +242,6 @@ export default function ContactForm() {
         value={preference}
         onChange={setPreference}
         onSubmit={() => {
-          // console.log("continuar", { name, phone, countryCode, preference });
           setContentNumber(1);
           document.getElementById("top-detalles")?.scrollIntoView({
             behavior: "smooth",

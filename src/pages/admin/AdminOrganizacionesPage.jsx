@@ -11,6 +11,8 @@ const AdminOrganizacionesPage = () => {
     aprobarOrganizacion,
     suspenderOrganizacion,
     activarDominioPropio,
+    desactivarDominioPropio,
+    quitarDominioPropio,
   } = useOrganizaciones();
 
   const [organizaciones, setOrganizaciones] = useState([]);
@@ -109,21 +111,73 @@ const AdminOrganizacionesPage = () => {
                     Suspender
                   </button>
                 )}
+
+                {/* Dominio pendiente de verificación DNS: activar o cancelar la solicitud */}
                 {org.custom_domain &&
                   org.dominio_estado === "pendiente_dns" && (
+                    <>
+                      <button
+                        onClick={() =>
+                          ejecutarAccion(
+                            activarDominioPropio,
+                            org.id,
+                            "Dominio activado",
+                          )
+                        }
+                        className="text-sm px-3 py-1 rounded-lg bg-blue-600 text-white"
+                      >
+                        Activar dominio
+                      </button>
+                      <button
+                        onClick={() =>
+                          ejecutarAccion(
+                            quitarDominioPropio,
+                            org.id,
+                            "Solicitud de dominio cancelada",
+                          )
+                        }
+                        className="text-sm px-3 py-1 rounded-lg bg-gray-500 text-white"
+                      >
+                        Cancelar solicitud
+                      </button>
+                    </>
+                  )}
+
+                {/* Dominio activo: pausar (mantiene el dato) o quitar (lo elimina) */}
+                {org.custom_domain && org.dominio_estado === "activo" && (
+                  <>
                     <button
                       onClick={() =>
                         ejecutarAccion(
-                          activarDominioPropio,
+                          desactivarDominioPropio,
                           org.id,
-                          "Dominio activado",
+                          "Dominio desactivado (pausado)",
                         )
                       }
-                      className="text-sm px-3 py-1 rounded-lg bg-blue-600 text-white"
+                      className="text-sm px-3 py-1 rounded-lg bg-yellow-600 text-white"
                     >
-                      Activar dominio
+                      Pausar dominio
                     </button>
-                  )}
+                    <button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            `¿Eliminar el dominio propio de "${org.nombre}"? Asegurate de haber corrido antes quitar-dominio.sh en el servidor.`,
+                          )
+                        ) {
+                          ejecutarAccion(
+                            quitarDominioPropio,
+                            org.id,
+                            "Dominio eliminado",
+                          );
+                        }
+                      }}
+                      className="text-sm px-3 py-1 rounded-lg bg-red-500 text-white"
+                    >
+                      Quitar dominio
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))}

@@ -59,7 +59,7 @@ const useFavoritos = () => {
       const url = `/favoritos/mis-favoritos`;
 
       const res = await apiBackend(url);
-      console.log(res.data);
+
       if (res.success) {
         setFavoritos(res.data);
       }

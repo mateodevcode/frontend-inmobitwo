@@ -6,18 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { HiBuildingOffice2 } from "react-icons/hi2";
 import useOrganizaciones from "@/hooks/useOrganizaciones.js";
 import { toCapitalize } from "../../lib/toCapitalize";
+import BotonAdminOrganizaciones from "./BotonAdminOrganizaciones";
 
 const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
   const { organizaciones, setOrganizaciones, usuario } = useAppContext();
   const navigate = useNavigate();
   const { cargarMisOrganizaciones } = useOrganizaciones();
   const [cargando, setCargando] = useState(true);
+  const dominio_dns = organizaciones[0]?.custom_domain
+    ? `https://${organizaciones[0]?.custom_domain}`
+    : `/inmobiliarias/${organizaciones[0]?.slug}`;
 
-  // ─────────────────────────────────────────────
-  // NUEVO: carga "mis organizaciones" al montar el sidebar.
-  // Antes nada llenaba organizaciones, así que siempre caía
-  // en el caso "no tiene ninguna" aunque sí tuviera.
-  // ─────────────────────────────────────────────
   useEffect(() => {
     const cargar = async () => {
       if (!usuario) {
@@ -44,6 +43,8 @@ const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
   if (organizaciones.length === 0) {
     return (
       <div>
+        <BotonAdminOrganizaciones />
+
         <h3 className="uppercase font-semibold text-xs text-black/60 px-2">
           Mi organización
         </h3>
@@ -75,15 +76,17 @@ const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
 
   return (
     <div>
+      <BotonAdminOrganizaciones />
       <h3 className="uppercase font-semibold text-xs text-black/60 px-2">
         Mi organización
       </h3>
 
       {/* Datos reales de la organización, no un placeholder */}
       <div className="px-2.5 pt-2 pb-1">
-        <div
+        <a
           className="flex items-center gap-3 p-3 rounded-lg  hover:bg-blue-50 border hover:border-blue-100 border-transparent cursor-pointer select-none"
-          onClick={() => navigate("/inmobiliarias/" + organizacionActiva.slug)}
+          href={dominio_dns}
+          target="_blank"
         >
           {organizacionActiva.logo_url ? (
             <img
@@ -107,7 +110,7 @@ const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
               · {organizacionActiva.estado}
             </p>
           </div>
-        </div>
+        </a>
       </div>
 
       <div className="px-2.5 pb-2.5">

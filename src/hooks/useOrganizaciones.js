@@ -150,6 +150,12 @@ const useOrganizaciones = () => {
   const activarDominioPropio = async (id) =>
     apiBackend(`/organizaciones/${id}/dominio/activar`, "PATCH");
 
+  const desactivarDominioPropio = async (id) =>
+    apiBackend(`/organizaciones/${id}/dominio/desactivar`, "PATCH");
+
+  const quitarDominioPropio = async (id) =>
+    apiBackend(`/organizaciones/${id}/dominio/quitar`, "PATCH");
+
   return {
     crearOrganizacion,
     cargarMisOrganizaciones,
@@ -170,6 +176,8 @@ const useOrganizaciones = () => {
     aprobarOrganizacion,
     suspenderOrganizacion,
     activarDominioPropio,
+    desactivarDominioPropio,
+    quitarDominioPropio,
   };
 };
 

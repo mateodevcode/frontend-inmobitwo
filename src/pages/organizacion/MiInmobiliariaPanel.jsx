@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext.js";
 import useOrganizaciones from "@/hooks/useOrganizaciones.js";
 import SolicitarDominioForm from "@/pages/organizacion/SolicitarDominioForm.jsx";
+import TemaSelector from "@/pages/organizacion/TemaSelector.jsx";
 
 // ────────────────────────────────────────────────────────────────
 // Muestra y permite editar los datos de la organización activa
@@ -37,6 +38,14 @@ const MiInmobiliariaPanel = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const actualizarOrganizacionEnContexto = (nuevaData) => {
+    setOrganizaciones((prev) =>
+      prev.map((org) =>
+        org.id === organizacion.id ? { ...org, ...nuevaData } : org,
+      ),
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -45,11 +54,7 @@ const MiInmobiliariaPanel = () => {
 
     if (res.success) {
       toast.success(res.message, { position: "bottom-right" });
-      setOrganizaciones((prev) =>
-        prev.map((org) =>
-          org.id === organizacion.id ? { ...org, ...res.data } : org,
-        ),
-      );
+      actualizarOrganizacionEnContexto(res.data);
     } else {
       toast.error(res.error || res.message, { position: "bottom-right" });
     }
@@ -145,16 +150,19 @@ const MiInmobiliariaPanel = () => {
 
       {esAdmin && (
         <div className="border-t pt-6">
+          <TemaSelector
+            organizacion={organizacion}
+            onCambiado={actualizarOrganizacionEnContexto}
+          />
+        </div>
+      )}
+
+      {esAdmin && (
+        <div className="border-t pt-6">
           <h3 className="font-semibold mb-2">Dominio propio</h3>
           <SolicitarDominioForm
             organizacion={organizacion}
-            onUpdated={(nuevaData) =>
-              setOrganizaciones((prev) =>
-                prev.map((org) =>
-                  org.id === organizacion.id ? { ...org, ...nuevaData } : org,
-                ),
-              )
-            }
+            onUpdated={actualizarOrganizacionEnContexto}
           />
         </div>
       )}

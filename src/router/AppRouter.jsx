@@ -1,7 +1,15 @@
 // src/router/AppRouter.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext.js";
 import { useTenant } from "@/context/TenantContext.js";
+import { useEffect, useRef } from "react";
+import useTracking from "../hooks/useTracking";
+
+import { RutaPrivada, RutaAdmin, RutaPublica } from "@/router/guards.jsx";
+import {
+  rutasModoOrganizacion,
+  rutasOrganizacion,
+} from "@/router/organizacionRoutes.jsx";
 
 // Páginas
 import Home from "@/pages/Home.jsx";
@@ -15,49 +23,12 @@ import MisAnuncios from "@/pages/MisAnuncios.jsx";
 import Anuncio from "@/pages/Anuncio.jsx";
 import MiPerfil from "@/pages/MiPerfil.jsx";
 import SeguridadAcceso from "@/pages/SeguridadAcceso";
-import useTracking from "../hooks/useTracking";
-import { useEffect, useRef } from "react";
 import Leads from "../pages/Leads";
 import Logs from "../pages/Logs";
 import ListaPruebaPropiedades from "../pages/ListaPruebaPropiedades";
 import PagePropiedadId from "../pages/PagePropiedadId";
-
-// Organizaciones (multi-tenant) — NUEVO
-import PaginaOrganizacion from "@/pages/organizacion/paginas/PaginaOrganizacion.jsx";
-import CrearOrganizacionForm from "@/pages/organizacion/CrearOrganizacionForm.jsx";
-import AdminOrganizacionesPage from "@/pages/admin/AdminOrganizacionesPage.jsx";
-import AgentesPanel from "@/pages/organizacion/AgentesPanel.jsx";
-import MiInmobiliariaPanel from "@/pages/organizacion/MiInmobiliariaPanel.jsx";
-import EstadisticasPanel from "@/pages/organizacion/EstadisticasPanel.jsx";
 import MisFavoritos from "../pages/MisFavoritos";
 import AdminRutasPage from "../pages/admin/AdminRutasPages";
-
-// ─────────────────────────────────────────────
-// Ruta que requiere estar autenticado
-// ─────────────────────────────────────────────
-const RutaPrivada = ({ children }) => {
-  const { estaAutenticado } = useAppContext();
-  return estaAutenticado ? children : <Navigate to="/login" replace />;
-};
-
-// ─────────────────────────────────────────────
-// Ruta que requiere rol superadmin
-// ─────────────────────────────────────────────
-const RutaAdmin = ({ children }) => {
-  const { estaAutenticado, esSuperAdmin } = useAppContext();
-  if (!estaAutenticado) return <Navigate to="/login" replace />;
-  if (!esSuperAdmin) return <Navigate to="/" replace />;
-  return children;
-};
-
-// ─────────────────────────────────────────────
-// Ruta que redirige si ya estás autenticado
-// (para no mostrar login/registro a usuarios ya logueados)
-// ─────────────────────────────────────────────
-const RutaPublica = ({ children }) => {
-  const { estaAutenticado } = useAppContext();
-  return estaAutenticado ? <Navigate to="/" replace /> : children;
-};
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -74,35 +45,24 @@ const AppRouter = () => {
   }, [consentimientoTracking]);
 
   // ────────────────────────────────────────────────────────────
-  // MODO ORGANIZACIÓN: estamos en el dominio propio de un cliente
-  // (ej: www.inmobiliariaoviedo.com). Aquí NO exponemos login,
-  // red social, ni admin — solo el escaparate de esa
-  // organización. Es intencional: quien entra por ese dominio
-  // solo debe ver la web de esa inmobiliaria.
+  // MODO ORGANIZACIÓN: dominio propio de un cliente. Solo el
+  // escaparate de esa organización — nada de login/red-social/admin.
   // ────────────────────────────────────────────────────────────
   if (modo === "organizacion") {
     return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<PaginaOrganizacion />} />
-          <Route path="*" element={<PaginaOrganizacion />} />
-        </Routes>
+        <Routes>{rutasModoOrganizacion}</Routes>
       </BrowserRouter>
     );
   }
 
   // ────────────────────────────────────────────────────────────
-  // MODO RED SOCIAL: tus rutas de siempre + las nuevas de
-  // organizaciones bajo el dominio principal.
+  // MODO RED SOCIAL: rutas de siempre + las de organización
+  // importadas de organizacionRoutes.jsx.
   // ────────────────────────────────────────────────────────────
   return (
     <BrowserRouter>
       <Routes>
-        {/* Públicas — cualquiera puede acceder */}
-
-        {/* Informacion para publicar anuncio */}
-
-        {/* Ruta prueba */}
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
 
         <Route
@@ -113,7 +73,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-        {/* Publicar anuncio  */}
         <Route
           path="/info/publicar-anuncio/publicar"
           element={
@@ -122,8 +81,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
-        {/* Listas de favoritos  */}
         <Route
           path="/usuario/favoritos"
           element={
@@ -132,8 +89,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
-        {/* Listas de anuncios  */}
         <Route
           path="/usuario/mis-anuncios"
           element={
@@ -142,8 +97,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
-        {/* Anuncio id  */}
         <Route
           path="/usuario/mis-anuncios/anuncio/:id"
           element={
@@ -152,8 +105,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
-        {/* usuario tus datos  */}
         <Route
           path="/usuario/tus-datos/perfil"
           element={
@@ -162,8 +113,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
-        {/* usuario tus datos  */}
         <Route
           path="/usuario/tus-datos/acceso"
           element={
@@ -173,7 +122,6 @@ const AppRouter = () => {
           }
         />
 
-        {/* Solo si NO estás logueado */}
         <Route
           path="/login"
           element={
@@ -191,8 +139,6 @@ const AppRouter = () => {
           }
         />
 
-        {/* Requiere login */}
-
         <Route
           path="/"
           element={
@@ -201,7 +147,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
         <Route
           path="/propiedades/:id"
           element={
@@ -210,7 +155,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
         <Route
           path="/leads"
           element={
@@ -228,64 +172,9 @@ const AppRouter = () => {
           }
         />
 
-        {/* ──────────────────────────────────────────────
-            Organizaciones (multi-tenant) — NUEVO
-        ────────────────────────────────────────────── */}
+        {/* ────────────── Organizaciones (multi-tenant) ────────────── */}
+        {rutasOrganizacion}
 
-        {/* Vitrina pública de una organización, sin dominio propio */}
-        <Route path="/inmobiliarias/:slug" element={<PaginaOrganizacion />} />
-
-        {/* Solicitar creación de una organización — requiere login */}
-        <Route
-          path="/inmobiliarias/nueva"
-          element={
-            <RutaPrivada>
-              <CrearOrganizacionForm />
-            </RutaPrivada>
-          }
-        />
-
-        {/* Panel de agentes de mi organización */}
-        <Route
-          path="/organizaciones/agentes"
-          element={
-            <RutaPrivada>
-              <AgentesPanel />
-            </RutaPrivada>
-          }
-        />
-
-        {/* Ajustes de mi organización (datos + solicitar dominio) */}
-        <Route
-          path="/organizaciones/ajustes"
-          element={
-            <RutaPrivada>
-              <MiInmobiliariaPanel />
-            </RutaPrivada>
-          }
-        />
-
-        {/* Estadísticas de una organización puntual */}
-        <Route
-          path="/organizaciones/estadisticas/:id"
-          element={
-            <RutaPrivada>
-              <EstadisticasPanel />
-            </RutaPrivada>
-          }
-        />
-
-        {/* Panel de superadmin: aprobar/suspender/activar dominios */}
-        <Route
-          path="/admin/organizaciones"
-          element={
-            <RutaAdmin>
-              <AdminOrganizacionesPage />
-            </RutaAdmin>
-          }
-        />
-
-        {/* Solo superadmin */}
         <Route
           path="/admin"
           element={
@@ -294,8 +183,6 @@ const AppRouter = () => {
             </RutaAdmin>
           }
         />
-
-        {/* Mapa de rutas — solo superadmin */}
         <Route
           path="/admin/rutas"
           element={
@@ -305,7 +192,6 @@ const AppRouter = () => {
           }
         />
 
-        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

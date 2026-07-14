@@ -28,6 +28,7 @@ const usePropiedades = () => {
     setHasMore,
   } = useAppContext();
   const cargandoPropiedades = useRef(false);
+  const cargandoPropiedadesInicio = useRef(false);
   const navigate = useNavigate();
   const { resetFormDataPropiedad } = useResetForm();
 
@@ -498,7 +499,10 @@ const usePropiedades = () => {
 
       if (res.success) {
         setLoadingPropiedades(false);
-        setPropiedades((prev) => [...prev, ...res.data.data]); // se acumulan
+        setPropiedades((prev) => {
+          const combinadas = [...prev, ...res.data.data];
+          return Array.from(new Map(combinadas.map((p) => [p.id, p])).values());
+        });
         setCursor(res.data.pagination.nextCursor);
         setHasMore(res.data.pagination.hasMore);
       }
@@ -511,6 +515,8 @@ const usePropiedades = () => {
   };
 
   const cargarPropiedadesInicio = async () => {
+    if (cargandoPropiedadesInicio.current) return;
+    cargandoPropiedadesInicio.current = true;
     iniciarCarga();
 
     try {
@@ -520,11 +526,15 @@ const usePropiedades = () => {
 
       if (res.success) {
         setLoadingPropiedades(false);
-        setPropiedades((prev) => [...prev, ...res.data.data]);
+        setPropiedades((prev) => {
+          const combinadas = [...prev, ...res.data.data];
+          return Array.from(new Map(combinadas.map((p) => [p.id, p])).values());
+        });
       }
     } catch (error) {
       console.error("Error cargando propiedades:", error);
     } finally {
+      cargandoPropiedadesInicio.current = false;
       terminarCarga();
     }
   };

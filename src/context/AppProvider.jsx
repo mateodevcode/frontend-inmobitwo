@@ -109,6 +109,7 @@ export const AppProvider = ({ children }) => {
   const [openModalContactoLead, setOpenModalContactoLead] = useState(false);
   const [leadPendienteContacto, setLeadPendienteContacto] = useState(null);
   const [favoritos, setFavoritos] = useState([]);
+  const [filtroSeleccionado, setFiltroSeleccionado] = useState("todo");
 
   // Se llama AL INICIO de cualquier petición
   const iniciarCarga = useCallback(() => {
@@ -246,6 +247,10 @@ export const AppProvider = ({ children }) => {
         // Favoritos
         favoritos,
         setFavoritos,
+
+        // Filtros
+        filtroSeleccionado,
+        setFiltroSeleccionado,
       }}
     >
       {children}

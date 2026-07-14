@@ -3,12 +3,12 @@
 import Sidebar from "@/components/sidebar/Sidebar.jsx";
 import Principal from "@/components/principal/Principal.jsx";
 import Actividad from "@/components/principal/actividad/Actividad.jsx";
-import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import ModalUser from "@/components/modales/ModalUser.jsx";
 import ModalAgregarPropiedad from "@/components/modales/ModalAgregarPropiedad.jsx";
 import ModalConfirmarEliminarPropiedad from "@/components/modales/ModalConfirmarEliminarPropiedad.jsx";
 import ModalSidebar from "@/components/modales/ModalSidebar";
 import ModalActividades from "@/components/modales/ModalActividades";
+import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 
 const Home = () => {
   return (
@@ -17,12 +17,12 @@ const Home = () => {
         <div className="md:flex hidden">
           <Sidebar />
         </div>
+
         <Principal />
 
-        <div className="md:flex hidden">
+        <div className="lg:flex hidden">
           <Actividad />
         </div>
-        <style>{scrollbarStyles.default}</style>
       </div>
 
       <ModalUser />
@@ -30,6 +30,8 @@ const Home = () => {
       <ModalConfirmarEliminarPropiedad />
       <ModalSidebar />
       <ModalActividades />
+
+      <style>{scrollbarStyles.default}</style>
     </div>
   );
 };

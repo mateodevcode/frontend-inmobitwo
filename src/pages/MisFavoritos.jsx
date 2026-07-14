@@ -1,18 +1,17 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderInmobitwo";
 import { useAppContext } from "@/context/AppContext";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
-import { useEffect, useState } from "react";
 import useFavoritos from "@/hooks/useFavoritos";
-import ListaFavoritos from "@/components/usuario/favoritos/ListaFavoritos"; // ← lo creamos después
-import SinFavoritos from "@/components/usuario/favoritos/SinFavoritos"; // ← lo creamos después
+import ListaFavoritos from "@/components/usuario/favoritos/ListaFavoritos";
+import SinFavoritos from "@/components/usuario/favoritos/SinFavoritos";
 
 const MisFavoritos = () => {
   const navigate = useNavigate();
   const { cargandoGlobal, favoritos } = useAppContext();
-
   const { cargarMisFavoritos, loading } = useFavoritos();
 
   // Cargar favoritos al montar la página

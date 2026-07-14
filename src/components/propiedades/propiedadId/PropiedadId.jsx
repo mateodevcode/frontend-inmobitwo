@@ -3,14 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import useTracking from "@/hooks/useTracking";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BsGeoAlt, BsTelephone } from "react-icons/bs";
+import { BsTelephone } from "react-icons/bs";
 import { CiShare2 } from "react-icons/ci";
 import { TiHeartOutline } from "react-icons/ti";
 import { FaRegBuilding } from "react-icons/fa";
 import { RxRulerSquare } from "react-icons/rx";
 import { PiBathtub } from "react-icons/pi";
 import { LiaBedSolid } from "react-icons/lia";
-import MenuOpciones from "@/components/principal/MenuOpciones";
+import MenuOpciones from "@/components/principal/card-propiedad/MenuOpciones";
 import { logo } from "@/data/logo";
 import {
   MdOutlineKeyboardArrowLeft,

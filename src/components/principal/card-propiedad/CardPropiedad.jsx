@@ -9,12 +9,12 @@ import { TiHeartFullOutline, TiHeartOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 import { getInitials } from "@/lib/getInitials";
 import { formatFirstTwoNames } from "@/lib/formatFirstTwoNames";
-import MenuOpciones from "@/components/principal/MenuOpciones";
+import MenuOpciones from "@/components/principal/card-propiedad/MenuOpciones";
 import { getColorForOrg } from "@/lib/getRandomTailwindColors";
 import { useAppContext } from "@/context/AppContext";
 import { useTiempoRelativo } from "@/hooks/useTiempoRelativo";
-import useTracking from "../../hooks/useTracking";
-import useFavoritos from "../../hooks/useFavoritos";
+import useTracking from "@/hooks/useTracking";
+import useFavoritos from "@/hooks/useFavoritos";
 import ImagenesCard from "./ImagenesCard";
 
 const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {

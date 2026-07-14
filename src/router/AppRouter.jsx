@@ -5,7 +5,6 @@ import { useTenant } from "@/context/TenantContext.js";
 
 // Páginas
 import Home from "@/pages/Home.jsx";
-import Dashboard from "@/pages/Dashboard.jsx";
 import Admin from "@/pages/Admin.jsx";
 import NotFound from "@/pages/NotFound.jsx";
 import Login from "@/components/login/Login.jsx";
@@ -24,13 +23,14 @@ import ListaPruebaPropiedades from "../pages/ListaPruebaPropiedades";
 import PagePropiedadId from "../pages/PagePropiedadId";
 
 // Organizaciones (multi-tenant) — NUEVO
-import PaginaOrganizacion from "@/pages/organizacion/PaginaOrganizacion.jsx";
+import PaginaOrganizacion from "@/pages/organizacion/paginas/PaginaOrganizacion.jsx";
 import CrearOrganizacionForm from "@/pages/organizacion/CrearOrganizacionForm.jsx";
 import AdminOrganizacionesPage from "@/pages/admin/AdminOrganizacionesPage.jsx";
 import AgentesPanel from "@/pages/organizacion/AgentesPanel.jsx";
 import MiInmobiliariaPanel from "@/pages/organizacion/MiInmobiliariaPanel.jsx";
 import EstadisticasPanel from "@/pages/organizacion/EstadisticasPanel.jsx";
 import MisFavoritos from "../pages/MisFavoritos";
+import AdminRutasPage from "../pages/admin/AdminRutasPages";
 
 // ─────────────────────────────────────────────
 // Ruta que requiere estar autenticado
@@ -46,7 +46,7 @@ const RutaPrivada = ({ children }) => {
 const RutaAdmin = ({ children }) => {
   const { estaAutenticado, esSuperAdmin } = useAppContext();
   if (!estaAutenticado) return <Navigate to="/login" replace />;
-  if (!esSuperAdmin) return <Navigate to="/dashboard" replace />;
+  if (!esSuperAdmin) return <Navigate to="/" replace />;
   return children;
 };
 
@@ -76,7 +76,7 @@ const AppRouter = () => {
   // ────────────────────────────────────────────────────────────
   // MODO ORGANIZACIÓN: estamos en el dominio propio de un cliente
   // (ej: www.inmobiliariaoviedo.com). Aquí NO exponemos login,
-  // red social, dashboard ni admin — solo el escaparate de esa
+  // red social, ni admin — solo el escaparate de esa
   // organización. Es intencional: quien entra por ese dominio
   // solo debe ver la web de esa inmobiliaria.
   // ────────────────────────────────────────────────────────────
@@ -100,11 +100,9 @@ const AppRouter = () => {
       <Routes>
         {/* Públicas — cualquiera puede acceder */}
 
-        {/* <Route path="/propiedades/:id" element={<PropiedadDetalle />} /> */}
         {/* Informacion para publicar anuncio */}
 
-        <Route path="/leads" element={<Leads />} />
-        <Route path="/logs" element={<Logs />} />
+        {/* Ruta prueba */}
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
 
         <Route
@@ -194,14 +192,6 @@ const AppRouter = () => {
         />
 
         {/* Requiere login */}
-        <Route
-          path="/dashboard"
-          element={
-            <RutaPrivada>
-              <Dashboard />
-            </RutaPrivada>
-          }
-        />
 
         <Route
           path="/"
@@ -217,6 +207,23 @@ const AppRouter = () => {
           element={
             <RutaPrivada>
               <PagePropiedadId />
+            </RutaPrivada>
+          }
+        />
+
+        <Route
+          path="/leads"
+          element={
+            <RutaPrivada>
+              <Leads />
+            </RutaPrivada>
+          }
+        />
+        <Route
+          path="/logs"
+          element={
+            <RutaPrivada>
+              <Logs />
             </RutaPrivada>
           }
         />
@@ -284,6 +291,16 @@ const AppRouter = () => {
           element={
             <RutaAdmin>
               <Admin />
+            </RutaAdmin>
+          }
+        />
+
+        {/* Mapa de rutas — solo superadmin */}
+        <Route
+          path="/admin/rutas"
+          element={
+            <RutaAdmin>
+              <AdminRutasPage />
             </RutaAdmin>
           }
         />

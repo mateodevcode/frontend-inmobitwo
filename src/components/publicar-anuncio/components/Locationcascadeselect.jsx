@@ -1,4 +1,4 @@
-// src/components/LocationCascadeSelect.jsx
+// src/components/publicar-anuncio/components/Locationcascadeselect.jsx
 
 import { useState, useEffect } from "react";
 import {

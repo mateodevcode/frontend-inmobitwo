@@ -8,7 +8,7 @@ import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { apiBackend } from "@/api/apiBackend";
 import { useNavigate } from "react-router-dom";
 import { ModalContinuarAnuncio } from "@/components/publicar-anuncio/ModalContinuarAnuncio";
-import useResetForm from "@/hooks/useResetForm";
+import useResetForm, { mapearApiAFormDataPropiedad } from "@/hooks/useResetForm";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 
 const PublicarAnuncio = () => {
@@ -51,7 +51,7 @@ const PublicarAnuncio = () => {
             timestamp: new Date().toISOString(),
           }),
         );
-        setFormDataPropiedad(data);
+        setFormDataPropiedad(mapearApiAFormDataPropiedad(data));
         setContentNumber(2);
       } else {
         localStorage.removeItem("ultimoAnuncioId");

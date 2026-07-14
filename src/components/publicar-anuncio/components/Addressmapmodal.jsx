@@ -1,4 +1,4 @@
-// src/components/AddressMapModal.jsx
+// src/components/publicar-anuncio/components/Addressmapmodal.jsx
 //
 // Modal de confirmación de ubicación. Reutiliza el patrón de Dialog de
 // Headless UI v2 que ya usamos en "Nadie contacta a un anuncio sin fotos".

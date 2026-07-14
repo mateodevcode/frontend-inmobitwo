@@ -38,7 +38,7 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
     ? publicador.logo_url
     : publicador.image_url;
 
-  const color = getColorForOrg(publicador.id);
+  const color = getColorForOrg(publicador.id, publicador.tipo || "user");
   const isFavorited = estaEnFavoritos(favoritos, id);
 
   const handleContactar = (e) => {
@@ -65,7 +65,8 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
             />
           ) : (
             <div
-              className={`flex items-center justify-center p-2 w-10 h-10 rounded-md font-semibold uppercase ${color.text} ${color.bg}`}
+              className={`flex items-center justify-center p-2 w-10 h-10 rounded-md font-semibold uppercase`}
+              style={color}
             >
               {getInitials(nombrePublicador)}
             </div>

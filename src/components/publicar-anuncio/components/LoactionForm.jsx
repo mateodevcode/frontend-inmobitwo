@@ -1,4 +1,4 @@
-// src/components/LocationForm.jsx
+// src/components/publicar-anuncio/components/LoactionForm.jsx
 //
 // Une todo el flujo: País → Provincia → Ciudad → Dirección → "Comprobar dirección"
 // → geocodifica vía tu backend (/api/geocode) → abre AddressMapModal → confirma.

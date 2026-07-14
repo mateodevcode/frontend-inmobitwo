@@ -9,6 +9,7 @@ import { data_perfil_usuario } from "@/data/data_perfil_usuario";
 import { useEffect, useState } from "react";
 import { apiBackend } from "@/api/apiBackend.js";
 import useUsuarios from "@/hooks/useUsuarios";
+import { mapearApiAFormDataUsuario } from "@/hooks/useResetForm";
 import { useNavigate } from "react-router-dom";
 
 const Perfil = () => {
@@ -35,7 +36,7 @@ const Perfil = () => {
       );
       const { success, data } = res;
       if (success) {
-        setFormDataUsuario(data);
+        setFormDataUsuario(mapearApiAFormDataUsuario(data));
       }
     } catch (error) {
       console.error("Error cargando propiedad:", error);

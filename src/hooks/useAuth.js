@@ -7,6 +7,7 @@ import { AppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
 import usePropiedades from "@/hooks/usePropiedades";
 import useResetForm from "./useResetForm";
+import { validatePasswordRegistro } from "@/utils/validatePassword";
 
 const useAuth = () => {
   const {
@@ -53,8 +54,8 @@ const useAuth = () => {
         return;
       }
 
-      await cargarPropiedades();
       guardarSesion(res.data.usuario, res.data.accessToken);
+      await cargarPropiedades();
       resetFormDataUsuario();
 
       toast.success("¡Inicio de sesión exitoso!", { position: "bottom-right" });
@@ -79,6 +80,13 @@ const useAuth = () => {
   // ─────────────────────────────────────────────
   const handleRegistro = async (e) => {
     e.preventDefault();
+
+    const erroresPassword = validatePasswordRegistro(formDataUsuario.password);
+    if (erroresPassword.length > 0) {
+      toast.error(erroresPassword[0], { position: "bottom-right" });
+      return;
+    }
+
     setLoadingAuth(true);
 
     try {
@@ -105,7 +113,7 @@ const useAuth = () => {
       toast.success("¡Cuenta creada correctamente!", {
         position: "bottom-right",
       });
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       toast.error("Error inesperado", { position: "bottom-right" });
       console.error("❌ Error en registro:", error);

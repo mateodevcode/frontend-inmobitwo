@@ -9,7 +9,7 @@ export async function apiBackendFormData(endpoint, formData, method = "POST") {
     const res = await fetch(url, {
       method,
       headers: {
-        // ❌ Sin Content-Type — el navegador lo pone solo con el boundary
+        "X-Tenant-Host": window.location.host,
         ...(token && { Authorization: `Bearer ${token}` }),
       },
       credentials: "include",
@@ -24,6 +24,7 @@ export async function apiBackendFormData(endpoint, formData, method = "POST") {
         const reintento = await fetch(url, {
           method,
           headers: {
+            "X-Tenant-Host": window.location.host,
             Authorization: `Bearer ${nuevoToken}`,
           },
           credentials: "include",

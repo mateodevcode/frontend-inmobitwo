@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+// src/pages/ListaPruebaPropiedades.jsx
 
 import Principal from "@/components/principal/Principal.jsx";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";

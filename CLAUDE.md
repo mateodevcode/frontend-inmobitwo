@@ -59,7 +59,6 @@ Access via `useAppContext()` from [src/context/AppContext.js](src/context/AppCon
 |---|---|---|
 | `apiBackend.js` | JSON requests | JWT access token in `Authorization` header, auto-refreshes via cookie on 401 |
 | `apiBackendFormData.js` | Multipart file uploads | Same JWT + refresh pattern |
-| `apiServerBackend.js` | Server-to-server calls | `x-api-key` header |
 
 All return a normalized shape: `{ success, message, data, error, status }`.
 

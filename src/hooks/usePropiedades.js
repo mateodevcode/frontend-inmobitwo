@@ -1,4 +1,5 @@
 // src/hooks/usePropiedades.js
+import { useRef } from "react";
 import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
@@ -20,13 +21,13 @@ const usePropiedades = () => {
     terminarCarga,
     setContentNumber,
     setPropiedad,
-    cargandoGlobal,
-    setCursor,
-    setHasMore,
     cursor,
     hasMore,
     setLoadingPropiedades,
+    setCursor,
+    setHasMore,
   } = useAppContext();
+  const cargandoPropiedades = useRef(false);
   const navigate = useNavigate();
   const { resetFormDataPropiedad } = useResetForm();
 
@@ -484,7 +485,8 @@ const usePropiedades = () => {
   // cargar propiedades home
   // --------------------------------
   const cargarPropiedades = async () => {
-    if (cargandoGlobal || !hasMore) return; // evita pedir doble o pedir cuando ya no hay más
+    if (cargandoPropiedades.current || !hasMore) return;
+    cargandoPropiedades.current = true;
     iniciarCarga();
 
     try {
@@ -503,6 +505,7 @@ const usePropiedades = () => {
     } catch (error) {
       console.error("Error cargando propiedades:", error);
     } finally {
+      cargandoPropiedades.current = false;
       terminarCarga();
     }
   };
@@ -527,6 +530,7 @@ const usePropiedades = () => {
   };
 
   const cargarPropiedadesMisAnuncios = async () => {
+    limpiarPropiedades();
     iniciarCarga();
 
     try {

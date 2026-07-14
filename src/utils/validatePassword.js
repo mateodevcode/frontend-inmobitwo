@@ -34,8 +34,33 @@ export function validatePasswordNueva(passwordActual, passwordNueva) {
   return errores;
 }
 
-// Versión que devuelve el cumplimiento de cada regla por separado,
-// útil para mostrar un checklist en vivo en el modal
+export function validatePasswordRegistro(password) {
+  const errores = [];
+
+  if (!password) {
+    errores.push("La contraseña es requerida.");
+    return errores;
+  }
+
+  if (password.length < 8) {
+    errores.push("Debe tener al menos 8 caracteres.");
+  }
+  if (!/[A-Z]/.test(password)) {
+    errores.push("Debe incluir al menos una mayúscula.");
+  }
+  if (!/[a-z]/.test(password)) {
+    errores.push("Debe incluir al menos una minúscula.");
+  }
+  if (!/[0-9]/.test(password)) {
+    errores.push("Debe incluir al menos un número.");
+  }
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    errores.push("Debe incluir al menos un carácter especial.");
+  }
+
+  return errores;
+}
+
 export function getPasswordChecklist(passwordNueva) {
   return {
     longitud: passwordNueva.length >= 8,

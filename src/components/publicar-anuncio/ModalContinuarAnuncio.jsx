@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { apiBackend } from "@/api/apiBackend";
+import { mapearApiAFormDataPropiedad } from "@/hooks/useResetForm";
 
 export const ModalContinuarAnuncio = ({ anuncio, onContinuar, onNuevo }) => {
   const {
     terminarCarga,
     iniciarCarga,
     setFormDataPropiedad,
-    formDataPropiedad,
     setContentNumber,
   } = useAppContext();
 
@@ -24,7 +24,7 @@ export const ModalContinuarAnuncio = ({ anuncio, onContinuar, onNuevo }) => {
             timestamp: new Date().toISOString(),
           }),
         );
-        setFormDataPropiedad(data);
+        setFormDataPropiedad(mapearApiAFormDataPropiedad(data));
         setContentNumber(2);
       } else {
         localStorage.removeItem("ultimoAnuncioId");
@@ -54,7 +54,7 @@ export const ModalContinuarAnuncio = ({ anuncio, onContinuar, onNuevo }) => {
           Tienes un anuncio sin terminar
         </h3>
         <p className="text-gray-600 mb-4">
-          Empezaste a publicar un anuncio el {formDataPropiedad.titulo} del{" "}
+          Tienes un anuncio sin terminar del{" "}
           {new Date(anuncio.timestamp).toLocaleDateString()}. ¿Quieres continuar
           agregando las imágenes a ese anuncio?
         </p>

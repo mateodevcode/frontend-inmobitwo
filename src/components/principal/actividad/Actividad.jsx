@@ -101,12 +101,13 @@ const Actividad = () => {
         </h2>
         <div className="grid grid-cols-1 p-4 gap-5">
           {listaOrganizaciones.map((org, i) => {
-            const color = getColorForOrg(org.id || i);
+            const color = getColorForOrg(org.id || i, "org");
             return (
               <div className="flex justify-between items-center" key={i}>
                 <div className="flex gap-2 ">
                   <div
-                    className={`w-10 h-10 ${color.bg} ${color.text} rounded-md flex items-center justify-center font-semibold`}
+                    className={`w-10 h-10 rounded-md flex items-center justify-center font-semibold`}
+                    style={color}
                   >
                     {getInitials(org.nombre)}
                   </div>

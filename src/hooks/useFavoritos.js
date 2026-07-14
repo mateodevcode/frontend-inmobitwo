@@ -85,7 +85,7 @@ const useFavoritos = () => {
   const handleFavorito = async (e, id) => {
     e.stopPropagation();
     const res = await toggleFavorito(id);
-    if (res.success) {
+    if (res.success && res.data?.action === "agregado") {
       dispararEventoYRevisar(id, "favorito_agregado");
     }
   };

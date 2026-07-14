@@ -30,9 +30,23 @@ const Principal = () => {
   const ultimaCardRef = useRef(null);
   const { cargarMisFavoritos } = useFavoritos();
 
-  const propiedades_publicadas = propiedades?.filter(
-    (pro) => pro.estado === "publicado",
-  );
+  // const propiedades_publicadas = propiedades?.filter(
+  //   (pro) => pro.estado === "publicado",
+  // );
+
+  const propiedades_publicadas = propiedades
+    ?.filter((pro) => pro.estado === "publicado")
+    .filter((pro) => {
+      if (!search) return true;
+
+      const term = search.toLowerCase().trim();
+
+      return (
+        pro.titulo?.toLowerCase().includes(term) ||
+        pro.tipo?.toLowerCase().includes(term) ||
+        pro.direccion?.toLowerCase().includes(term)
+      );
+    });
 
   useEffect(() => {
     if (cargaInicialHecha.current) return; // 👈 nuevo

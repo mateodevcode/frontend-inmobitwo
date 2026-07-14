@@ -1,20 +1,11 @@
 // src/components/ConsentimientoBanner.jsx
 import { useAppContext } from "@/context/AppContext";
-import useTracking from "@/hooks/useTracking";
 
 const ConsentimientoBanner = () => {
   const { consentimientoTracking, aceptarTracking, rechazarTracking } =
     useAppContext();
-  const { registrarSesion } = useTracking();
 
-  // Ya respondió antes (aceptó o rechazó) → no mostrar nada
   if (consentimientoTracking !== null) return null;
-
-  const handleAceptar = async () => {
-    aceptarTracking();
-    // Registrar sesión justo después de aceptar (no antes, por respeto al consentimiento)
-    setTimeout(() => registrarSesion(), 0);
-  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-black/10 shadow-lg p-4 md:p-6">
@@ -32,7 +23,7 @@ const ConsentimientoBanner = () => {
             Rechazar
           </button>
           <button
-            onClick={handleAceptar}
+            onClick={aceptarTracking}
             className="text-sm font-medium px-4 py-2 rounded-lg bg-black text-white hover:bg-black/80 transition"
           >
             Aceptar

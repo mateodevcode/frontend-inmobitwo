@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { GoAlert } from "react-icons/go";
 import { apiBackend } from "@/api/apiBackend.js";
 import useUsuarios from "@/hooks/useUsuarios";
+import { mapearApiAFormDataUsuario } from "@/hooks/useResetForm";
 import { phoneFormatter } from "@/lib/phoneFormatter";
 
 const Acceso = () => {
@@ -38,7 +39,7 @@ const Acceso = () => {
       );
       const { success, data } = res;
       if (success) {
-        setFormDataUsuario(data);
+        setFormDataUsuario(mapearApiAFormDataUsuario(data));
       }
     } catch (error) {
       console.error("Error cargando propiedad:", error);

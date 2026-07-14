@@ -3,6 +3,10 @@ import { useCallback, useRef, useState } from "react";
 import { AppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
 import { getSessionId } from "@/utils/getSessionId.js";
+import {
+  FORM_DATA_PROPIEDAD_INICIAL,
+  FORM_DATA_USUARIO_INICIAL,
+} from "@/hooks/useResetForm";
 
 export const AppProvider = ({ children }) => {
   // ─────────────────────────────────────────────
@@ -51,27 +55,11 @@ export const AppProvider = ({ children }) => {
   // ─────────────────────────────────────────────
   // FORMULARIO USUARIO (login / registro)
   // ─────────────────────────────────────────────
-  const formDataUsuarioInicial = {
-    name: "",
-    email: "",
-    password: "",
-    telefono: "",
-    rol: "user",
-    image_url: null,
-    public_id: null,
-    email_verificado: false,
-  };
+  const formDataUsuarioInicial = FORM_DATA_USUARIO_INICIAL;
 
-  const [formDataUsuario, setFormDataUsuario] = useState({
-    name: "",
-    email: "",
-    password: "",
-    telefono: "",
-    rol: "user",
-    image_url: null,
-    public_id: null,
-    email_verificado: false,
-  });
+  const [formDataUsuario, setFormDataUsuario] = useState(
+    FORM_DATA_USUARIO_INICIAL,
+  );
 
   const resetFormDataUsuario = () => setFormDataUsuario(formDataUsuarioInicial);
 
@@ -110,30 +98,9 @@ export const AppProvider = ({ children }) => {
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
-  const [formDataPropiedad, setFormDataPropiedad] = useState({
-    tipo: "",
-    operacion: "venta",
-    country_id: 0,
-    state_id: 0,
-    city_id: 0,
-    direccion: "",
-    numero_direccion: "",
-    latitude: 0,
-    longitude: 0,
-    titulo: "",
-    imagen_principal_url: "",
-    imagen_principal_public_id: "",
-    estado: "publicado",
-    es_de_organizacion: false,
-    organizacion_id: "null",
-    publicado_por_id: "",
-    galeria: [
-      {
-        url: "",
-        publicId: "",
-      },
-    ],
-  });
+  const [formDataPropiedad, setFormDataPropiedad] = useState(
+    FORM_DATA_PROPIEDAD_INICIAL,
+  );
 
   const [leads, setLeads] = useState([]);
   const [loadingLeads, setLoadingLeads] = useState(false);

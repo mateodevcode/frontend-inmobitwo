@@ -1,7 +1,7 @@
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FaRegBuilding } from "react-icons/fa";
 import { TiHeartOutline } from "react-icons/ti";
-import { BsChatSquareText } from "react-icons/bs";
+import { BsArrowUpRightSquare, BsChatSquareText } from "react-icons/bs";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { LiaUserFriendsSolid } from "react-icons/lia";
 import { FaChartBar } from "react-icons/fa";
@@ -58,5 +58,14 @@ export const items_organizacion = [
     icon: <CiSettings />,
     url: "/organizaciones/ajustes",
     name: "Ajustes",
+  },
+];
+
+export const items_admin = [
+  {
+    label: "rutas",
+    icon: <BsArrowUpRightSquare />,
+    url: "/admin/rutas",
+    name: "Rutas",
   },
 ];

@@ -1,4 +1,4 @@
-// src/pages/organizacion/PaginaOrganizacion.jsx
+// src/pages/organizacion/paginas/PaginaOrganizacion.jsx
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTenant } from "@/context/TenantContext.js";
@@ -15,9 +15,7 @@ const PaginaOrganizacion = () => {
   const { slug: slugParam } = useParams();
   const { organizacionActual } = useTenant();
   const slug = slugParam || organizacionActual?.slug || null;
-
   const { cargarPropiedadesOrganizacion } = useOrganizaciones();
-
   const [organizacion, setOrganizacion] = useState(organizacionActual || null);
   const [propiedades, setPropiedades] = useState([]);
   const [cursor, setCursor] = useState(null);

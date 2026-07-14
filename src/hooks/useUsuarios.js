@@ -1,4 +1,4 @@
-// src/hooks/usePropiedades.js
+// src/hooks/useUsuarios.js
 import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import useResetForm from "@/hooks/useResetForm";
 import { apiBackendFormData } from "@/api/apiBackendFormData.js";
 import { validatePasswordNueva } from "../utils/validatePassword";
-import usePropiedades from "./usePropiedades";
 
 const useUsuarios = () => {
   const {
@@ -18,7 +17,6 @@ const useUsuarios = () => {
   } = useAppContext();
   const navigate = useNavigate();
   const { resetFormDataUsuario } = useResetForm();
-  const { finalizarPublicacion } = usePropiedades();
 
   // ========================================
   // HANDLE CHANGE IMAGEN PRINCIPAL
@@ -48,62 +46,6 @@ const useUsuarios = () => {
       ...prevData,
       [name]: value,
     }));
-  };
-
-  // ─────────────────────────────────────────────
-  // Subir fotos al anuncio ya creado (paso 3 del wizard)
-  // PATCH /propiedades/:id — usa apiBackendFormData
-  // ─────────────────────────────────────────────
-  const subirFotosAnuncio = async (
-    anuncioId,
-    setLoading,
-    imagenPrincipal,
-    galeriaFiles,
-  ) => {
-    try {
-      iniciarCarga();
-      setLoading(true);
-
-      const formData = new FormData();
-
-      if (imagenPrincipal) {
-        formData.append("imagenPrincipal", imagenPrincipal);
-      }
-
-      if (galeriaFiles && galeriaFiles.length > 0) {
-        galeriaFiles.forEach((file) => {
-          formData.append("galeria", file);
-        });
-      }
-
-      const data = await apiBackendFormData(
-        `/propiedades/${anuncioId}`,
-        formData,
-        "PATCH",
-      );
-
-      const { success, message, error } = data;
-
-      if (success) {
-        toast.success(message || "Fotos guardadas correctamente", {
-          position: "bottom-right",
-        });
-        // await refreshPropiedades();
-        finalizarPublicacion();
-        return { success: true };
-      } else {
-        console.warn("⚠️ Error:", error);
-        toast.error(error || message, { position: "bottom-right" });
-        return { success: false };
-      }
-    } catch (error) {
-      console.error("❌ Error:", error);
-      toast.error("Error subiendo las fotos", { position: "bottom-right" });
-      return { success: false };
-    } finally {
-      terminarCarga();
-      setLoading(false);
-    }
   };
 
   const actualizarUsuario = async (
@@ -349,9 +291,6 @@ const useUsuarios = () => {
     desactivarVerificacionEmail,
     confirmarCodigoVerificacion,
     enviarCodigoVerificacion,
-
-    // Paso 3: fotos del anuncio
-    subirFotosAnuncio,
   };
 };
 

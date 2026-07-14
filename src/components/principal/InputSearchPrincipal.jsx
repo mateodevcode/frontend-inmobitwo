@@ -1,7 +1,6 @@
-import { LuSearch } from "react-icons/lu";
+import { LuFilterX, LuSearch } from "react-icons/lu";
 import useTypingPlaceholder from "@/hooks/useTypingPlaceholder";
 import { frases_buscar } from "@/data/frases_buscar";
-import { FunnelX } from "lucide-react";
 import { VscSettings } from "react-icons/vsc";
 
 const InputSearchPrincipal = ({ setSearch, search }) => {
@@ -27,10 +26,10 @@ const InputSearchPrincipal = ({ setSearch, search }) => {
         </div>
         {search && (
           <button
-            className="rounded-full bg-cuarto p-2.5 hover:bg-cuarto/80 cursor-pointer select-none active:scale-95 duration-75"
+            className="rounded-full bg-[#FF1B1C] p-2.5 hover:bg-[#FF1B1C]/80 cursor-pointer select-none active:scale-95 duration-75 text-white border border-black/20"
             onClick={() => setSearch("")}
           >
-            <FunnelX className="text-primero" size={20} />
+            <LuFilterX className="text-white" />
           </button>
         )}
       </div>

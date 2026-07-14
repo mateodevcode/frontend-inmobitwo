@@ -1,4 +1,4 @@
-// src/components/.../MiOrganizacionesSidebar.jsx
+// src/components/sidebar/MiOrganizacionesSidebar.jsx
 import { useEffect, useState } from "react";
 import { items_organizacion } from "@/data/items_sidebar";
 import { useAppContext } from "@/context/AppContext.js";
@@ -34,8 +34,6 @@ const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
     cargar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usuario]);
-
-  console.log(organizaciones);
 
   if (cargando) {
     return <div className="px-2.5 py-4 text-xs text-black/40">Cargando...</div>;

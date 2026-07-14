@@ -1,25 +1,19 @@
-function getRandomColor() {
-  const colors = [
-    { bg: "bg-purple-300", text: "text-purple-900" },
-    { bg: "bg-blue-300", text: "text-blue-900" },
-    { bg: "bg-green-300", text: "text-green-900" },
-    { bg: "bg-red-300", text: "text-red-900" },
-    { bg: "bg-yellow-300", text: "text-yellow-900" },
-    { bg: "bg-pink-300", text: "text-pink-900" },
-    { bg: "bg-indigo-300", text: "text-indigo-900" },
-    { bg: "bg-teal-300", text: "text-teal-900" },
-    { bg: "bg-orange-300", text: "text-orange-900" },
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
+function hashId(id) {
+  let hash = 0;
+  const str = String(id);
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
+  hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
+  hash = (hash >> 16) ^ hash;
+  return Math.abs(hash);
 }
 
-// En tu componente - mezclar y asignar colores aleatorios
-const colorMap = new Map();
-
-// Función para obtener color aleatorio para cada organización
-export function getColorForOrg(id) {
-  if (!colorMap.has(id)) {
-    colorMap.set(id, getRandomColor());
-  }
-  return colorMap.get(id);
+export function getColorForOrg(id, namespace = "") {
+  const hue = hashId(namespace + id) % 360;
+  return {
+    backgroundColor: `hsl(${hue}, 60%, 75%)`,
+    color: `hsl(${hue}, 60%, 22%)`,
+  };
 }

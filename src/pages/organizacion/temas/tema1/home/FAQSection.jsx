@@ -67,7 +67,7 @@ const SkylineBackground = () => (
 );
 
 const FaqItem = ({ item, index, isOpen, onToggle }) => (
-  <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
     <button
       onClick={onToggle}
       className="w-full flex items-center justify-between gap-4 p-6 text-left"

@@ -33,7 +33,7 @@ const AUTOPLAY_MS = 5000;
 
 // Cuántas cards según el ancho de pantalla
 const getItemsPerView = (width) => {
-  if (width < 640) return 1;
+  if (width < 640) return 2;
   if (width < 768) return 2;
   if (width < 1024) return 3;
   if (width < 1280) return 4;
@@ -121,14 +121,14 @@ const PropertySlider = () => {
               return (
                 <div
                   key={property.id}
-                  className="flex-shrink-0 cursor-pointer"
+                  className="shrink-0 cursor-pointer"
                   style={{
                     width: `calc(${100 / itemsPerView}% - ${(6 * (itemsPerView - 1)) / itemsPerView}px)`,
                   }}
                   onClick={() => goToSlide(index)}
                 >
                   <div
-                    className={`rounded-2xl p-8 text-center h-full flex flex-col items-center justify-center transition-colors duration-300 ${
+                    className={`rounded-md p-8 text-center h-full flex flex-col items-center justify-center transition-colors duration-300 ${
                       isActive
                         ? "bg-red-500 text-white shadow-xl"
                         : "bg-stone-100 text-gray-900"
@@ -154,7 +154,7 @@ const PropertySlider = () => {
         </div>
 
         {/* Dots: uno por cada card, proporcional a la cantidad de imágenes */}
-        <div className="flex justify-center gap-3 mt-10">
+        <div className="flex justify-center gap-3 mt-10 select-none">
           {propertyTypes.map((_, index) => (
             <button
               key={index}
@@ -162,7 +162,7 @@ const PropertySlider = () => {
               className={`transition-all duration-200 rounded-full ${
                 index === activeIndex
                   ? "w-3 h-3 bg-red-500"
-                  : "w-2.5 h-2.5 border border-gray-300 hover:border-red-400"
+                  : "w-3 h-3 border border-gray-300 hover:border-red-400"
               }`}
               aria-label={`Ir a la propiedad ${index + 1}`}
             />

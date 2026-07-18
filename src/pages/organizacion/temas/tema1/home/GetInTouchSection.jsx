@@ -7,6 +7,14 @@ const marqueeItems = [
   "Book A Private Tour",
 ];
 
+// Repetimos el set de items varias veces ANTES de duplicarlo para la animación,
+// así cada "mitad" es lo bastante ancha para cubrir pantallas anchas sin dejar
+// hueco visible al reiniciar el loop (esa era la causa del salto).
+const REPEATS_PER_HALF = 3;
+const repeatedItems = Array.from({ length: REPEATS_PER_HALF }).flatMap(
+  () => marqueeItems,
+);
+
 const HouseIcon = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
     <path
@@ -58,12 +66,12 @@ const Marquee = () => (
     `}</style>
     <div
       className="flex w-max"
-      style={{ animation: "marquee-scroll 22s linear infinite" }}
+      style={{ animation: "marquee-scroll 60s linear infinite" }}
     >
-      {[0, 1].map((copy) => (
-        <div key={copy} className="flex items-center gap-4 pr-4">
-          {marqueeItems.map((text, i) => (
-            <span key={`${copy}-${i}`} className="flex items-center gap-4">
+      {[0, 1].map((half) => (
+        <div key={half} className="flex items-center gap-4 pr-4">
+          {repeatedItems.map((text, i) => (
+            <span key={`${half}-${i}`} className="flex items-center gap-4">
               <HouseIcon />
               <span className="text-2xl text-gray-800 whitespace-nowrap">
                 {text}
@@ -188,13 +196,15 @@ const ContactForm = () => {
 const GetInTouchSection = () => (
   <div className="w-full bg-white pt-8">
     <div className="w-10/12 mx-auto">
-      <div className="relative rounded-3xl overflow-hidden h-[540px]">
+      {/* Ya NO tiene overflow-hidden: solo posiciona. El recorte/redondeado
+          vive únicamente en la imagen, así el form puede sobresalir libre. */}
+      <div className="relative h-[540px]">
         <img
           src="https://picsum.photos/id/1076/1600/1000"
           alt="Propiedad destacada"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover rounded-3xl"
         />
-        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 bg-black/10 rounded-3xl pointer-events-none" />
 
         {/* Mini mapa con flecha */}
         <div className="absolute left-[18%] top-[45%] flex flex-col items-center">
@@ -214,8 +224,9 @@ const GetInTouchSection = () => (
           </div>
         </div>
 
-        {/* Formulario de contacto */}
-        <div className="absolute right-6 bottom-6 lg:right-10 lg:bottom-10">
+        {/* Formulario de contacto: sobresale por debajo del cuadro y queda
+            por encima de todo (z-30), incluido el carrusel de abajo */}
+        <div className="absolute right-0 bottom-3 lg:right-10 lg:-bottom-20 z-30">
           <ContactForm />
         </div>
       </div>

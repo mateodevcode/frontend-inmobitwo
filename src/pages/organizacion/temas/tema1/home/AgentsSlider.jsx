@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { PiLinkedinLogoFill, PiEnvelopeSimpleFill } from "react-icons/pi";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 
 const agents = [
   {
@@ -161,14 +163,14 @@ const AgentsSlider = () => {
             className="absolute left-0 top-[38%] -translate-y-1/2 -translate-x-1/2 z-20 w-11 h-11 rounded-full bg-white shadow-md flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-colors"
             aria-label="Agente anterior"
           >
-            ←
+            <MdKeyboardArrowLeft />
           </button>
           <button
             onClick={goNext}
             className="absolute right-0 top-[38%] -translate-y-1/2 translate-x-1/2 z-20 w-11 h-11 rounded-full bg-white shadow-md flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-colors"
             aria-label="Siguiente agente"
           >
-            →
+            <MdKeyboardArrowRight />
           </button>
 
           <div className="overflow-hidden">
@@ -180,7 +182,7 @@ const AgentsSlider = () => {
               {agents.map((agent) => (
                 <div
                   key={agent.id}
-                  className="flex-shrink-0"
+                  className="shrink-0"
                   style={{
                     width: `calc(${100 / itemsPerView}% - ${(32 * (itemsPerView - 1)) / itemsPerView}px)`,
                   }}

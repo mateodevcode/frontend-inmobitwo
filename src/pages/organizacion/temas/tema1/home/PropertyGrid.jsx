@@ -129,7 +129,7 @@ const PropertyCard = ({ property }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
       {/* Imagen */}
       <div className="relative h-56">
         <img
@@ -182,7 +182,7 @@ const PropertyCard = ({ property }) => {
           <span className="text-lg font-bold text-gray-900">
             {formatPrice(property.price)}
           </span>
-          <button className="text-sm font-medium border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors">
+          <button className="text-sm font-medium border border-gray-300 rounded-sm px-4 py-2 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors">
             View More
           </button>
         </div>
@@ -240,13 +240,11 @@ const PropertyGrid = () => {
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
-              className={`text-sm font-medium px-5 py-2.5 rounded-lg border transition-colors ${
-                activeCategory === category
-                  ? "bg-gray-900 text-white border-gray-900"
-                  : "bg-white text-gray-700 border-gray-300 hover:border-gray-900"
-              }`}
+              className={`relative flex items-center gap-2 px-4 bg-gray-100 text-black h-9 cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-black before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0`}
             >
-              {category}
+              <p className="text-sm relative z-10 group-hover:text-white transition-colors duration-300">
+                {category}
+              </p>
             </button>
           ))}
         </div>
@@ -270,14 +268,14 @@ const PropertyGrid = () => {
             {hasMore ? (
               <button
                 onClick={() => setVisibleCount((prev) => prev + LOAD_STEP)}
-                className="text-sm font-semibold px-6 py-3 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
+                className="text-sm font-semibold px-6 py-3 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors"
               >
                 Load More
               </button>
             ) : (
               <button
                 onClick={() => setVisibleCount(INITIAL_VISIBLE)}
-                className="text-sm font-semibold px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:border-gray-900 transition-colors"
+                className="text-sm font-semibold px-6 py-3 rounded-md border border-gray-300 text-gray-700 hover:border-gray-900 transition-colors"
               >
                 Show Less
               </button>

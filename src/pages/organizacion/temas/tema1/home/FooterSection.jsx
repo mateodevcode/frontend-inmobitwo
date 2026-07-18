@@ -100,14 +100,23 @@ const RulerLine = () => {
   `);
 
   return (
-    <div
-      className="w-full h-8"
-      style={{
-        backgroundImage: `url("data:image/svg+xml,${tickSvg}")`,
-        backgroundRepeat: "repeat-x",
-        backgroundSize: "80px 30px",
-      }}
-    />
+    <div className="relative w-screen left-1/2 -translate-x-1/2 h-8 overflow-hidden">
+      <style>{`
+        @keyframes footer-ruler-scroll {
+          from { background-position-x: 0; }
+          to { background-position-x: -80px; }
+        }
+      `}</style>
+      <div
+        className="w-full h-full"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,${tickSvg}")`,
+          backgroundRepeat: "repeat-x",
+          backgroundSize: "80px 30px",
+          animation: "footer-ruler-scroll 3s linear infinite",
+        }}
+      />
+    </div>
   );
 };
 
@@ -289,8 +298,8 @@ const FooterSection = () => {
           </div>
         </div>
 
-        {/* Línea de regla decorativa */}
-        <div className="w-10/12 mx-auto mt-10">
+        {/* Línea de regla decorativa: a todo lo ancho de la pantalla */}
+        <div className="mt-10">
           <RulerLine />
         </div>
 

@@ -5,11 +5,11 @@ import PropertyMap from "./PropertyMap";
 
 const Hero = () => {
   return (
-    <div className="h-[85svh] w-full bg-rose-50 flex items-center justify-center font-poppins relative">
-      <div className="w-11/12 flex items-center justify-center">
+    <div className="md:h-[85svh] h-full w-full bg-[#FFF8F7] flex items-center justify-center font-poppins relative pb-40 md:pb-0">
+      <div className="w-11/12 flex items-center justify-center flex-col md:flex-row mt-10 md:mt-0">
         {/* left */}
-        <div className="w-[55%] ml-28">
-          <div className="flex items-center gap-2">
+        <div className="w-11/12 md:w-[55%] ml-0 md:ml-28 pb-16 md:pb-0">
+          <div className="flex items-center gap-2 justify-center md:justify-start">
             <div className="w-10 h-6 flex flex-col gap-1 items-end justify-center">
               <div className="h-0.5 w-3 bg-black"></div>
               <div className="h-0.5 w-6 bg-rose-600"></div>
@@ -39,7 +39,7 @@ const Hero = () => {
             </button>
           </div>
 
-          <div className="bg-white rounded-md flex items-center gap-2 px-3 py-2 mt-4 w-min">
+          <div className="bg-white rounded-md flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-2 px-3 py-2 mt-10 md:mt-4 w-full md:w-min">
             <div>
               <p className="text-black text-sm font-semibold select-none">
                 Keyword
@@ -51,7 +51,7 @@ const Hero = () => {
               />
             </div>
 
-            <div className="w-px h-8 bg-black/20 mr-5" />
+            <div className="w-px h-8 bg-black/20 mr-5 md:flex hidden" />
 
             <div>
               <p className="text-black text-sm font-semibold select-none">
@@ -64,7 +64,7 @@ const Hero = () => {
               />
             </div>
 
-            <div className="w-px h-8 bg-black/20 mr-5" />
+            <div className="w-px h-8 bg-black/20 mr-5 md:flex hidden" />
 
             <div>
               <p className="text-black text-sm font-semibold select-none">
@@ -77,7 +77,7 @@ const Hero = () => {
               />
             </div>
 
-            <div className="w-px h-8 bg-black/20 mr-5" />
+            <div className="w-px h-8 bg-black/20 mr-5 md:flex hidden" />
 
             <div className="flex items-center gap-4">
               <button className="relative flex items-center gap-2 px-4 bg-gray-100 text-black h-9 rounded-md cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-black before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0">
@@ -94,9 +94,9 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="mt-10 flex items-center gap-16">
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 items-center gap-16">
             <div>
-              <p className="text-5xl font-semibold text-black">1950 +</p>
+              <p className="text-4xl font-semibold text-black">1950+</p>
               <div className="flex flex-col mt-2">
                 <p className="text-black/50">Project</p>
                 <p className="text-black/50">Handover</p>
@@ -104,7 +104,7 @@ const Hero = () => {
             </div>
 
             <div>
-              <p className="text-5xl font-semibold text-black">2M +</p>
+              <p className="text-4xl font-semibold text-black">2M +</p>
               <div className="flex flex-col mt-2">
                 <p className="text-black/50">Monthly</p>
                 <p className="text-black/50">Visitors</p>
@@ -112,7 +112,7 @@ const Hero = () => {
             </div>
 
             <div>
-              <p className="text-5xl font-semibold text-black">850 +</p>
+              <p className="text-4xl font-semibold text-black">850 +</p>
               <div className="flex flex-col mt-2">
                 <p className="text-black/50">Property</p>
                 <p className="text-black/50">Ready</p>
@@ -120,7 +120,7 @@ const Hero = () => {
             </div>
 
             <div>
-              <p className="text-5xl font-semibold text-black">98 %</p>
+              <p className="text-4xl font-semibold text-black">98 %</p>
               <div className="flex flex-col mt-2">
                 <p className="text-black/50">Happy</p>
                 <p className="text-black/50">Customers</p>
@@ -130,14 +130,14 @@ const Hero = () => {
         </div>
 
         {/* right */}
-        <div className="w-[45%]">
+        <div className="w-11/12 md:w-[45%]">
           <div className="w-full h-150">
             <PropertyMap />
           </div>
         </div>
       </div>
 
-      <div className="animate-spin absolute left-8 bottom-8 [animation-duration:5s]">
+      <div className="animate-spin absolute md:left-8 md:bottom-8 bottom-4 left-4 [animation-duration:5s]">
         <VscStarFull className="text-7xl text-black" />
       </div>
     </div>

@@ -36,7 +36,7 @@ const NeighborhoodCard = ({ item, className = "" }) => (
       alt={item.city}
       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+    <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
 
     <div className="absolute bottom-6 left-6 text-white">
       <p className="text-sm font-medium mb-1">{item.count}</p>
@@ -75,19 +75,16 @@ const NeighborhoodsSection = () => {
         </div>
 
         {/* Bento grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-2 gap-6 h-auto lg:h-[600px]">
-          <NeighborhoodCard
-            item={big}
-            className="row-span-2 h-[400px] lg:h-auto"
-          />
-          <NeighborhoodCard item={wide} className="h-[280px] lg:h-auto" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-2 gap-6 h-auto lg:h-150">
+          <NeighborhoodCard item={big} className="row-span-2 h-100 lg:h-auto" />
+          <NeighborhoodCard item={wide} className="h-70 lg:h-auto" />
 
           <div className="grid grid-cols-2 gap-6">
             {small.map((item) => (
               <NeighborhoodCard
                 key={item.id}
                 item={item}
-                className="h-[220px] lg:h-auto"
+                className="h-55 lg:h-auto"
               />
             ))}
           </div>

@@ -100,32 +100,34 @@ const TestimonialsSection = () => {
 
   return (
     <div className="w-full bg-white py-16">
-      <div className="w-10/12 mx-auto grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-16 items-start">
+      <div className="w-10/12 mx-auto grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-16 items-start h-120">
         <TrustScorePanel />
 
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-px bg-red-500" />
-            <h3 className="text-red-500 text-sm font-semibold">Testimonials</h3>
-            <div className="w-8 h-px bg-red-500" />
-          </div>
-          <h2 className="text-4xl font-bold text-gray-900 mt-2">
-            What Clients Say About Pillar
-          </h2>
-
-          <span className="block text-red-200 text-6xl font-serif leading-none mt-8">
-            &ldquo;
-          </span>
-
-          <div className="space-y-6 mt-2">
-            {testimonial.quotes.map((quote, i) => (
-              <p
-                key={i}
-                className="text-xl font-semibold text-gray-900 leading-relaxed"
-              >
-                &ldquo;{quote}&rdquo;
-              </p>
-            ))}
+        <div className="flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-px bg-red-500" />
+              <h3 className="text-red-500 text-sm font-semibold">
+                Testimonials
+              </h3>
+              <div className="w-8 h-px bg-red-500" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mt-2">
+              What Clients Say About Pillar
+            </h2>
+            <span className="block text-red-200 text-6xl font-serif leading-none mt-8">
+              &ldquo;
+            </span>
+            <div className="space-y-6 mt-2">
+              {testimonial.quotes.map((quote, i) => (
+                <p
+                  key={i}
+                  className="text-xl font-semibold text-gray-900 leading-relaxed"
+                >
+                  &ldquo;{quote}&rdquo;
+                </p>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center justify-between border-t border-gray-200 mt-8 pt-6">

@@ -84,7 +84,7 @@ const PulsingPlayButton = ({ onClick }) => (
 
     {/* Botón central */}
     <span className="relative z-10 w-16 h-16 rounded-full bg-white/25 backdrop-blur-sm border border-white/70 flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
-      <PiPlayFill className="text-white text-2xl ml-1" />
+      <PiPlayFill className="text-white text-2xl absolute left-5" />
     </span>
   </button>
 );
@@ -136,12 +136,12 @@ const FeaturedPropertyHero = () => {
       <div className="absolute inset-0 bg-black/10" />
 
       {/* Botón de play con ondas expansivas */}
-      <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-40">
+      <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-96">
         <PulsingPlayButton onClick={() => setIsVideoOpen(true)} />
       </div>
 
       {/* Panel de información */}
-      <div className="absolute top-[8%] left-0 lg:left-[6%] w-full max-w-md bg-stone-50 shadow-xl p-10">
+      <div className="absolute top-[20%] left-0 lg:left-[6%] w-full max-w-md bg-stone-50 shadow-xl p-10">
         <div className="flex items-center gap-2">
           <div className="w-8 h-px bg-red-500" />
           <h3 className="text-red-500 text-sm font-semibold">

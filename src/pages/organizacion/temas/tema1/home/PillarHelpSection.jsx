@@ -100,29 +100,35 @@ const HelpCard = ({ item, index }) => {
   const number = String(index + 1).padStart(2, "0");
 
   return (
-    <div
-      className="relative bg-white h-full flex flex-col p-8 pt-9"
-      style={{
-        clipPath: "polygon(0 0, 82% 0, 100% 18%, 100% 100%, 0 100%)",
-        boxShadow: "0 20px 40px -20px rgba(0,0,0,0.12)",
-      }}
-    >
-      <span className="absolute top-4 right-6 text-5xl font-extrabold text-gray-200 select-none">
-        {number}
-      </span>
+    // Wrapper SIN clip-path: aquí vive el número, para que no quede recortado
+    // junto con el resto de la card. Al no tener overflow-hidden, puede
+    // "sobresalir" libremente sobre el doblez de la esquina.
+    <div className="relative h-full">
+      <div
+        className="bg-white h-full flex flex-col p-8 pt-9 rounded-md"
+        style={{
+          clipPath: "polygon(0 0, 60% 0, 100% 40%, 100% 100%, 0 100%)",
+          boxShadow: "0 20px 40px -20px rgba(0,0,0,0.12)",
+        }}
+      >
+        <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-6">
+          <Icon className="text-3xl text-red-500" />
+        </div>
 
-      <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-6">
-        <Icon className="text-3xl text-red-500" />
+        <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+        <p className="text-gray-500 text-sm leading-relaxed mb-8">
+          {item.description}
+        </p>
+
+        <button className="mt-auto self-start text-sm font-semibold px-6 py-3 rounded-md border border-gray-200 text-black hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors">
+          {item.button}
+        </button>
       </div>
 
-      <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-      <p className="text-gray-500 text-sm leading-relaxed mb-8">
-        {item.description}
-      </p>
-
-      <button className="mt-auto self-start text-sm font-semibold px-6 py-3 rounded-lg border border-gray-200 text-gray-900 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors">
-        {item.button}
-      </button>
+      {/* Número: hermano del div recortado, no un hijo -> no se clipea */}
+      <span className="absolute -top-2 right-4 text-5xl font-extrabold text-black select-none pointer-events-none z-10">
+        {number}
+      </span>
     </div>
   );
 };
@@ -186,8 +192,10 @@ const PillarHelpSection = () => {
             </h2>
           </div>
 
-          <button className="text-sm font-medium px-5 py-2.5 rounded-lg border border-gray-300 text-gray-900 hover:border-gray-900 transition-colors whitespace-nowrap">
-            View All Amenities
+          <button className="relative flex items-center gap-2 px-5 py-2 bg-transparent text-black border-black/20 border rounded-md cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-[#FF1B1C] before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 w-44">
+            <p className="relative z-10 group-hover:text-white transition-colors duration-300">
+              View all amenities
+            </p>
           </button>
         </div>
 
@@ -205,7 +213,7 @@ const PillarHelpSection = () => {
             {items.map((item, index) => (
               <div
                 key={index}
-                className="flex-shrink-0"
+                className="shrink-0 relative"
                 style={{
                   width: `calc(${100 / itemsPerView}% - ${(32 * (itemsPerView - 1)) / itemsPerView}px)`,
                 }}
@@ -217,7 +225,7 @@ const PillarHelpSection = () => {
         </div>
 
         {/* Dots */}
-        <div className="flex justify-center gap-3 mt-14">
+        <div className="flex justify-center gap-3 mt-14 select-none">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
@@ -225,7 +233,7 @@ const PillarHelpSection = () => {
               className={`transition-all duration-200 rounded-full ${
                 index === scrollIndex
                   ? "w-3 h-3 bg-red-500"
-                  : "w-2.5 h-2.5 bg-white border border-gray-300 hover:border-red-400"
+                  : "w-3 h-3 bg-white border border-gray-300 hover:border-red-400"
               }`}
               aria-label={`Ir a la posición ${index + 1}`}
             />

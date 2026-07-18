@@ -38,7 +38,7 @@ const RulerStrip = () => {
   `);
 
   return (
-    <div className="w-full h-10 bg-stone-100 overflow-hidden">
+    <div className="w-full h-10 overflow-hidden">
       <style>{`
         @keyframes ruler-scroll {
           from { background-position-x: 0; }
@@ -143,20 +143,20 @@ const MiniPropertyCard = () => (
 );
 
 const PhoneMockup = () => (
-  <div className="relative mx-auto w-[280px]">
+  <div className="relative mx-auto w-70">
     {/* Anillos decorativos detrás del teléfono */}
     <div className="absolute -inset-16 -z-10 flex items-center justify-center">
-      <div className="w-[420px] h-[420px] rounded-full border border-gray-200" />
+      <div className="w-150 h-150 rounded-full border border-gray-200" />
     </div>
     <div className="absolute -inset-6 -z-10 flex items-center justify-center">
-      <div className="w-[340px] h-[340px] rounded-full border border-gray-200" />
+      <div className="w-85 h-85 rounded-full border border-gray-200" />
     </div>
 
     <Asterisk className="absolute -right-10 top-1/2 -translate-y-1/2 w-10 h-10 text-red-500" />
 
     {/* Marco del teléfono */}
-    <div className="rounded-[2.5rem] border-[10px] border-gray-900 bg-gray-900 shadow-2xl overflow-hidden">
-      <div className="bg-white h-[560px] overflow-hidden relative">
+    <div className="rounded-[2.5rem] border-10 border-gray-900 bg-gray-900 shadow-2xl overflow-hidden">
+      <div className="bg-white h-140 overflow-hidden relative">
         {/* Header con imagen de fondo */}
         <div className="relative h-40">
           <img
@@ -211,7 +211,7 @@ const DownloadAppSection = () => (
     <div className="py-16">
       <div className="w-10/12 mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
         {/* Columna izquierda: collage de fotos */}
-        <div className="relative h-[480px] hidden lg:block">
+        <div className="relative h-120 hidden lg:block">
           <Squiggle className="absolute left-0 top-8" />
 
           <div className="absolute top-8 left-16 w-64 h-64 rounded-full overflow-hidden shadow-lg">
@@ -222,9 +222,9 @@ const DownloadAppSection = () => (
             />
           </div>
 
-          <Asterisk className="absolute left-56 top-[300px] w-8 h-8 text-red-500 z-10" />
+          <Asterisk className="absolute left-56 top-75 w-8 h-8 text-red-500 z-10" />
 
-          <div className="absolute left-0 top-[300px] w-44 h-44 rounded-full overflow-hidden shadow-lg">
+          <div className="absolute left-0 top-75 w-44 h-44 rounded-full overflow-hidden shadow-lg">
             <img
               src="https://i.pravatar.cc/500?img=47"
               alt="Persona usando el celular"
@@ -232,7 +232,7 @@ const DownloadAppSection = () => (
             />
           </div>
 
-          <div className="absolute left-40 top-[280px] w-52 h-52 rounded-full overflow-hidden shadow-lg">
+          <div className="absolute left-40 top-70 w-52 h-52 rounded-full overflow-hidden shadow-lg">
             <img
               src="https://i.pravatar.cc/500?img=59"
               alt="Persona usando el celular"

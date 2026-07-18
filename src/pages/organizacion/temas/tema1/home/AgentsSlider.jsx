@@ -64,7 +64,7 @@ const AgentCard = ({ agent }) => {
     >
       {/* Marco en forma de casa */}
       <div
-        className={`relative h-[380px] overflow-hidden transition-colors duration-300 ${
+        className={`relative h-95 overflow-hidden transition-colors duration-300 ${
           isHovered ? "bg-red-100" : "bg-stone-100"
         }`}
         style={{ clipPath: HOUSE_CLIP_PATH }}

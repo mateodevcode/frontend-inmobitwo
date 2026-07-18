@@ -14,7 +14,7 @@ const QR_PATTERN = [
 ];
 
 const FakeQrCode = () => (
-  <div className="grid grid-cols-7 gap-[1px] w-11 h-11 bg-white p-1 rounded-sm">
+  <div className="grid grid-cols-7 gap-px w-11 h-11 bg-white p-1 rounded-sm">
     {QR_PATTERN.flat().map((cell, i) => (
       <div key={i} className={cell ? "bg-black" : "bg-white"} />
     ))}

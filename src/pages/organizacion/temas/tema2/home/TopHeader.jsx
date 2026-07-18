@@ -52,7 +52,7 @@ const MobileContactCarousel = () => {
 
 const TopHeader = () => {
   return (
-    <div className="bg-[#FFF8F7] h-12 flex items-center justify-center w-full font-poppins">
+    <div className="bg-transparent h-12 flex items-center justify-center w-full font-poppins backdrop-blur-sm">
       <div className="flex items-center justify-between w-10/12">
         {/* Mobile: carrusel vertical (email <-> teléfono) */}
         <MobileContactCarousel />
@@ -61,13 +61,13 @@ const TopHeader = () => {
         <div className="hidden md:flex items-center gap-8 flex-row">
           <div className="flex items-center gap-2">
             <IoIosMail className="text-[#FF1B1C]" />
-            <p className="text-black/80 text-xs hover:text-rose-600 transition duration-300 cursor-pointer select-none">
+            <p className="text-white/80 text-xs hover:text-rose-600 transition duration-300 cursor-pointer select-none">
               infomailexample@gmail.com
             </p>
           </div>
           <div className="flex items-center gap-2">
             <RiPhoneFill className="text-[#FF1B1C]" />
-            <p className="text-black/80 text-xs hover:text-rose-600 transition duration-300 cursor-pointer select-none">
+            <p className="text-white/80 text-xs hover:text-rose-600 transition duration-300 cursor-pointer select-none">
               + 00 (123) 456 789 00
             </p>
           </div>
@@ -76,21 +76,21 @@ const TopHeader = () => {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <a href="/" target="_blank">
-              <FaWhatsapp className="text-black hover:text-[#FF1B1C] duration-500 transition" />
+              <FaWhatsapp className="text-white hover:text-[#FF1B1C] duration-500 transition" />
             </a>
             <a href="/" target="_blank">
-              <GrFacebookOption className="text-black hover:text-[#FF1B1C] duration-500 transition" />
+              <GrFacebookOption className="text-white hover:text-[#FF1B1C] duration-500 transition" />
             </a>
             <a href="/" target="_blank">
-              <FaInstagram className="text-black hover:text-[#FF1B1C] duration-500 transition" />
+              <FaInstagram className="text-white hover:text-[#FF1B1C] duration-500 transition" />
             </a>
           </div>
-          <div className="w-px h-5 bg-black/20 md:flex hidden" />
+          <div className="w-px h-5 bg-white/20 md:flex hidden" />
           <div className="items-center gap-1 md:flex hidden">
-            <p className="text-black/80 text-xs cursor-pointer select-none hover:text-black">
+            <p className="text-white/80 text-xs cursor-pointer select-none hover:text-black">
               English
             </p>
-            <MdOutlineKeyboardArrowDown className="text-black/80" />
+            <MdOutlineKeyboardArrowDown className="text-white/80" />
           </div>
         </div>
       </div>

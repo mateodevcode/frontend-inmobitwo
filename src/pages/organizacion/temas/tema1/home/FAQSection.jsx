@@ -43,7 +43,7 @@ const Squiggle = () => (
 
 const SkylineBackground = () => (
   <svg
-    className="absolute bottom-0 left-0 w-[420px] h-[260px] text-gray-900 opacity-[0.06] pointer-events-none"
+    className="absolute bottom-0 left-0 w-105 h-65 text-gray-900 opacity-[0.06] pointer-events-none"
     viewBox="0 0 420 260"
     fill="none"
   >

@@ -126,7 +126,7 @@ const FeaturedPropertyHero = () => {
   );
 
   return (
-    <div className="relative w-full h-[85vh] min-h-[600px] overflow-hidden">
+    <div className="relative w-full h-[85vh] min-h-150 overflow-hidden">
       {/* Imagen de fondo */}
       <img
         src={slide.image}

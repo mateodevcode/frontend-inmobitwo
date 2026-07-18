@@ -198,7 +198,7 @@ const GetInTouchSection = () => (
     <div className="w-10/12 mx-auto">
       {/* Ya NO tiene overflow-hidden: solo posiciona. El recorte/redondeado
           vive únicamente en la imagen, así el form puede sobresalir libre. */}
-      <div className="relative h-[540px]">
+      <div className="relative h-135">
         <img
           src="https://picsum.photos/id/1076/1600/1000"
           alt="Propiedad destacada"

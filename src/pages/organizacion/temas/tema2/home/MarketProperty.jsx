@@ -1,11 +1,4 @@
-import {
-  Briefcase,
-  House,
-  MessageSquareText,
-  Smile,
-  Play,
-  Tag,
-} from "lucide-react";
+import { Briefcase, House, MessageSquareText, Smile, Play } from "lucide-react";
 
 const HOUSE_IMAGE =
   "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?fm=jpg&q=80&w=1600&auto=format&fit=crop";
@@ -93,9 +86,6 @@ export default function MarketProperty() {
             alt="Real estate agent"
             className="h-full w-auto object-cover object-top"
           />
-          <div className="absolute top-6 right-2 w-9 h-9 rounded-full bg-[#FF1B1C] flex items-center justify-center shadow-lg shadow-black/20">
-            <Tag size={16} className="text-white" />
-          </div>
         </div>
       </div>
     </section>

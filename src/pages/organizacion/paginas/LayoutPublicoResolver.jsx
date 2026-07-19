@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useOrganizaciones from "@/hooks/useOrganizaciones.js";
 import { getTema } from "@/pages/organizacion/temas/temaRegistry.js";
+import Loading from "../temas/loading/Loading";
 
 const LayoutPublicoResolver = () => {
   const { slug } = useParams();
@@ -25,7 +26,7 @@ const LayoutPublicoResolver = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
-  if (loading) return <div className="py-20 text-center">Cargando...</div>;
+  if (loading) return <Loading logo="/logo/logo-hor.png" type="opcion2" />;
 
   if (notFound) {
     return (

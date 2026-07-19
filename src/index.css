@@ -64,3 +64,14 @@
  html {
   scroll-behavior: smooth;
 }
+
+
+/* Paleta de colores */
+/* White     #FFFFFF   → fondo principal (dominante)
+Graphite  #303036   → texto, navbar, footer
+Red       #FF1B1C   → acento primario — CTA principal, botón "Buscar", tab activo
+Sapphire  #5465FF   → acento secundario — links, hover states, badges, "Alquilar"
+Black     #050401   → texto de máximo contraste (títulos grandes) */
+
+
+/* #125F06 */

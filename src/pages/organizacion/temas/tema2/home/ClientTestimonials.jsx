@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUp, Star, Building2, Home } from "lucide-react";
+import { ArrowLeft, ArrowRight, Star, Building2, Home } from "lucide-react";
 
 const TESTIMONIALS = [
   {
@@ -109,7 +109,9 @@ function TestimonialCard({ item, active }) {
           />
           <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-neutral-900 flex items-center justify-center gap-0.5">
             <Star size={8} className="text-amber-400 fill-amber-400" />
-            <span className="text-white text-[9px] font-semibold">{item.rating}</span>
+            <span className="text-white text-[9px] font-semibold">
+              {item.rating}
+            </span>
           </div>
         </div>
       </div>
@@ -142,7 +144,10 @@ export default function ClientTestimonials() {
   return (
     <section
       className="relative bg-[#F4F0EB] py-20 overflow-hidden font-sans"
-      style={{ backgroundImage: `url("${HEX_PATTERN_URL}")`, backgroundRepeat: "repeat" }}
+      style={{
+        backgroundImage: `url("${HEX_PATTERN_URL}")`,
+        backgroundRepeat: "repeat",
+      }}
     >
       <div className="text-center mb-14 px-6">
         <div className="flex items-center justify-center gap-3 mb-4">
@@ -163,7 +168,11 @@ export default function ClientTestimonials() {
         style={{ scrollbarWidth: "none" }}
       >
         {TESTIMONIALS.map((item, i) => (
-          <TestimonialCard key={item.name} item={item} active={i === activeIndex} />
+          <TestimonialCard
+            key={item.name}
+            item={item}
+            active={i === activeIndex}
+          />
         ))}
       </div>
 
@@ -193,16 +202,6 @@ export default function ClientTestimonials() {
           <ArrowRight size={16} />
         </button>
       </div>
-
-      {/* Global scroll-to-top affordance, shown here as this section's page tail */}
-      <button
-        type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="Scroll to top"
-        className="absolute bottom-6 right-6 lg:right-10 w-11 h-11 rounded-full bg-[#FF1B1C] text-white flex items-center justify-center shadow-lg shadow-black/20 hover:bg-[#e01617] transition-colors duration-200"
-      >
-        <ArrowUp size={18} />
-      </button>
     </section>
   );
 }

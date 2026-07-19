@@ -1,6 +1,7 @@
 // src/pages/organizacion/temas/tema1/Home.jsx
 import { useOutletContext } from "react-router-dom";
 import usePropiedadesOrganizacionData from "@/hooks/usePropiedadesOrganizacionData.js";
+import Loading from "../loading/Loading";
 
 const Home = () => {
   const organizacionContext = useOutletContext();
@@ -17,7 +18,7 @@ const Home = () => {
   }
 
   if (loading && propiedades.length === 0) {
-    return <div className="py-20 text-center">Cargando...</div>;
+    return <Loading logo="/logo/logo-hor.png" type="opcion2" />;
   }
 
   return (

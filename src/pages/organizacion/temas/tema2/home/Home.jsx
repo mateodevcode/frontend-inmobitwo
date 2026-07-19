@@ -19,7 +19,7 @@ const Home = () => {
     <div className="m-h-svh">
       <div className="relative">
         <div
-          className="relative h-svh bg-cover bg-center flex flex-col bg-amber-300"
+          className="relative h-full bg-cover bg-center flex flex-col bg-amber-300"
           style={{ backgroundImage: `url(${HERO_IMAGE})` }}
         >
           <div className="absolute inset-0 bg-linear-to-r from-[#0b0f16] via-[#0b0f16]/70 to-transparent" />

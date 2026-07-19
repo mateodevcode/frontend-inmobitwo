@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import useOrganizaciones from "@/hooks/useOrganizaciones.js";
 import OrganizacionNav from "./OrganizacionNav.jsx";
+import Loading from "../temas/loading/Loading.jsx";
 
 const OrganizacionPublicaLayout = () => {
   const { slug } = useParams();
@@ -29,7 +30,7 @@ const OrganizacionPublicaLayout = () => {
   }, [slug]);
 
   if (loading) {
-    return <div className="py-20 text-center">Cargando...</div>;
+    return <Loading logo="/logo/logo-hor.png" type="opcion2" />;
   }
 
   if (notFound) {

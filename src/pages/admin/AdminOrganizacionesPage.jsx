@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useOrganizaciones from "@/hooks/useOrganizaciones.js";
+import Loading from "../organizacion/temas/loading/Loading";
 
 const ESTADOS = ["pendiente", "aprobada", "suspendida"];
 
@@ -60,7 +61,7 @@ const AdminOrganizacionesPage = () => {
       </div>
 
       {loading ? (
-        <p>Cargando...</p>
+        <Loading logo="/logo/logo-hor.png" type="opcion2" />
       ) : organizaciones.length === 0 ? (
         <p className="text-gray-400">No hay organizaciones en este estado.</p>
       ) : (

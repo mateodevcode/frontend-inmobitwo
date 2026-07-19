@@ -29,6 +29,7 @@ import ListaPruebaPropiedades from "../pages/ListaPruebaPropiedades";
 import PagePropiedadId from "../pages/PagePropiedadId";
 import MisFavoritos from "../pages/MisFavoritos";
 import AdminRutasPage from "../pages/admin/AdminRutasPages";
+import PageInicio from "../pages/inicio/PagePrincipal";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -64,6 +65,7 @@ const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
+        <Route path="/" element={<PageInicio />} />
 
         <Route
           path="/info/publicar-anuncio"
@@ -140,7 +142,7 @@ const AppRouter = () => {
         />
 
         <Route
-          path="/"
+          path="/feed"
           element={
             <RutaPrivada>
               <Home />

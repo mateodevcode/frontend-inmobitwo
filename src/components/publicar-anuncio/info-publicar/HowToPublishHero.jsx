@@ -20,10 +20,10 @@ export function HowToPublishHero() {
   ];
 
   return (
-    <section className="bg-rose-100 py-10">
-      <div className="mx-auto w-11/12 md:w-8/12 flex flex-col gap-8 rounded-lg bg-white p-8 md:flex-row md:items-center md:justify-between md:gap-12 shadow-lg shadow-black/20">
+    <section className="bg-septimo py-10">
+      <div className="mx-auto w-11/12 md:w-8/12 flex flex-col gap-8 rounded-lg bg-white p-10 md:flex-row md:items-center md:justify-between md:gap-12 shadow-lg shadow-black/20">
         <div className="flex-1">
-          <h1 className="mb-6 text-3xl font-bold text-slate-900 md:text-4xl">
+          <h1 className="mb-6 text-3xl font-bold text-slate-900 md:text-3xl">
             Cómo poner un anuncio en inmobitwo
           </h1>
 
@@ -47,11 +47,13 @@ export function HowToPublishHero() {
           </p>
 
           <button
+            className="relative flex items-center justify-center gap-2 px-8 bg-black text-white h-11 cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-tercero before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 rounded-md w-full"
             type="button"
             onClick={() => navigate("/info/publicar-anuncio/publicar")}
-            className="rounded-md bg-rose-600 px-6 py-3.5 text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none w-full"
           >
-            Pon tu anuncio
+            <p className="text-base relative z-10 group-hover:text-white transition-colors duration-300 font-semibold">
+              Pon tu anuncio
+            </p>
           </button>
 
           <p className="mt-5 text-base text-slate-900">

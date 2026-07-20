@@ -11,6 +11,8 @@ function hashId(id) {
 }
 
 export function getColorForOrg(id, namespace = "") {
+  if (id === "" || id === null || !id) return;
+
   const hue = hashId(namespace + id) % 360;
   return {
     backgroundColor: `hsl(${hue}, 60%, 75%)`,

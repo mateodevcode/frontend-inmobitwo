@@ -10,6 +10,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { items_menu } from "@/data/items_menu";
+import { irArriba } from "@/utils/irArriba";
 
 const ModalHamburguesa = () => {
   const {
@@ -107,7 +108,7 @@ const ModalHamburguesa = () => {
                           onClick={() => {
                             setOpenModalHamburguesa(false);
                             navigate(`/usuario/${item.id}`);
-                            window.scrollTo(0, 0);
+                            irArriba();
                           }}
                         >
                           <div className="flex items-center gap-4">

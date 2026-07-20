@@ -41,7 +41,7 @@ export default function MarketProperty() {
       <div className="relative w-full grid grid-cols-1 lg:grid-cols-[0.9fr_1fr_0.55fr] items-center gap-10 py-14 px-0">
         {/* Left: blob-shaped video image */}
         <div
-          className="relative h-[420px] md:h-[560px] overflow-hidden"
+          className="relative h-105 md:h-140 overflow-hidden"
           style={{ borderRadius: "0 260px 260px 0" }}
         >
           <img
@@ -80,7 +80,7 @@ export default function MarketProperty() {
         </div>
 
         {/* Right: agent portrait */}
-        <div className="relative hidden lg:flex justify-center items-end h-[560px] pr-6">
+        <div className="relative hidden lg:flex justify-center items-end h-140 pr-6">
           <img
             src={AGENT_IMAGE}
             alt="Real estate agent"

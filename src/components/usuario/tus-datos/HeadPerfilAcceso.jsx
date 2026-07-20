@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { irArriba } from "@/utils/irArriba";
 
 const HeadPerfilAcceso = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const HeadPerfilAcceso = () => {
           className={`relative cursor-pointer ${segmento === "perfil" ? 'after:content-[""] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-1 after:bg-[#FF1B1C] after:rounded-md' : ""}`}
           onClick={() => {
             navigate("/usuario/tus-datos/perfil");
-            window.scrollTo(0, 0);
+            irArriba();
           }}
         >
           <p
@@ -30,7 +31,7 @@ const HeadPerfilAcceso = () => {
           className={`relative cursor-pointer ${segmento === "acceso" ? 'after:content-[""] after:absolute after:-bottom-1.5 after:left-0 after:w-full after:h-1 after:bg-[#FF1B1C] after:rounded-md' : ""}`}
           onClick={() => {
             navigate("/usuario/tus-datos/acceso");
-            window.scrollTo(0, 0);
+            irArriba();
           }}
         >
           <p

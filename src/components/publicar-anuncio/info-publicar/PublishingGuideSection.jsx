@@ -3,7 +3,7 @@ import { NumberedStep } from "./NumberedStep";
 export function PublishingGuideSection() {
   return (
     <section className="py-14">
-      <div className="w-10/12 mx-auto">
+      <div className="w-9/12 mx-auto">
         <h2 className="mb-2 text-3xl font-bold text-slate-900">
           ¿Qué pasos seguir para publicar tu anuncio como propietario
           particular?

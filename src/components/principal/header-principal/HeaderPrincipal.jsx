@@ -4,6 +4,7 @@ import InputSearchPrincipal from "./InputSearchPrincipal";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
+import { irArriba } from "@/utils/irArriba";
 
 const HeaderPrincipal = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const HeaderPrincipal = () => {
         type="button"
         onClick={() => {
           navigate("/info/publicar-anuncio");
-          window.scrollTo(0, 0);
+          irArriba();
         }}
       >
         <FaPlus className="text-sm" />

@@ -3,7 +3,7 @@ import { AdvantageColumn } from "./AdvantageColumn";
 export function AdvantagesSection() {
   return (
     <section className="py-10">
-      <div className="w-10/12 mx-auto">
+      <div className="w-9/12 mx-auto">
         <h2 className="mb-8 text-3xl font-bold text-slate-900">
           Ventajas de publicar en inmobitwo
         </h2>

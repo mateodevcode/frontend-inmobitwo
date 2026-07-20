@@ -7,21 +7,21 @@ export const items_menu = [
   {
     label: "Mis anuncios",
     id: "mis-anuncios",
-    icon: <LuBuilding2 className="text-2xl" />,
+    icon: <LuBuilding2 className="text-xl" />,
   },
   {
     label: "Favoritos",
     id: "favoritos",
-    icon: <FaRegHeart className="text-2xl" />,
+    icon: <FaRegHeart className="text-xl" />,
   },
   {
     label: "Chat",
     id: "chat",
-    icon: <IoChatboxEllipsesOutline className="text-2xl" />,
+    icon: <IoChatboxEllipsesOutline className="text-xl" />,
   },
   {
     label: "Notificaciones",
     id: "notificaciones",
-    icon: <IoMdNotificationsOutline className="text-2xl" />,
+    icon: <IoMdNotificationsOutline className="text-xl" />,
   },
 ];

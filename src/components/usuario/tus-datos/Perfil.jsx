@@ -11,6 +11,7 @@ import { apiBackend } from "@/api/apiBackend.js";
 import useUsuarios from "@/hooks/useUsuarios";
 import { mapearApiAFormDataUsuario } from "@/hooks/useResetForm";
 import { useNavigate } from "react-router-dom";
+import { irArriba } from "@/utils/irArriba";
 
 const Perfil = () => {
   const {
@@ -200,7 +201,7 @@ const Perfil = () => {
                 className="text-lg font-semibold text-blue-700 hover:text-blue-600 cursor-pointer select-none active:scale-95 duration-75 transition mt-2"
                 onClick={() => {
                   navigate("/usuario/tus-datos/acceso");
-                  window.scrollTo(0, 0);
+                  irArriba();
                 }}
               >
                 Modificar contraseña y email

@@ -8,6 +8,7 @@ import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 import SinAnuncios from "@/components/usuario/tus-anuncios/SinAnuncios";
 import { useEffect } from "react";
 import usePropiedades from "../hooks/usePropiedades";
+import { irArriba } from "@/utils/irArriba";
 
 const MisAnuncios = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const MisAnuncios = () => {
                 block: "start",
               });
               navigate("/info/publicar-anuncio");
-              window.scrollTo(0, 0);
+              irArriba();
             }}
             className="rounded-md bg-rose-600 px-6 py-2 text-lg md:text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
           >

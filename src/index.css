@@ -6,6 +6,15 @@
   --font-mono: ui-monospace, Consolas, monospace;
   --font-montserrat: 'Montserrat', system-ui, sans-serif;
   --font-poppins: 'Poppins', system-ui, sans-serif;
+    /* Colores paleta */
+  --color-primero: #FFFFFF;
+  --color-segundo: #050401;
+  --color-tercero: #FF1B1C;
+  --color-cuarto: #303036;
+  --color-quinto: #5465FF;
+  --color-sexto: #125F06;  
+  --color-septimo: #FFF0F3;
+  /* Paleta de colores */
 }
 :root {
   --text: #6b6375;
@@ -23,6 +32,9 @@
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+
+
+
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -75,3 +87,5 @@ Black     #050401   → texto de máximo contraste (títulos grandes) */
 
 
 /* #125F06 */
+
+

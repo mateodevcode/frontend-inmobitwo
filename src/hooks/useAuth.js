@@ -131,7 +131,7 @@ const useAuth = () => {
 
     resetFormDataPropiedad();
     limpiarPropiedades();
-    navigate("/");
+    navigate("/login");
   };
 
   return {

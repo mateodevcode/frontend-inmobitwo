@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import usePropiedades from "@/hooks/usePropiedades";
 import SkeletonDetalleAnuncio from "./SkeletonDetalleAnuncio";
 import useTracking from "../../../../hooks/useTracking";
+import { irArriba } from "@/utils/irArriba";
 
 const DetalleDeAnuncio = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ const DetalleDeAnuncio = () => {
             className="font-semibold text-blue-700 flex items-center gap-4 cursor-pointer select-none hover:text-blue-600"
             onClick={() => {
               navigate("/usuario/mis-anuncios");
-              window.scrollTo(0, 0);
+              irArriba();
             }}
           >
             <MdOutlineKeyboardDoubleArrowLeft className="text-4xl" />

@@ -3,7 +3,7 @@ import { ServiceCard } from "./ServiceCard";
 export function ServicesSection() {
   return (
     <section className="bg-slate-100 py-14">
-      <div className="mx-auto w-10/12">
+      <div className="mx-auto w-9/12">
         <h2 className="mb-8 text-3xl font-bold text-slate-900">
           Algunos servicios para facilitarte la venta o alquiler de tu inmueble
         </h2>

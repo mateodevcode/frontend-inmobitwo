@@ -4,6 +4,7 @@ import useFavoritos from "@/hooks/useFavoritos";
 import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoAlertCircle } from "react-icons/io5";
+import { irArriba } from "@/utils/irArriba";
 
 const ListaFavoritos = ({ propiedades }) => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const ListaFavoritos = ({ propiedades }) => {
                     className="text-xl text-blue-500 font-semibold hover:underline text-center mt-6 cursor-pointer select-none"
                     onClick={() => {
                       navigate(`/info/publicar-anuncio/publicar?id=${pro.id}`);
-                      window.scrollTo(0, 0);
+                      irArriba();
                     }}
                   >
                     Añadir tus fotos para recibir más contactos
@@ -107,7 +108,7 @@ const ListaFavoritos = ({ propiedades }) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/propiedades/${pro.id}`);
-                      window.scrollTo(0, 0);
+                      irArriba();
                     }}
                   >
                     Ver propiedad

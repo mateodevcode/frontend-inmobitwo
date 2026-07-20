@@ -1,25 +1,6 @@
 import { useNavigate } from "react-router-dom";
-
-const cards = [
-  {
-    id: "zonas",
-    image: "/home/multizone-large.webp",
-    title: "Seleccionar zonas en el mapa",
-    description:
-      "Puedes buscar al mismo tiempo en varias zonas seleccionándolas directamente en el mapa.",
-    linkLabel: "Empezar a seleccionar zonas",
-    linkUrl: "#",
-  },
-  {
-    id: "publicar",
-    image: "/home/put-property-large.jpg",
-    title: "Publicar tu inmueble",
-    description:
-      "Tus 2 primeros anuncios son gratis. Casas, habitaciones, oficinas... ¡Todo cabe!",
-    linkLabel: "Poner tu anuncio",
-    linkUrl: "/info/publicar-anuncio",
-  },
-];
+import { cards } from "@/data/infocards";
+import { irArriba } from "@/utils/irArriba";
 
 const InfoCards = () => {
   const navigate = useNavigate();
@@ -46,7 +27,10 @@ const InfoCards = () => {
                 {card.description}
               </p>
               <button
-                onClick={() => navigate("/info/publicar-anuncio")}
+                onClick={() => {
+                  navigate(card.linkUrl);
+                  irArriba();
+                }}
                 className="text-sky-700 text-xs md:text-sm font-medium hover:underline w-fit"
               >
                 {card.linkLabel}

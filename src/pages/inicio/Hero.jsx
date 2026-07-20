@@ -48,7 +48,7 @@ const Hero = ({
                 onClick={() => setTab("comprar")}
                 className={`px-5 h-11 text-sm font-semibold border transition-colors ${
                   tab === "comprar"
-                    ? "bg-white text-[#303036] border-[#303036]"
+                    ? "bg-white text-tercero border-tercero"
                     : "bg-white/60 text-black/70 border-black/10"
                 }`}
               >
@@ -58,7 +58,7 @@ const Hero = ({
                 onClick={() => setTab("alquilar")}
                 className={`px-5 h-11 text-sm font-semibold border transition-colors ${
                   tab === "alquilar"
-                    ? "bg-white text-[#303036] border-[#303036]"
+                    ? "bg-white text-tercero border-tercero"
                     : "bg-white/60 text-black/70 border-black/10"
                 }`}
               >
@@ -83,8 +83,7 @@ const Hero = ({
             </div>
 
             {/* Botón buscar */}
-
-            <button className="relative flex items-center gap-2 px-8 bg-black text-white h-11 cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-[#FF1B1C] before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 w-28">
+            <button className="relative flex items-center gap-2 px-8 bg-black text-white h-11 cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-tercero before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 w-28">
               <p className="text-sm relative z-10 group-hover:text-white transition-colors duration-300 font-semibold">
                 Buscar
               </p>

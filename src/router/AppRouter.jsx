@@ -30,6 +30,7 @@ import PagePropiedadId from "../pages/PagePropiedadId";
 import MisFavoritos from "../pages/MisFavoritos";
 import AdminRutasPage from "../pages/admin/AdminRutasPages";
 import PageInicio from "../pages/inicio/PagePrincipal";
+import EnConstruccion from "../components/en-construccion/EnConstruccion";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -66,7 +67,11 @@ const AppRouter = () => {
       <Routes>
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
         <Route path="/" element={<PageInicio />} />
+        <Route path="/" element={<PageInicio />} />
+        {/* En construccion */}
+        /busqueda-multizona/venta-viviendas
 
+        <Route path="/busqueda-multizona/venta-viviendas" element={<EnConstruccion />} />
         <Route
           path="/info/publicar-anuncio"
           element={
@@ -123,7 +128,6 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
         <Route
           path="/login"
           element={
@@ -140,7 +144,6 @@ const AppRouter = () => {
             </RutaPublica>
           }
         />
-
         <Route
           path="/feed"
           element={
@@ -173,10 +176,8 @@ const AppRouter = () => {
             </RutaPrivada>
           }
         />
-
         {/* ────────────── Organizaciones (multi-tenant) ────────────── */}
         {rutasOrganizacion}
-
         <Route
           path="/admin"
           element={
@@ -193,7 +194,6 @@ const AppRouter = () => {
             </RutaAdmin>
           }
         />
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

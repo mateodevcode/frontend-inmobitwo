@@ -3,6 +3,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import usePropiedades from "@/hooks/usePropiedades";
 import { useState } from "react";
+import { irArriba } from "@/utils/irArriba";
 
 const ListaAnuncios = ({ propiedades }) => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const ListaAnuncios = ({ propiedades }) => {
                     className="text-xl text-blue-500 font-semibold hover:underline text-center mt-6 cursor-pointer select-none"
                     onClick={() => {
                       navigate(`/info/publicar-anuncio/publicar?id=${pro.id}`);
-                      window.scrollTo(0, 0);
+                      irArriba();
                     }}
                   >
                     Añadir tus fotos para recibir más contactos
@@ -96,7 +97,7 @@ const ListaAnuncios = ({ propiedades }) => {
                     className="text-xl font-semibold text-blue-700 hover:underline cursor-pointer select-none active:scale-95 duration-75 transition"
                     onClick={() => {
                       navigate(`/usuario/mis-anuncios/anuncio/${pro.id}`);
-                      window.scrollTo(0, 0);
+                      irArriba();
                     }}
                   >
                     Gestionar tu anuncio

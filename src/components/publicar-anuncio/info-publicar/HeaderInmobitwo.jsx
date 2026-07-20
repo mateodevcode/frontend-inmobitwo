@@ -1,36 +1,42 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
-import { logo } from "@/data/logo";
 import { getInitials } from "@/lib/getInitials";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { items_menu } from "@/data/items_menu";
+import { irArriba } from "@/utils/irArriba";
+import { getColorForOrg } from "@/lib/getRandomTailwindColors";
 
 const HeaderInmobitwo = () => {
   const { usuario, openModalHamburguesa, setOpenModalHamburguesa } =
     useAppContext();
+  const color = getColorForOrg(usuario.id, usuario.name);
   const navigate = useNavigate();
   const location = useLocation();
   const segmento = location.pathname.split("/usuario/")[1];
 
   return (
-    <header className="bg-stone-50 flex items-center w-full justify-between">
-      <div className="flex items-center w-11/12 justify-between mx-auto">
+    <header className="bg-white flex items-center w-full justify-between">
+      <div className="flex items-center w-9/12 justify-between mx-auto">
         <div
-          className="py-5 flex items-center gap-4 cursor-pointer select-none"
+          className="flex items-center gap-2 select-none py-5"
           onClick={() => {
             navigate("/");
-            window.scrollTo(0, 0);
+            irArriba();
           }}
         >
-          <div className="border-black/10 border rounded-xl w-10 h-10 flex items-center justify-center shadow-xl">
-            <img src={logo.src} alt={logo.alt} width={25} height={25} />
+          <div className="w-9 h-9">
+            <img
+              src="/logo/logo.png"
+              alt="logo inmobitwo"
+              className="object-center w-full h-full"
+            />
           </div>
-          <span className="font-montserrat text-2xl font-bold tracking-tight text-black md:text-3xl">
+          <span className="text-2xl md:text-3xl tracking-tight text-black font-bold font-poppins">
             inmobitwo
           </span>
         </div>
-        <nav className="items-center gap-2 md:gap-10 font-semibold flex">
-          <div className="hidden md:flex items-center gap-6">
+        <div className="items-center gap-2 md:gap-8 font-semibold flex">
+          <nav className="hidden md:flex items-center gap-6">
             {items_menu.slice(0, 3).map((item, i) => {
               return (
                 <div
@@ -38,20 +44,24 @@ const HeaderInmobitwo = () => {
                   onClick={() => navigate(`/usuario/${item.id}`)}
                   key={i}
                 >
-                  <div className="text-lg">{item.icon}</div>
-                  <div>{item.label}</div>
+                  <div className="">{item.icon}</div>
+                  <div className="text-sm">{item.label}</div>
                 </div>
               );
             })}
-          </div>
+          </nav>
 
-          <div className="flex gap-2 items-center">
+          <div
+            className="flex gap-2 items-center relative"
+            onClick={() => {
+              navigate("/usuario/tus-datos/perfil");
+              irArriba();
+            }}
+          >
+            <div className="hover:bg-segundo/5 absolute inset-0 rounded-full z-20" />
             <div
-              className="w-10 h-10 text-rose-400 bg-rose-200 p-4 rounded-full font-semibold flex items-center justify-center hover:shadow shadow-black/10 cursor-pointer select-none active:scale-95 duration-75 transition"
-              onClick={() => {
-                navigate("/usuario/tus-datos/perfil");
-                window.scrollTo(0, 0);
-              }}
+              className="w-9 h-9 p-4 rounded-full font-semibold flex items-center justify-center hover:shadow shadow-black/10 cursor-pointer select-none active:scale-95 duration-75 transition hover:bg-black text-sm"
+              style={color}
             >
               {getInitials(usuario?.name)}
             </div>
@@ -65,7 +75,7 @@ const HeaderInmobitwo = () => {
           >
             <RxHamburgerMenu className="text-2xl text-black" />
           </button>
-        </nav>
+        </div>
       </div>
     </header>
   );

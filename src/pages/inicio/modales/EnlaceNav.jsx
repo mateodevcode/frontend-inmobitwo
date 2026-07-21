@@ -56,7 +56,7 @@ export default function EnlaceNav({
       ? "absolute top-full left-0 mt-2 w-64 rounded-md shadow-lg border border-black/10 bg-white overflow-hidden"
       : `fixed left-0 right-0 ${
           scrolled ? "top-14" : "top-20"
-        } h-svh bg-white shadow-lg border-b overflow-hidden`;
+        } h-[50svh] bg-white shadow-lg border-b overflow-hidden`;
 
   return (
     <div className="relative inline-block">

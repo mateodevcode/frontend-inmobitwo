@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
-import { logo } from "@/data/logo";
+import { irArriba } from "../../utils/irArriba";
 
 const steps = [
   { id: 0, label: "1. Datos básicos" },
@@ -16,24 +16,36 @@ const HeaderPublicarAnuncio = () => {
     <>
       {/* Barra del logo */}
       <div
-        className="bg-stone-50 cursor-pointer select-none"
+        className="bg-primero cursor-pointer select-none"
         id="top-detalles"
         onClick={() => navigate("/")}
       >
-        <div className="px-6 py-5 md:px-10 flex items-center gap-4">
-          <div className="border-black/10 border rounded-xl w-10 h-10 flex items-center justify-center shadow-xl">
-            <img src={logo.src} alt={logo.alt} width={25} height={25} />
+        <div className="w-full flex items-center justify-center">
+          <div
+            className="flex items-center gap-2 select-none py-5 w-11/12"
+            onClick={() => {
+              navigate("/");
+              irArriba();
+            }}
+          >
+            <div className="w-9 h-9">
+              <img
+                src="/logo/logo.png"
+                alt="logo inmobitwo"
+                className="object-center w-full h-full"
+              />
+            </div>
+            <span className="text-2xl md:text-3xl tracking-tight text-black font-bold font-poppins">
+              inmobitwo
+            </span>
           </div>
-          <span className="font-montserrat text-2xl font-bold tracking-tight text-black md:text-3xl">
-            inmobitwo
-          </span>
         </div>
       </div>
 
       {/* Navegación de pasos con flechas */}
       <nav
         aria-label="Progreso del anuncio"
-        className="flex w-full border-b border-neutral-200 bg-white font-poppins sticky top-0 z-50"
+        className="flex w-full border-b border-t border-neutral-200 bg-white font-poppins sticky top-0 z-50"
       >
         {steps.map((step, index) => {
           const isActive = step.id === contentNumber;

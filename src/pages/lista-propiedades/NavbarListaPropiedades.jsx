@@ -5,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import { getInitials } from "@/lib/getInitials";
 import { getColorForOrg } from "@/lib/getRandomTailwindColors";
-import EnlaceNav from "./modales/EnlaceNav";
+import EnlaceNav from "@/pages/inicio/modales/EnlaceNav";
 import { irArriba } from "../../utils/irArriba";
 
-const NavbarHome = () => {
+const NavbarListaPropiedades = () => {
   const { usuario, openModalUser, setOpenModalUser } = useAppContext();
   const navigate = useNavigate();
   const color = getColorForOrg(usuario?.id, usuario?.name);
 
   return (
     <div className="bg-white w-full border-b border-black/5 font-poppins">
-      <div className="mx-auto w-11/12 md:w-9/12 h-20 flex items-center justify-between">
+      <div className="mx-auto w-[90%] 2xl:w-10/12 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           {/* Logo */}
           <div
@@ -111,4 +111,4 @@ const NavbarHome = () => {
   );
 };
 
-export default NavbarHome;
+export default NavbarListaPropiedades;

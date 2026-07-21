@@ -31,6 +31,8 @@ import MisFavoritos from "../pages/MisFavoritos";
 import AdminRutasPage from "../pages/admin/AdminRutasPages";
 import PageInicio from "../pages/inicio/PagePrincipal";
 import EnConstruccion from "../components/en-construccion/EnConstruccion";
+import PropertySearchScreen from "../pages/PropertySearchScreen";
+import ListaPropiedades from "../pages/lista-propiedades/ListaPropiedades";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -70,8 +72,10 @@ const AppRouter = () => {
         <Route path="/" element={<PageInicio />} />
         {/* En construccion */}
         /busqueda-multizona/venta-viviendas
-
-        <Route path="/busqueda-multizona/venta-viviendas" element={<EnConstruccion />} />
+        <Route
+          path="/busqueda-multizona/venta-viviendas"
+          element={<EnConstruccion />}
+        />
         <Route
           path="/info/publicar-anuncio"
           element={
@@ -193,6 +197,14 @@ const AppRouter = () => {
               <AdminRutasPage />
             </RutaAdmin>
           }
+        />
+        {/* ──────────────────────────────────────────────────────────── */}
+        {/* NUEVA RUTA DINÁMICA DE BÚSQUEDA SINO RESTRICCIONES (TIPO IDEALISTA) */}
+        {/* Captura URLs como /arriendo-apartamentos/bogota-dc */}
+        {/* ──────────────────────────────────────────────────────────── */}
+        <Route
+          path="/:operationAndType/:cityAndDepartment"
+          element={<ListaPropiedades />}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

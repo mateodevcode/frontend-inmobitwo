@@ -3,7 +3,7 @@ import { BsFillGeoAltFill } from "react-icons/bs";
 const FiltrosPrincipal = () => {
   return (
     <div className="w-[25%] h-svh bg-primero p-6">
-      <div className="w-full h-80 flex flex-col">
+      <div className="w-full h-60 2xl:h-80 flex flex-col">
         <div className="w-full h-full border border-black/40 border-b-transparent rounded-sm">
           <img
             src="/tema/tema1/mapa.png"

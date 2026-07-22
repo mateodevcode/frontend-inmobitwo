@@ -31,6 +31,7 @@ const Hero = ({
   const navigate = useNavigate();
   const [tab, setTab] = useState("comprar"); // "comprar" | "alquilar"
   const [tipo, setTipo] = useState("Viviendas");
+  const [query, setQuery] = useState("");
 
   // Estado para capturar la geolocalización seleccionada desde el autocompletado
   const [selectedGeo, setSelectedGeo] = useState({
@@ -106,11 +107,20 @@ const Hero = ({
             <SelectorTipo value={tipo} onChange={setTipo} />
 
             {/* Pasamos la función actualizadora de geolocalización al input de búsqueda */}
-            <InputSearchPrincipal onGeoSelect={setSelectedGeo} />
+            <InputSearchPrincipal
+              onGeoSelect={setSelectedGeo}
+              setQuery={setQuery}
+              query={query}
+            />
 
             <button
               onClick={handleSearchSubmit}
-              className="relative flex items-center gap-2 px-8 bg-black text-white h-11 cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-tercero before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 w-28"
+              disabled={!selectedGeo || query.trim() === ""}
+              className={`relative flex items-center gap-2 px-8 h-11 select-none overflow-hidden group before:absolute before:inset-0 before:bg-tercero before:w-0 before:transition-all before:duration-500 before:ease-in-out before:z-0 w-28 ${
+                !selectedGeo || query.trim() === ""
+                  ? "bg-black/40 text-white/60 cursor-not-allowed before:hidden"
+                  : "bg-black text-white cursor-pointer hover:before:w-full"
+              }`}
             >
               <p className="text-sm relative z-10 group-hover:text-white transition-colors duration-300 font-semibold">
                 Buscar

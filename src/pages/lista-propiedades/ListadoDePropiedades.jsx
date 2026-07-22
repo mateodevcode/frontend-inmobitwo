@@ -72,7 +72,7 @@ const ListadoDePropiedades = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-[65%] bg-primero h-full rounded-r-md relative pb-2 flex flex-col justify-between">
+              <div className="w-[65%] bg-primero h-full rounded-r-md relative pb-3 flex flex-col justify-between">
                 <div className="flex flex-col">
                   {/* Head */}
                   <div className="flex items-center justify-between w-full">

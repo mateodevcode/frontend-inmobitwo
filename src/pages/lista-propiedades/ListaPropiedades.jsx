@@ -5,13 +5,20 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { MdArrowDropDown } from "react-icons/md";
 import { IoNotificationsSharp } from "react-icons/io5";
 import { SiOpenstreetmap } from "react-icons/si";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListadoDePropiedades from "./ListadoDePropiedades";
 
 const ListaPropiedades = () => {
   const tabs = ["Comprar", "Alquilar", "Vacacional"];
   const [selected, setSelected] = useState(tabs[0]);
   const [hovered, setHovered] = useState(null);
+
+  useEffect(() => {
+    const logWidth = () => console.log("Ancho actual:", window.innerWidth);
+    logWidth(); // log inicial
+    window.addEventListener("resize", logWidth);
+    return () => window.removeEventListener("resize", logWidth);
+  }, []);
 
   return (
     <div className="flex items-center flex-col w-full font-poppins">

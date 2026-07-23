@@ -1,27 +1,25 @@
-// src/hooks/usePropertySearch.js
 import { useState, useEffect } from "react";
-import { apiBackend } from "@/api/apiBackend.js";
+import { apiBackend } from "@/api/apiBackend";
+import { MAPPING_OPERACIONES, MAPPING_TIPOS } from "@/data/mappings_busqueda";
 
-export function usePropertySearch(searchParams) {
+export function usePropertySearch({ operationSlug, typeSlug, citySlug, deptSlug }) {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const operationDb = MAPPING_OPERACIONES[operationSlug] || operationSlug;
+  const typeDb = MAPPING_TIPOS[typeSlug] || typeSlug;
+
   useEffect(() => {
-    if (!searchParams) {
-      setProperties([]);
-      setError(null);
-      return;
-    }
+    if (!operationDb || !typeDb || !deptSlug) return;
 
     let cancelled = false;
 
-    async function fetchPropertiesData() {
+    async function fetchProperties() {
       setLoading(true);
       setError(null);
 
-      // Consumimos el nuevo endpoint enviando los slugs indexados
-      const endpoint = `/propiedades/search-slugs?operation=${searchParams.operation}&type=${searchParams.propertyType}&city=${searchParams.citySlug}&dept=${searchParams.departmentSlug}`;
+      const endpoint = `/propiedades/search-slugs?operation=${operationDb}&type=${typeDb}&city=${citySlug || ""}&dept=${deptSlug}`;
 
       const res = await apiBackend(endpoint, "GET");
 
@@ -37,12 +35,12 @@ export function usePropertySearch(searchParams) {
       setLoading(false);
     }
 
-    fetchPropertiesData();
+    fetchProperties();
 
     return () => {
       cancelled = true;
     };
-  }, [searchParams]);
+  }, [operationDb, typeDb, citySlug, deptSlug]);
 
   return { properties, loading, error };
 }

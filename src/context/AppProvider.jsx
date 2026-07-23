@@ -1,5 +1,5 @@
 // src/context/AppProvider.jsx
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
 import { getSessionId } from "@/utils/getSessionId.js";
@@ -124,6 +124,14 @@ export const AppProvider = ({ children }) => {
       setCargandoGlobal(false);
     }
   }, []);
+
+  // Cargar organizaciones del usuario al iniciar sesión
+  useEffect(() => {
+    if (!usuario?.id) return;
+    apiBackend("/organizaciones/mias").then((res) => {
+      if (res.success) setOrganizaciones(res.data ?? []);
+    });
+  }, [usuario?.id]);
 
   // ─────────────────────────────────────────────
   // TRACKING / CONSENTIMIENTO RGPD

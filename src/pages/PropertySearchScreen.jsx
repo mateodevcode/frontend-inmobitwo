@@ -40,7 +40,7 @@ const MAPPING_OPERACIONES = {
 };
 
 const MAPPING_TIPOS = {
-  viviendas: "piso", // 👈 LOGRA EL MATCH DIRECTO: "viviendas" en URL -> "piso" en DB
+  viviendas: "piso,chalet,rustica",
   habitaciones: "habitacion",
   oficinas: "oficina",
   locales: "local",

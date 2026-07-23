@@ -1,35 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
-import { SiOpenstreetmap } from "react-icons/si";
-import { FaDrawPolygon } from "react-icons/fa";
-import { IoMdLocate } from "react-icons/io";
 import { apiBackend } from "@/api/apiBackend";
-
-const SUGGESTIONS = [
-  {
-    id: "select-zone",
-    label: "Seleccionar zonas en mapa",
-    icon: SiOpenstreetmap,
-    route: "/hola",
-  },
-  {
-    id: "draw-zone",
-    label: "Dibujar tu zona",
-    icon: FaDrawPolygon,
-    route: "/hola",
-  },
-  {
-    id: "around-me",
-    label: "Buscar a tu alrededor",
-    icon: IoMdLocate,
-    route: "/hola",
-  },
-];
+import { BsGeoAlt } from "react-icons/bs";
+import ModalSuggestionsMenu from "./ModalSuggestionsMenu";
 
 const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
-  const navigate = useNavigate();
-
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -92,12 +67,21 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
     }
   }, [activeIndex]);
 
-  const handleSelectCity = (city) => {
-    setQuery(`${city.city_name}, ${city.state_name}`);
-    onGeoSelect({
-      citySlug: city.city_slug,
-      departmentSlug: city.state_slug,
-    });
+  const handleSelectResult = (item) => {
+    if (item.tipo === "region") {
+      setQuery(item.region_name);
+      onGeoSelect({ type: "region", regionSlug: item.region_slug });
+    } else if (item.tipo === "departamento") {
+      setQuery(item.state_name);
+      onGeoSelect({ type: "departamento", departmentSlug: item.state_slug });
+    } else {
+      setQuery(`${item.city_name}, ${item.state_name}`);
+      onGeoSelect({
+        type: "ciudad",
+        citySlug: item.city_slug,
+        departmentSlug: item.state_slug,
+      });
+    }
     setIsOpen(false);
     setActiveIndex(-1);
   };
@@ -124,7 +108,7 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (activeIndex >= 0 && results[activeIndex]) {
-        handleSelectCity(results[activeIndex]);
+        handleSelectResult(results[activeIndex]);
       }
     } else if (e.key === "Escape") {
       setIsOpen(false);
@@ -148,25 +132,7 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
       </div>
 
       {isOpen && showSuggestionsMenu && (
-        <div className="absolute z-50 left-0 right-0 -mt-0.5 bg-white border border-black/10 shadow-lg">
-          <ul className="py-1">
-            {SUGGESTIONS.map(({ id, label, icon: Icon, route }) => (
-              <li key={id}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                    navigate(route);
-                  }}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-black/80 hover:bg-tercero/3 transition-colors cursor-pointer"
-                >
-                  <Icon className="text-lg text-black/60 shrink-0" />
-                  <span>{label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ModalSuggestionsMenu setIsOpen={setIsOpen} />
       )}
 
       {isOpen && showResultsMenu && (
@@ -180,23 +146,47 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
           )}
 
           {!loading && results.length > 0 && (
-            <ul className="py-1">
-              {results.map((city, index) => (
-                <li key={city.id} ref={(el) => (itemRefs.current[index] = el)}>
+            <ul className="">
+              {results.map((item, index) => (
+                <li key={`${item.tipo}-${item.id}`} ref={(el) => (itemRefs.current[index] = el)}>
                   <button
                     type="button"
-                    onClick={() => handleSelectCity(city)}
+                    onClick={() => handleSelectResult(item)}
                     onMouseEnter={() => setActiveIndex(index)}
-                    className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors cursor-pointer ${
+                    className={`flex flex-col w-full items-start px-4 py-3 text-left text-sm transition-colors cursor-pointer border-b border-segundo/10 ${
                       activeIndex === index
                         ? "bg-tercero/10 text-black"
                         : "text-black/80 hover:bg-tercero/3"
                     }`}
                   >
-                    <SiOpenstreetmap className="text-lg text-black/60 shrink-0" />
-                    <span>
-                      {city.city_name}, {city.state_name}
+                    <span className="font-medium">
+                      {item.tipo === "region" && item.region_name}
+                      {item.tipo === "departamento" && (
+                        <>
+                          {item.state_name}
+                          {item.region_name && (
+                            <span className="text-black/40 font-normal">
+                              , {item.region_name}
+                            </span>
+                          )}
+                        </>
+                      )}
+                      {item.tipo === "ciudad" && (
+                        <>
+                          {item.city_name}, {item.state_name}
+                        </>
+                      )}
                     </span>
+                    <div className="text-xs text-segundo/60 mt-0.5 flex items-center gap-2 justify-between w-full">
+                      <div className="flex items-center gap-2">
+                        <BsGeoAlt className="text-sm" />
+                        <span className="capitalize">{item.tipo}</span>
+                      </div>
+
+                      <span className="font-semibold">
+                        {item.total_propiedades}
+                      </span>
+                    </div>
                   </button>
                 </li>
               ))}

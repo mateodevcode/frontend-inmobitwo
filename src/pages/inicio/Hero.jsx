@@ -34,21 +34,24 @@ const Hero = ({
   const [query, setQuery] = useState("");
 
   // Estado para capturar la geolocalización seleccionada desde el autocompletado
-  const [selectedGeo, setSelectedGeo] = useState({
-    citySlug: "bogota", // Valor fallback por defecto
-    departmentSlug: "dc", // Valor fallback por defecto
-  });
+  const [selectedGeo, setSelectedGeo] = useState(null);
 
   const handleSearchSubmit = () => {
-    // 1. Obtener los equivalentes limpios para el SEO de la URL
+    if (!selectedGeo) return;
+
     const operationSlug = SLUGS_MAPPING[tab];
     const typeSlug = SLUGS_MAPPING[tipo] || "viviendas";
-
-    // 2. Unir los segmentos simulando el patrón estricto de Idealista
     const firstSegment = `${operationSlug}-${typeSlug}`;
-    const secondSegment = `${selectedGeo.citySlug}-${selectedGeo.departmentSlug}`;
 
-    // 3. Despachar la redirección a la ruta pública dinámica
+    let secondSegment;
+    if (selectedGeo.type === "region") {
+      secondSegment = selectedGeo.regionSlug;
+    } else if (selectedGeo.type === "departamento") {
+      secondSegment = selectedGeo.departmentSlug;
+    } else {
+      secondSegment = `${selectedGeo.citySlug}-${selectedGeo.departmentSlug}`;
+    }
+
     navigate(`/${firstSegment}/${secondSegment}`);
   };
 

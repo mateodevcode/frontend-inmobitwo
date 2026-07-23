@@ -8,7 +8,6 @@ const SLUGS_MAPPING = {
   // Operaciones
   comprar: "venta",
   alquilar: "arriendo",
-
   // Tipos (Traduce el texto visual del select al ID que espera la DB)
   Viviendas: "viviendas", // En la URL se verá "viviendas", pero el Front lo traducirá a "piso"
   Habitación: "habitacion", // Ajustado a tu ID real sin tilde
@@ -114,6 +113,7 @@ const Hero = ({
               onGeoSelect={setSelectedGeo}
               setQuery={setQuery}
               query={query}
+              operation={tab}
             />
 
             <button

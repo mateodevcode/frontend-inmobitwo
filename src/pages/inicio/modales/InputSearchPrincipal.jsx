@@ -4,7 +4,7 @@ import { apiBackend } from "@/api/apiBackend";
 import { BsGeoAlt } from "react-icons/bs";
 import ModalSuggestionsMenu from "./ModalSuggestionsMenu";
 
-const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
+const InputSearchPrincipal = ({ onGeoSelect, query, setQuery, operation }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,8 +28,9 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
     setLoading(true);
 
     debounceRef.current = setTimeout(async () => {
+      const operacionDb = operation === "alquilar" ? "arriendo" : "venta";
       const res = await apiBackend(
-        `/api/suggest-cities?q=${encodeURIComponent(text)}`,
+        `/api/suggest-cities?q=${encodeURIComponent(text)}&operation=${operacionDb}`,
       );
 
       if (res.success) {
@@ -42,7 +43,7 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery }) => {
     }, 300);
 
     return () => clearTimeout(debounceRef.current);
-  }, [query]);
+  }, [query, operation]);
 
   useEffect(() => {
     if (!isOpen) return;

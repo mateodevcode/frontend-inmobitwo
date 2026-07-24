@@ -1,7 +1,8 @@
 export const MAPPING_OPERACIONES = {
-  arriendo: "arriendo",
+  comprar: "venta",
   venta: "venta",
-  alquiler: "arriendo",
+  alquilar: "alquiler",
+  alquiler: "alquiler",
 };
 
 export const MAPPING_TIPOS = {
@@ -14,6 +15,7 @@ export const MAPPING_TIPOS = {
   edificios: "edificio",
   "casa-o-chalet": "chalet",
   "casa-rustica": "rustica",
+  trasteros: "trastero",
   "obra-nueva": "obra-nueva",
   vacacional: "vacacional",
 };

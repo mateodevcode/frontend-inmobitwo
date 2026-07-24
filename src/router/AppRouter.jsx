@@ -199,8 +199,8 @@ const AppRouter = () => {
           }
         />
         {/* ──────────────────────────────────────────────────────────── */}
-        {/* NUEVA RUTA DINÁMICA DE BÚSQUEDA SINO RESTRICCIONES (TIPO IDEALISTA) */}
-        {/* Captura URLs como /arriendo-apartamentos/bogota-dc */}
+        {/* NUEVA RUTA DINÁMICA DE BÚSQUEDA (TIPO IDEALISTA) */}
+        {/* Captura URLs como /alquiler-viviendas/barranquilla-atlantico */}
         {/* ──────────────────────────────────────────────────────────── */}
         <Route
           path="/:operationAndType/:cityAndDepartment"

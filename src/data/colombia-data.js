@@ -58,7 +58,7 @@ export const estadosPropiedad = [
   {
     value: "disponible",
     label: "🟢 Disponible",
-    descripcion: "Propiedad disponible para venta o arriendo",
+    descripcion: "Propiedad disponible para venta o alquiler",
   },
   {
     value: "arrendado",

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { apiBackend } from "@/api/apiBackend";
+import { MAPPING_TIPOS, MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 import { BsGeoAlt } from "react-icons/bs";
 import ModalSuggestionsMenu from "./ModalSuggestionsMenu";
 
-const InputSearchPrincipal = ({ onGeoSelect, query, setQuery, operation }) => {
+const InputSearchPrincipal = ({ onGeoSelect, query, setQuery, operation, tipo }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,9 +29,11 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery, operation }) => {
     setLoading(true);
 
     debounceRef.current = setTimeout(async () => {
-      const operacionDb = operation === "alquilar" ? "arriendo" : "venta";
+      const operacionDb = MAPPING_OPERACIONES[operation] || operation;
+      const typeDb = MAPPING_TIPOS[tipo?.slug] || tipo?.slug || "";
+      const typeParam = typeDb ? `&type=${typeDb}` : "";
       const res = await apiBackend(
-        `/api/suggest-cities?q=${encodeURIComponent(text)}&operation=${operacionDb}`,
+        `/api/suggest-cities?q=${encodeURIComponent(text)}&operation=${operacionDb}${typeParam}`,
       );
 
       if (res.success) {
@@ -43,7 +46,7 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery, operation }) => {
     }, 300);
 
     return () => clearTimeout(debounceRef.current);
-  }, [query, operation]);
+  }, [query, operation, tipo?.slug]);
 
   useEffect(() => {
     if (!isOpen) return;

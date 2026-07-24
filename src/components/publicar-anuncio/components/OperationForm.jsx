@@ -107,15 +107,17 @@ export default function OperationForm() {
             (opt) => opt.id === formDataPropiedad.operacion,
           ) ?? OPERATION_OPTIONS[0]
         }
-        onChange={(selectedOption) =>
+        onChange={(selectedOption) => {
+          const isVacacional = selectedOption.id === "alquiler-vacacional";
           setFormDataPropiedad({
             ...formDataPropiedad,
-            operacion: selectedOption.id,
-          })
-        }
+            operacion: isVacacional ? "alquiler" : selectedOption.id,
+            tipo: isVacacional ? "vacacional" : formDataPropiedad.tipo,
+          });
+        }}
         formDataPropiedad={formDataPropiedad}
       />
-      {formDataPropiedad.operacion === "alquiler" && (
+      {(formDataPropiedad.operacion === "alquiler" || formDataPropiedad.operacion === "alquiler-vacacional") && (
         <RentalTypeField value={rentalType} onChange={setRentalType} />
       )}
     </div>

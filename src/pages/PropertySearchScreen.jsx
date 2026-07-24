@@ -34,9 +34,8 @@ const customIcon = new L.Icon({
 
 // Diccionarios de traducción de Slugs de la URL a los términos exactos de tu Base de Datos
 const MAPPING_OPERACIONES = {
-  arriendo: "arriendo",
   venta: "venta",
-  alquiler: "arriendo",
+  alquiler: "alquiler",
 };
 
 const MAPPING_TIPOS = {
@@ -175,7 +174,7 @@ export default function PropertySearchScreen() {
                       ? Number(item.price).toLocaleString("es-CO")
                       : "Consultar"}
                     <span className="text-xs font-normal text-black/50">
-                      {item.operacion === "arriendo" ? " / mes" : ""}
+                      {item.operacion === "alquiler" ? " / mes" : ""}
                     </span>
                   </span>
                   <span className="text-xs px-2 py-1 bg-black/5 text-black/70 rounded-xs capitalize">

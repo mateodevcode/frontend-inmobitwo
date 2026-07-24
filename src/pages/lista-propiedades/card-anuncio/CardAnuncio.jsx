@@ -31,7 +31,7 @@ const TIPO_BADGE = {
 
 const OPERACION_LABEL = {
   venta: "Venta",
-  arriendo: "Alquiler",
+  alquiler: "Alquiler",
 };
 
 const CardAnuncio = ({ propiedad }) => {
@@ -51,15 +51,16 @@ const CardAnuncio = ({ propiedad }) => {
   const tipoLabel =
     TIPO_BADGE[propiedad?.tipo] || propiedad?.tipo || "Apartamento";
   const operacionLabel =
-    OPERACION_LABEL[propiedad?.operacion] ||
-    propiedad?.operacion ||
-    "Alquiler";
+    OPERACION_LABEL[propiedad?.operacion] || propiedad?.operacion || "Alquiler";
 
   const galeria = propiedad?.galeria || [];
 
   const imagenes = [
     imagenPrincipal,
-    ...galeria.slice().sort((a, b) => a.orden - b.orden).map((g) => g.url),
+    ...galeria
+      .slice()
+      .sort((a, b) => a.orden - b.orden)
+      .map((g) => g.url),
   ];
 
   const totalImagenes = imagenes.length;
@@ -87,7 +88,7 @@ const CardAnuncio = ({ propiedad }) => {
 
   return (
     <div className="flex items-center h-64 w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group">
-      <div className="w-[35%] h-full bg-amber-400 rounded-l-md relative overflow-hidden">
+      <div className="w-[35%] h-full bg-primero rounded-l-md relative overflow-hidden">
         <img
           src={imagenes[currentIndex]}
           alt={titulo}

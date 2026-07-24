@@ -1,26 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importación clave
+import { useNavigate } from "react-router-dom";
 import AnimatedTitle from "./AnimatedTitle";
 import InputSearchPrincipal from "./modales/InputSearchPrincipal";
 import SelectorTipo from "./modales/SelectorTipo";
+import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 
-const SLUGS_MAPPING = {
-  // Operaciones
-  comprar: "venta",
-  alquilar: "arriendo",
-  // Tipos (Traduce el texto visual del select al ID que espera la DB)
-  Viviendas: "viviendas", // En la URL se verá "viviendas", pero el Front lo traducirá a "piso"
-  Habitación: "habitacion", // Ajustado a tu ID real sin tilde
-  Vacacional: "vacacional",
-  Garajes: "garaje", // Ajustado a tu ID real en singular
-  Trasteros: "trastero", // Ajustado a tu ID real en singular
-  Oficinas: "oficina", // Ajustado a tu ID real en singular
-  "Locales o naves": "local", // Ajustado a tu ID real "local"
-  Traspasos: "traspaso",
-  Terrenos: "terreno", // Ajustado a tu ID real en singular
-  Edificios: "edificio", // Ajustado a tu ID real en singular
-  "Obra nueva": "obra-nueva",
-};
+const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
 
 const Hero = ({
   image = "/propiedades/chalet.jpg",
@@ -28,19 +13,16 @@ const Hero = ({
   propertyUrl = "#",
 }) => {
   const navigate = useNavigate();
-  const [tab, setTab] = useState("comprar"); // "comprar" | "alquilar"
-  const [tipo, setTipo] = useState("Viviendas");
+  const [tab, setTab] = useState("comprar");
+  const [tipo, setTipo] = useState(TIPO_DEFAULT);
   const [query, setQuery] = useState("");
-
-  // Estado para capturar la geolocalización seleccionada desde el autocompletado
   const [selectedGeo, setSelectedGeo] = useState(null);
 
   const handleSearchSubmit = () => {
     if (!selectedGeo) return;
 
-    const operationSlug = SLUGS_MAPPING[tab];
-    const typeSlug = SLUGS_MAPPING[tipo] || "viviendas";
-    const firstSegment = `${operationSlug}-${typeSlug}`;
+    const operationSlug = MAPPING_OPERACIONES[tab] || tab;
+    const firstSegment = `${operationSlug}-${tipo.slug}`;
 
     let secondSegment;
     if (selectedGeo.type === "region") {
@@ -85,7 +67,7 @@ const Hero = ({
           <div className="flex flex-col md:flex-row items-stretch gap-4">
             <div className="flex">
               <button
-                onClick={() => setTab("comprar")}
+                onClick={() => { setTab("comprar"); setTipo(TIPO_DEFAULT); }}
                 className={`px-5 h-11 text-sm font-semibold border transition-colors cursor-pointer ${
                   tab === "comprar"
                     ? "bg-tercero/10 text-tercero border-tercero"
@@ -95,7 +77,7 @@ const Hero = ({
                 Comprar
               </button>
               <button
-                onClick={() => setTab("alquilar")}
+                onClick={() => { setTab("alquilar"); setTipo(TIPO_DEFAULT); }}
                 className={`px-5 h-11 text-sm font-semibold border transition-colors cursor-pointer ${
                   tab === "alquilar"
                     ? "bg-tercero/10 text-tercero border-tercero"
@@ -106,14 +88,14 @@ const Hero = ({
               </button>
             </div>
 
-            <SelectorTipo value={tipo} onChange={setTipo} />
+            <SelectorTipo tab={tab} value={tipo} onChange={setTipo} />
 
-            {/* Pasamos la función actualizadora de geolocalización al input de búsqueda */}
             <InputSearchPrincipal
               onGeoSelect={setSelectedGeo}
               setQuery={setQuery}
               query={query}
               operation={tab}
+              tipo={tipo}
             />
 
             <button

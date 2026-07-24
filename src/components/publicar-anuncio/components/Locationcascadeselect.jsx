@@ -89,6 +89,14 @@ export default function LocationCascadeSelect({ onChange }) {
     state ? `/api/cities?stateId=${state.id}` : null,
   );
 
+  // Auto-seleccionar Colombia (por ahora solo país activo)
+  useEffect(() => {
+    if (countries.length > 0 && !country) {
+      const colombia = countries.find((c) => c.name === "Colombia");
+      if (colombia) setCountry(colombia);
+    }
+  }, [countries, country]);
+
   // Reset en cascada: cambiar país limpia provincia y ciudad
   function handleCountryChange(newCountry) {
     setCountry(newCountry);

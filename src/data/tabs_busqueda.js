@@ -7,13 +7,13 @@ export const TAB_COMPRAR = {
 export const TAB_ALQUILAR = {
   nombre: "Alquilar",
   id: "alquilar",
-  urlSegment: "arriendo-viviendas",
+  urlSegment: "alquiler-viviendas",
 };
 
 export const TAB_VACACIONAL = {
   nombre: "Vacacional",
   id: "vacacional",
-  urlSegment: "arriendo-vacacional",
+  urlSegment: "alquiler-vacacional",
 };
 
 export const TAB_OBRA_NUEVA = {
@@ -25,7 +25,7 @@ export const TAB_OBRA_NUEVA = {
 export function getSelectedId(operationSlug, typeSlug) {
   if (typeSlug === "vacacional") return "vacacional";
   if (typeSlug === "obra-nueva") return "obra-nueva";
-  if (operationSlug === "arriendo") return "alquilar";
+  if (operationSlug === "alquiler") return "alquilar";
   return "comprar";
 }
 
@@ -33,6 +33,6 @@ export function getTabs(operationSlug) {
   return [
     TAB_COMPRAR,
     TAB_ALQUILAR,
-    operationSlug === "arriendo" ? TAB_VACACIONAL : TAB_OBRA_NUEVA,
+    operationSlug === "alquiler" ? TAB_VACACIONAL : TAB_OBRA_NUEVA,
   ];
 }

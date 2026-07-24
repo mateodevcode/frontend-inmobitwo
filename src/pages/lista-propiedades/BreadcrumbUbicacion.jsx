@@ -8,11 +8,11 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
   if (!locationInfo) {
     return (
       <div className="flex items-center gap-2 mt-2 text-sm">
-        <div className="text-blue-600">inmobitwo</div>
+        <Link to="/" className="text-blue-600 hover:underline">
+          inmobitwo
+        </Link>
         <MdOutlineKeyboardArrowRight />
-        <div className="text-blue-600">
-          {geoSegment?.split("-").pop() || ""}
-        </div>
+        <div className="text-black">{geoSegment?.split("-").pop() || ""}</div>
         <div>
           <MdArrowDropDown />
         </div>
@@ -22,11 +22,14 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
 
   const esRegion = locationInfo.tipo === "region";
   const esDepto = locationInfo.tipo === "departamento";
+  const esCiudad = locationInfo.tipo === "ciudad";
   const tieneRegion = !esRegion && locationInfo.region_name;
 
   return (
     <div className="flex items-center gap-2 mt-2 text-sm">
-      <div className="text-blue-600">inmobitwo</div>
+      <Link to="/" className="text-blue-600 hover:underline">
+        inmobitwo
+      </Link>
 
       {tieneRegion && (
         <>
@@ -35,10 +38,10 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
             to={`/${firstSegment}/${locationInfo.region_slug}`}
             className="relative"
           >
-            <div className="text-blue-600 hover:underline cursor-pointer">
+            <div className="text-blue-600 hover:underline">
               {locationInfo.region_name}
             </div>
-            <div className="absolute top-6 text-blue-600 no-underline">
+            <div className="absolute top-6 text-black no-underline">
               {locationInfo.total_region?.toLocaleString() || ""}
             </div>
           </Link>
@@ -46,14 +49,14 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
       )}
 
       <MdOutlineKeyboardArrowRight />
-      {esRegion || esDepto ? (
+      {esDepto || esRegion ? (
         <div className="relative">
-          <div className="text-blue-600">
+          <div className="text-black">
             {esRegion
               ? locationInfo.region_name
               : locationInfo.state_name || geoSegment?.split("-").pop()}
           </div>
-          <div className="absolute top-6">
+          <div className="absolute top-6 text-black">
             {locationInfo.total_state_all?.toLocaleString() || ""}
           </div>
         </div>
@@ -62,22 +65,23 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
           to={`/${firstSegment}/${locationInfo.state_slug}`}
           className="relative"
         >
-          <div className="text-blue-600 hover:underline cursor-pointer">
+          <div className="text-blue-600 hover:underline">
             {locationInfo.state_name || geoSegment?.split("-").pop()}
           </div>
-          <div className="absolute top-6 text-blue-600 no-underline">
+          <div className="absolute top-6 text-black no-underline">
             {locationInfo.total_state_all?.toLocaleString() || ""}
           </div>
         </Link>
       )}
-      {locationInfo.tipo === "ciudad" && (
+
+      {esCiudad && (
         <>
           <MdOutlineKeyboardArrowRight />
           <div className="relative">
-            <div className="text-segundo">
+            <div className="text-black">
               {locationInfo.city_name || citySlug}
             </div>
-            <div className="absolute top-6">
+            <div className="absolute top-6 text-black">
               {locationInfo.total_city?.toLocaleString() || ""}
             </div>
           </div>

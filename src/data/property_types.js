@@ -4,11 +4,11 @@ export const PROPERTY_TYPES = [
     label: "Habitación en vivienda compartida",
     description: "vivienda compartida con más gente",
   },
-  // {
-  //   id: "vacacional",
-  //   label: "Alquiler vacacional",
-  //   description: "alquiler de corta estancia o de temporada, con Rentalia",
-  // },
+  {
+    id: "vacacional",
+    label: "Alquiler vacacional",
+    description: "alquiler de corta estancia o de temporada, con Rentalia",
+  },
   {
     id: "piso",
     label: "Piso",

@@ -30,9 +30,8 @@ import PagePropiedadId from "../pages/PagePropiedadId";
 import MisFavoritos from "../pages/MisFavoritos";
 import AdminRutasPage from "../pages/admin/AdminRutasPages";
 import PageInicio from "../pages/inicio/PagePrincipal";
-import EnConstruccion from "../components/en-construccion/EnConstruccion";
-import PropertySearchScreen from "../pages/PropertySearchScreen";
 import ListaPropiedades from "../pages/lista-propiedades/ListaPropiedades";
+import SeleccionarZonaPage from "../features/seleccionar-zona/index.jsx";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -70,12 +69,6 @@ const AppRouter = () => {
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
         <Route path="/" element={<PageInicio />} />
         <Route path="/" element={<PageInicio />} />
-        {/* En construccion */}
-        /busqueda-multizona/venta-viviendas
-        <Route
-          path="/busqueda-multizona/venta-viviendas"
-          element={<EnConstruccion />}
-        />
         <Route
           path="/info/publicar-anuncio"
           element={
@@ -202,6 +195,10 @@ const AppRouter = () => {
         {/* NUEVA RUTA DINÁMICA DE BÚSQUEDA (TIPO IDEALISTA) */}
         {/* Captura URLs como /alquiler-viviendas/barranquilla-atlantico */}
         {/* ──────────────────────────────────────────────────────────── */}
+        <Route
+          path="/busqueda-multizona/:operationAndType"
+          element={<SeleccionarZonaPage />}
+        />
         <Route
           path="/:operationAndType/:cityAndDepartment"
           element={<ListaPropiedades />}

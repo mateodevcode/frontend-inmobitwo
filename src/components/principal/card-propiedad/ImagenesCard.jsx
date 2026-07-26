@@ -91,7 +91,7 @@ const ImagenesCard = ({ propiedades }) => {
       <img
         src={imagenes[currentIndex]}
         alt={titulo}
-        onClick={() => navigate(`/propiedades/${id}`)}
+        onClick={() => navigate(`/inmueble/${id}`)}
         className="w-full h-72 object-cover cursor-pointer"
         style={{
           opacity: fade ? 1 : 0,

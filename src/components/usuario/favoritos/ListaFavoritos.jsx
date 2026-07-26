@@ -107,7 +107,7 @@ const ListaFavoritos = ({ propiedades }) => {
                     className="text-xl font-semibold text-blue-700 hover:underline cursor-pointer select-none active:scale-95 duration-75 transition"
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(`/propiedades/${pro.id}`);
+                      navigate(`/inmueble/${pro.id}`);
                       irArriba();
                     }}
                   >

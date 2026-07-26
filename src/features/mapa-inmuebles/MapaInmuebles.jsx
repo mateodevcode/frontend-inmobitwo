@@ -13,6 +13,8 @@ import {
   createZoomControl,
   createLocationControl,
 } from "@/features/seleccionar-zona/components/MapControls";
+import InputSearchZona from "../seleccionar-zona/components/InputSearchZona";
+import { useSelectZona } from "../seleccionar-zona/hooks/useSelectZona";
 
 export default function MapaInmuebles({
   lat,
@@ -29,11 +31,21 @@ export default function MapaInmuebles({
   const [selectedInmueble, setSelectedInmueble] = useState(null);
   const [imagenIndex, setImagenIndex] = useState(0);
   const markersMapRef = useRef(new Map());
+  const {
+    selectedZone,
+    setSelectedZone: selectZone,
+    clearZone,
+    propertyCount,
+  } = useSelectZona();
 
   // Reseteá el índice de imagen cada vez que cambia el inmueble seleccionado
   useEffect(() => {
     setImagenIndex(0);
   }, [selectedInmueble]);
+
+  const handleSelectZone = (zone, op, tipo) => {
+    selectZone(zone, op, tipo);
+  };
 
   useEffect(() => {
     markersMapRef.current?.forEach((marker, id) => {
@@ -175,20 +187,21 @@ export default function MapaInmuebles({
       {selectedInmueble && (
         <PropertyCard
           inmueble={selectedInmueble}
-          imagenIndex={imagenIndex}
-          onNext={() =>
-            setImagenIndex((i) =>
-              i < (selectedInmueble.imagenes?.length ?? 1) - 1 ? i + 1 : 0,
-            )
-          }
-          onPrev={() =>
-            setImagenIndex((i) =>
-              i > 0 ? i - 1 : (selectedInmueble.imagenes?.length ?? 1) - 1,
-            )
-          }
           onClose={() => setSelectedInmueble(null)}
         />
       )}
+
+      <div className="absolute top-3 right-4 z-1000">
+        <InputSearchZona
+          onSelectZone={(zone) =>
+            handleSelectZone(zone, operation, tipoInmueble)
+          }
+          operation={operation}
+          tipoInmueble={tipoInmueble}
+          className="w-80 border-2"
+          showX={true}
+        />
+      </div>
     </div>
   );
 }

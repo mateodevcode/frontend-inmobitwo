@@ -145,7 +145,7 @@ export default function PropertySearchScreen() {
             <div
               key={item.id}
               className="flex flex-col sm:flex-row border border-black/10 bg-white hover:shadow-md transition-shadow duration-300 rounded-sm overflow-hidden cursor-pointer group"
-              onClick={() => navigate(`/propiedades/${item.id}`)}
+              onClick={() => navigate(`/inmueble/${item.id}`)}
             >
               {/* Imagen */}
               <div className="w-full sm:w-44 h-40 bg-black/5 relative shrink-0">
@@ -222,7 +222,7 @@ export default function PropertySearchScreen() {
                         $ {Number(item.price).toLocaleString("es-CO")}
                       </p>
                       <button
-                        onClick={() => navigate(`/propiedades/${item.id}`)}
+                        onClick={() => navigate(`/inmueble/${item.id}`)}
                         className="mt-2 w-full text-center text-[10px] bg-black text-white py-1 rounded-xs font-semibold cursor-pointer"
                       >
                         Ver detalle

@@ -225,8 +225,8 @@ const PropiedadId = () => {
             <HeaderPropiedadId />
             <div className="flex items-start justify-end p-4 absolute right-2">
               <MenuOpciones
-                onVer={() => navigate(`/propiedades/${id}`)}
-                onEditar={() => navigate(`/propiedades/${id}/editar`)}
+                onVer={() => navigate(`/inmueble/${id}`)}
+                onEditar={() => navigate(`/inmueble/${id}/editar`)}
                 onEliminar={() => {
                   setPropiedadAEliminar(id);
                   setOpenModalConfirmarEliminarPropiedad(true);

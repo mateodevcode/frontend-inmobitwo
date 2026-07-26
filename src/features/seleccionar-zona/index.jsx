@@ -69,7 +69,7 @@ export default function SeleccionarZonaPage() {
           }
           operation={operation}
           tipoInmueble={tipoInmueble}
-          className="w-100"
+          className="w-100 border-2"
           showX={true}
         />
         <button

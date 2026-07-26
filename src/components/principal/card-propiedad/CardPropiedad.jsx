@@ -93,8 +93,8 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
           </div>
         </div>
         <MenuOpciones
-          onVer={() => navigate(`/propiedades/${id}`)}
-          onEditar={() => navigate(`/propiedades/${id}/editar`)}
+          onVer={() => navigate(`/inmueble/${id}`)}
+          onEditar={() => navigate(`/inmueble/${id}/editar`)}
           onEliminar={() => {
             setPropiedadAEliminar(id);
             setOpenModalConfirmarEliminarPropiedad(true);

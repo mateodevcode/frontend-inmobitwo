@@ -188,7 +188,7 @@ const CardAnuncioCompra = ({ propiedad }) => {
             <h2
               className="font-medium text-blue-600 hover:text-blue-700 hover:underline cursor-pointer select-none px-4 pt-2"
               onClick={() =>
-                propiedad?.id && navigate(`/propiedades/${propiedad.id}`)
+                propiedad?.id && navigate(`/inmueble/${propiedad.id}`)
               }
             >
               {titulo}
@@ -230,7 +230,7 @@ const CardAnuncioCompra = ({ propiedad }) => {
           <div
             className="flex items-center gap-2 text-blue-600 cursor-pointer select-none"
             onClick={() =>
-              propiedad?.id && navigate(`/propiedades/${propiedad.id}`)
+              propiedad?.id && navigate(`/inmueble/${propiedad.id}`)
             }
           >
             <PiChats className="text-lg" />

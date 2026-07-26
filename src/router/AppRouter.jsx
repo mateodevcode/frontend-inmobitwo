@@ -33,6 +33,8 @@ import PageInicio from "../pages/inicio/PagePrincipal";
 import ListaPropiedades from "../pages/lista-propiedades/ListaPropiedades";
 import SeleccionarZonaPage from "../features/seleccionar-zona/index.jsx";
 import MapaInmueblesPage from "../pages/MapaInmueblesPage.jsx";
+import PageAnuncio from "../pages/anuncio/PageAnuncio.jsx";
+import FotoVisor from "../pages/anuncio/FotoVisor.jsx";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -70,6 +72,10 @@ const AppRouter = () => {
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
         <Route path="/" element={<PageInicio />} />
         <Route path="/" element={<PageInicio />} />
+
+        <Route path="/inmueble/:id" element={<PageAnuncio />} />
+        <Route path="/inmueble/:id/foto/:fotoIndex" element={<FotoVisor />} />
+
         <Route
           path="/info/publicar-anuncio"
           element={

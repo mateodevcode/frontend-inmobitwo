@@ -115,8 +115,8 @@ export default function InputSearchZona({
 
   return (
     <div ref={containerRef} className={`relative ${className || "max-w-md"}`}>
-      <div className="flex items-center gap-2 border border-black/30 py-2.5 px-4 rounded-sm bg-white">
-        <FiSearch className="text-black/40 shrink-0" />
+      <div className="flex items-center gap-2 border-black py-2.5 px-4 rounded-sm bg-white">
+        <FiSearch className="text-black/60 shrink-0" />
         <input
           type="text"
           value={query}
@@ -127,7 +127,7 @@ export default function InputSearchZona({
           }}
           onKeyDown={handleKeyDown}
           placeholder="Barrio, ciudad, municipio"
-          className="w-full text-sm bg-transparent outline-none"
+          className="w-full text-sm bg-transparent outline-none placeholder:text-black/60"
         />
         {showX && query && (
           <button

@@ -157,6 +157,10 @@ const usePropiedades = () => {
       formData.append("estado", formDataPropiedad.estado || "disponible");
       formData.append("publicado_por_id", usuario?.id);
 
+      if (formDataPropiedad.precio) {
+        formData.append("precio", formDataPropiedad.precio);
+      }
+
       if (
         formDataPropiedad.organizacion_id &&
         formDataPropiedad.organizacion_id !== "null"

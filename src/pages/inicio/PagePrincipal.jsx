@@ -1,3 +1,4 @@
+import { useState } from "react";
 import NavbarHome from "./NavbarHome";
 import Hero from "./Hero";
 import InfoCards from "./InfoCards";
@@ -5,14 +6,18 @@ import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import ModalUser from "./modales/ModalUser";
 import { useAppContext } from "@/context/AppContext";
 
+const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
+
 const PageInicio = () => {
   const { usuario } = useAppContext();
+  const [tab, setTab] = useState("comprar");
+  const [tipo, setTipo] = useState(TIPO_DEFAULT);
 
   return (
     <div className="w-full min-h-dvh bg-white">
       <NavbarHome />
-      <Hero />
-      <InfoCards />
+      <Hero tab={tab} setTab={setTab} tipo={tipo} setTipo={setTipo} />
+      <InfoCards tab={tab} tipo={tipo} />
 
       {usuario && <ModalUser />}
 

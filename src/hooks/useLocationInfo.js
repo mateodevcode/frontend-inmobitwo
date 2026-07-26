@@ -46,8 +46,18 @@ export function useLocationInfo({
           `/api/location-info?city=${citySlug}&dept=${deptSlug}&operation=${operationDb}&type=${typeDb}`,
         );
         if (cancelled) return;
-        if (res.success) setLocationInfo(res.data);
-        else setError(res.message || "Ubicación no encontrada");
+        if (res.success) {
+          setLocationInfo(res.data);
+        } else {
+          // Fallback: el "city" podria ser parte del nombre del depto (ej: "la-guajira")
+          const fullDept = `${citySlug}-${deptSlug}`;
+          const res2 = await apiBackend(
+            `/api/location-info?dept=${fullDept}&operation=${operationDb}&type=${typeDb}`,
+          );
+          if (cancelled) return;
+          if (res2.success) setLocationInfo(res2.data);
+          else setError(res2.message || "Ubicación no encontrada");
+        }
       }
 
       setLoading(false);

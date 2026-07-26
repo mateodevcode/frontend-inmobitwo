@@ -136,7 +136,7 @@ const InputSearchPrincipal = ({ onGeoSelect, query, setQuery, operation, tipo })
       </div>
 
       {isOpen && showSuggestionsMenu && (
-        <ModalSuggestionsMenu setIsOpen={setIsOpen} />
+        <ModalSuggestionsMenu setIsOpen={setIsOpen} tab={operation} tipo={tipo} />
       )}
 
       {isOpen && showResultsMenu && (

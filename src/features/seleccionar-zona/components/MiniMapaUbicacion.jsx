@@ -4,7 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { apiBackend } from "@/api/apiBackend.js";
 import { BsFillGeoAltFill } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { VITE_MAPTILER_KEY } from "../../../config/config";
 
 export default function MiniMapaUbicacion({
@@ -16,6 +16,7 @@ export default function MiniMapaUbicacion({
   const instanceRef = useRef(null);
   const layerRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!locationInfo) return;
@@ -38,13 +39,12 @@ export default function MiniMapaUbicacion({
           attribution: "",
           maxZoom: 20,
           tileSize: 512,
-          zoomOffset: -1, // importante: sin esto se ve borroso/mal alineado
+          zoomOffset: -1,
         },
       ).addTo(map);
 
       instanceRef.current = map;
 
-      // Determinar qué pedir al backend
       const { tipo } = locationInfo;
       let endpoint = "";
 
@@ -73,7 +73,6 @@ export default function MiniMapaUbicacion({
 
         if (layerRef.current) map.removeLayer(layerRef.current);
 
-        // Para regiones usamos bounds, para ciudad/depto usamos geometría
         if (res.data.geometry) {
           layerRef.current = L.geoJSON(res.data.geometry, {
             style: {
@@ -104,9 +103,7 @@ export default function MiniMapaUbicacion({
   }, [locationInfo]);
 
   const handleVerEnMapa = () => {
-    const op = operationSlug || "venta";
-    const tipo = typeSlug || "viviendas";
-    navigate(`/busqueda-multizona/${op}-${tipo}`);
+    navigate(`${location.pathname}/mapa`);
   };
 
   return (

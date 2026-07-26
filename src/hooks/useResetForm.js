@@ -13,6 +13,7 @@ export const FORM_DATA_PROPIEDAD_INICIAL = {
   latitude: 0,
   longitude: 0,
   titulo: "",
+  precio: "",
   imagen_principal_url: "",
   imagen_principal_public_id: "",
   estado: "publicado",

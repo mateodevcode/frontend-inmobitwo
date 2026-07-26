@@ -10,7 +10,7 @@ function slugify(text) {
     .replace(/^-+|-+$/g, "");
 }
 
-export function buildSearchUrl(selectedZone) {
+export function buildSearchUrl(selectedZone, deptNames = {}) {
   if (!selectedZone) return null;
 
   const op = selectedZone.operation || "venta";
@@ -22,14 +22,15 @@ export function buildSearchUrl(selectedZone) {
     case "barrio": {
       const b = slugify(selectedZone.name);
       const m = slugify(selectedZone.mpioName || "");
-      const d = slugify(selectedZone.dptoName || "");
-      locationSlug = `${b}-${m}-${d}`;
+      const dptoCode = selectedZone.mpioDaneCode?.slice(0, 2);
+      const d = slugify(selectedZone.dptoName || deptNames[dptoCode] || "");
+      locationSlug = [b, m, d].filter(Boolean).join("-");
       break;
     }
     case "municipio": {
       const m = slugify(selectedZone.name);
-      const d = slugify(selectedZone.dptoName || "");
-      locationSlug = `${m}-${d}`;
+      const d = slugify(selectedZone.dptoName || deptNames[selectedZone.dptoDaneCode] || "");
+      locationSlug = [m, d].filter(Boolean).join("-");
       break;
     }
     case "departamento":

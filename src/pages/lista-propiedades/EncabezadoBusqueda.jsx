@@ -63,7 +63,7 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
           )}{" "}
           <span
             className="inline-flex items-center gap-1 align-middle text-blue-500 font-semibold text-sm sm:text-base cursor-pointer select-none hover:text-blue-600"
-            onClick={() => navigate("/busqueda-multizona/venta-viviendas")}
+            onClick={() => navigate(`/busqueda-multizona/${operationSlug}-${typeSlug}`)}
           >
             <TfiMapAlt className="shrink-0 text-xl" />
             Modificar zona

@@ -3,7 +3,9 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { fetchStatesGeoJSON, fetchCitiesGeoJSON, fetchBarrios } from "../api";
+import { createZoomControl, createLocationControl } from "./MapControls";
 import { VITE_MAPTILER_KEY } from "../../../config/config";
+import MapHintBanner from "./MapHintBanner";
 
 // ──── Constantes de estilo (tipo Idealista) ────
 const STROKE_DEFAULT = "#1a1a1a"; // negro base
@@ -36,6 +38,8 @@ export default function SelectZonaMap({
   const [loading, setLoading] = useState(false);
   const [visibleMpioDpto, setVisibleMpioDpto] = useState(null);
   const [visibleBarrioMpio, setVisibleBarrioMpio] = useState(null);
+
+  const skipZoneEffectRef = useRef(false);
 
   useEffect(() => {
     selectedZoneRef.current = selectedZone;
@@ -114,53 +118,8 @@ export default function SelectZonaMap({
       zoom: 6,
       minZoom: 5,
     });
-    // ──── Control de zoom personalizado ────
-    const ZoomControl = L.Control.extend({
-      options: { position: "bottomright" },
-      onAdd: function (map) {
-        const container = L.DomUtil.create("div", "custom-zoom-control");
-        container.innerHTML = `
-      <button class="custom-zoom-btn" data-action="in" title="Acercar">+</button>
-      <button class="custom-zoom-btn" data-action="out" title="Alejar">−</button>
-    `;
-        L.DomEvent.disableClickPropagation(container);
-        L.DomEvent.disableScrollPropagation(container);
-
-        container
-          .querySelector('[data-action="in"]')
-          .addEventListener("click", () => map.zoomIn());
-        container
-          .querySelector('[data-action="out"]')
-          .addEventListener("click", () => map.zoomOut());
-
-        return container;
-      },
-    });
-    new ZoomControl().addTo(map);
-
-    // ──── Control de ubicación personalizado ────
-    const LocationControl = L.Control.extend({
-      options: { position: "bottomright" },
-      onAdd: function (map) {
-        const container = L.DomUtil.create("div", "custom-location-control");
-        container.innerHTML = `
-      <button class="custom-location-btn" title="Tu ubicación">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="3 11 22 2 13 21 11 13 3 11" />
-        </svg>
-        <span>Tu ubicación</span>
-      </button>
-    `;
-        L.DomEvent.disableClickPropagation(container);
-
-        container.querySelector("button").addEventListener("click", () => {
-          map.locate({ setView: true, maxZoom: 15 });
-        });
-
-        return container;
-      },
-    });
-    new LocationControl().addTo(map);
+    createLocationControl().addTo(map);
+    createZoomControl().addTo(map);
 
     // Manejo de resultado de geolocalización
     let userMarker = null;
@@ -245,6 +204,7 @@ export default function SelectZonaMap({
         layer.on("click", async () => {
           const sel = selectedZoneRef.current;
           if (sel?.daneCode === code && visibleMpioDptoRef.current === code) {
+            skipZoneEffectRef.current = true;
             onSelectZone(null, operation, tipoInmueble);
             setVisibleMpioDpto(null);
             if (mpioLayerRef.current) {
@@ -253,6 +213,7 @@ export default function SelectZonaMap({
             }
             map.setView([4.6, -74.1], 6);
           } else {
+            skipZoneEffectRef.current = true;
             onSelectZone(
               { type: "departamento", daneCode: code, name },
               operation,
@@ -294,6 +255,7 @@ export default function SelectZonaMap({
               sel?.daneCode === code &&
               visibleBarrioMpioRef.current === code
             ) {
+              skipZoneEffectRef.current = true;
               onSelectZone(
                 { type: "departamento", daneCode: stateDaneCode, name: "" },
                 operation,
@@ -305,6 +267,7 @@ export default function SelectZonaMap({
                 barrioLayerRef.current = null;
               }
             } else {
+              skipZoneEffectRef.current = true;
               const stateName = feature.properties.DPTO_CCDGO ? "" : "";
               onSelectZone(
                 {
@@ -421,10 +384,33 @@ export default function SelectZonaMap({
     if (barrioLayerRef.current) barrioLayerRef.current.setStyle(getBarrioStyle);
   }, [selectedZone, hoveredZone, getDptoStyle, getMpioStyle, getBarrioStyle]);
 
+  // ──── Zoom desde búsqueda externa ────
+  const prevSearchZoneRef = useRef(null);
+
+  useEffect(() => {
+    if (!selectedZone || !mapInstanceRef.current || !dptoLayerRef.current) return;
+    if (selectedZone === prevSearchZoneRef.current) return;
+    prevSearchZoneRef.current = selectedZone;
+
+    // Si el cambio vino del propio mapa, no duplicar el zoom
+    if (skipZoneEffectRef.current) {
+      skipZoneEffectRef.current = false;
+      return;
+    }
+
+    if (selectedZone.type === "municipio" && selectedZone.dptoDaneCode) {
+      setVisibleMpioDpto(selectedZone.dptoDaneCode);
+      renderMunicipios(selectedZone.dptoDaneCode);
+    } else if (selectedZone.type === "departamento" && selectedZone.daneCode) {
+      setVisibleMpioDpto(selectedZone.daneCode);
+      renderMunicipios(selectedZone.daneCode);
+    }
+  }, [selectedZone]);
+
   return (
     <div className="relative w-full h-full">
       {loading && (
-        <div className="absolute top-4 left-4 bg-black/85 text-white px-4 py-2 rounded-full text-xs z-[1000]">
+        <div className="absolute top-4 left-4 bg-black/85 text-white px-4 py-2 rounded-full text-xs z-1000">
           Cargando límites...
         </div>
       )}
@@ -433,6 +419,7 @@ export default function SelectZonaMap({
         className="w-full h-full"
         style={{ background: "#e0f2f1" }}
       />
+      <MapHintBanner />
     </div>
   );
 }

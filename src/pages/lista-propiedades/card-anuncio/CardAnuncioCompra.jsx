@@ -12,6 +12,7 @@ import { TiHeartFullOutline, TiHeartOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import useFavoritos from "@/hooks/useFavoritos";
+import { formatPrecioCompleto } from "@/utils/formatPrecio";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -205,8 +206,8 @@ const CardAnuncioCompra = ({ propiedad }) => {
 
           <div className="px-4">
             <div className="flex items-center gap-2 text-black">
-              <p className="text-2xl font-bold">850</p>
-              <p>$/mes</p>
+              <p className="text-2xl font-bold">{formatPrecioCompleto(propiedad.precio)}</p>
+              {propiedad.operacion === "alquiler" && <p className="text-sm text-gray-500">/mes</p>}
             </div>
 
             <div className="text-sm flex items-center gap-2">

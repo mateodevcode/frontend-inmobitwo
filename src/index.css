@@ -83,68 +83,63 @@ path.leaflet-interactive {
   outline: none;
 }
 
-/* Contenedor del zoom: caja blanca dividida en dos botones apilados */
-.custom-zoom-control {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  margin-bottom: 8px !important;
+
+.leaflet-container .leaflet-interactive {
+  cursor: grab !important;
+}
+.leaflet-container.leaflet-dragging .leaflet-interactive {
+  cursor: grabbing !important;
 }
 
-.custom-zoom-btn {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: #fff;
-  color: #1a1a1a;
-  font-size: 24px;
-  font-weight: 400;
-  cursor: pointer;
-  display: flex;
+/* Chincheta mapa inmuebles */
+
+.price-pin {
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-}
-
-.custom-zoom-btn:first-child {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.custom-zoom-btn:hover {
-  background: #f2f2f2;
-}
-
-/* Botón de ubicación */
-.custom-location-control {
-  margin-top: 8px !important;
-}
-
-.custom-location-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border: none;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  padding: 10px 16px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1a1a1a;
-  cursor: pointer;
+  background: #e6007a;
+  border: 2px solid fff;
+  border-radius: 5px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color:  #fff;
   white-space: nowrap;
-  font-family: "Poppins";
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  transform-origin: bottom center;
 }
 
-.custom-location-btn:hover {
-  background: #f2f2f2;
+/* La "puntita" del pin, apuntando hacia abajo */
+.price-pin::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 11px;
+  height: 11px;
+  background: #e6007a;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-radius: 0 0 2px 0;
 }
 
-.custom-location-btn svg {
-  flex-shrink: 0;
+.price-pin:hover {
+  transform: scale(1.12);
+  z-index: 1000 !important; /* para que quede por encima de sus vecinos al agrandarse */
 }
 
+/* Estado seleccionado — relleno rosa sólido, mismo patrón que tus polígonos */
+.price-pin.selected {
+  background: #fff;
+  color: #e6007a;
+}
+.price-pin.selected::after {
+  background: #fff;
+  border-color: #fff;
+}
 
+/* Chincheta mapa inmuebles */

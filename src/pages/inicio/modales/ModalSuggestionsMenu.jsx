@@ -1,8 +1,18 @@
 import { SUGGESTIONS } from "@/data/suggestions.search";
 import { useNavigate } from "react-router-dom";
+import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 
-const ModalSuggestionsMenu = ({ setIsOpen }) => {
+const ModalSuggestionsMenu = ({ setIsOpen, tab, tipo }) => {
   const navigate = useNavigate();
+
+  const operationSlug = MAPPING_OPERACIONES[tab] || tab;
+  const typeSlug = tipo?.slug || "viviendas";
+
+  const buildRoute = (base) => {
+    return base
+      .replace("/venta-viviendas", `/${operationSlug}-${typeSlug}`)
+      .replace("/alquiler-viviendas", `/${operationSlug}-${typeSlug}`);
+  };
 
   return (
     <div className="absolute z-50 left-0 right-0 -mt-0.5 bg-white border border-black/10 shadow-lg">
@@ -13,7 +23,7 @@ const ModalSuggestionsMenu = ({ setIsOpen }) => {
               type="button"
               onClick={() => {
                 setIsOpen(false);
-                navigate(route);
+                navigate(buildRoute(route));
               }}
               className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-black/80 hover:bg-tercero/3 transition-colors cursor-pointer"
             >

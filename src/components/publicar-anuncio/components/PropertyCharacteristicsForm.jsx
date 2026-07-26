@@ -284,7 +284,7 @@ const RATING_LETTERS = ["A", "B", "C", "D", "E", "F", "G"];
    ============================================================ */
 
 export default function PropertyCharacteristicsForm() {
-  const { setContentNumber } = useAppContext();
+  const { setContentNumber, formDataPropiedad, setFormDataPropiedad } = useAppContext();
   const { publicarDataAnuncio } = usePropiedades();
   const [loading, setLoading] = useState(false);
   const [tipoPiso, setTipoPiso] = useState([]);
@@ -313,7 +313,6 @@ export default function PropertyCharacteristicsForm() {
 
   const [movilidad, setMovilidad] = useState([]);
 
-  const [precio, setPrecio] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
   const toggleIn = (arr, setArr) => (id, checked) => {
@@ -593,9 +592,15 @@ export default function PropertyCharacteristicsForm() {
           <Label className="mb-2 block text-base font-semibold text-slate-900">
             Precio
           </Label>
-          <UnitInput value={precio} onChange={setPrecio} unit="euros/mes" />
+          <UnitInput
+            value={formDataPropiedad.precio || ""}
+            onChange={(v) =>
+              setFormDataPropiedad((prev) => ({ ...prev, precio: v }))
+            }
+            unit="COP"
+          />
           <Description className="mt-2 block text-sm text-slate-500">
-            Si piensas cobrar la comunidad al inquilino añádela al precio
+            Precio en pesos colombianos
           </Description>
         </Field>
 

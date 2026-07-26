@@ -32,6 +32,7 @@ import AdminRutasPage from "../pages/admin/AdminRutasPages";
 import PageInicio from "../pages/inicio/PagePrincipal";
 import ListaPropiedades from "../pages/lista-propiedades/ListaPropiedades";
 import SeleccionarZonaPage from "../features/seleccionar-zona/index.jsx";
+import MapaInmueblesPage from "../pages/MapaInmueblesPage.jsx";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -198,6 +199,10 @@ const AppRouter = () => {
         <Route
           path="/busqueda-multizona/:operationAndType"
           element={<SeleccionarZonaPage />}
+        />
+        <Route
+          path="/:operationAndType/:cityAndDepartment/mapa"
+          element={<MapaInmueblesPage />}
         />
         <Route
           path="/:operationAndType/:cityAndDepartment"

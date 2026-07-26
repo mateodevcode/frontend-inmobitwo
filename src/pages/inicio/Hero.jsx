@@ -11,10 +11,13 @@ const Hero = ({
   image = "/propiedades/chalet.jpg",
   propertyLabel = "Oficina en Alicante / Alacant, Alicante - 399.000 eur",
   propertyUrl = "#",
+  tab,
+  setTab,
+  tipo,
+  setTipo,
 }) => {
+  const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
   const navigate = useNavigate();
-  const [tab, setTab] = useState("comprar");
-  const [tipo, setTipo] = useState(TIPO_DEFAULT);
   const [query, setQuery] = useState("");
   const [selectedGeo, setSelectedGeo] = useState(null);
 

@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { cards } from "@/data/infocards";
 import { irArriba } from "@/utils/irArriba";
+import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 
-const InfoCards = () => {
+const InfoCards = ({ tab, tipo }) => {
   const navigate = useNavigate();
+
+  const operationSlug = MAPPING_OPERACIONES[tab] || tab;
+  const zonaUrl = `/busqueda-multizona/${operationSlug}-${tipo.slug}`;
 
   return (
     <section className="w-full flex justify-center font-poppins py-5 md:py-10">
@@ -28,7 +32,8 @@ const InfoCards = () => {
               </p>
               <button
                 onClick={() => {
-                  navigate(card.linkUrl);
+                  const url = card.id === "zonas" ? zonaUrl : card.linkUrl;
+                  navigate(url);
                   irArriba();
                 }}
                 className="text-sky-700 text-xs md:text-sm font-medium hover:underline w-fit"

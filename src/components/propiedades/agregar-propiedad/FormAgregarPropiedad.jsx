@@ -36,6 +36,8 @@ export default function FormAgregarPropiedad() {
   const [previewPrincipal, setPreviewPrincipal] = useState(null);
   const [galeriaFiles, setGaleriaFiles] = useState([]);
   const [galeriaPreviews, setGaleriaPreviews] = useState([]);
+  const [planosFiles, setPlanosFiles] = useState([]);
+  const [planosPreviews, setPlanosPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // const handleDepartamentoChange = (departamento) => {
@@ -58,6 +60,8 @@ export default function FormAgregarPropiedad() {
     setPreviewPrincipal(null);
     setGaleriaFiles([]);
     setGaleriaPreviews([]);
+    setPlanosFiles([]);
+    setPlanosPreviews([]);
     setOpenModalAgregarPropiedad(false);
   };
 
@@ -275,6 +279,81 @@ export default function FormAgregarPropiedad() {
         )}
       </div>
 
+      <div className="mt-6">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm text-gray-500 font-medium">
+            Planos (opcional)
+          </p>
+          <span className="text-xs text-gray-400">
+            {planosFiles.length} / 10 planos
+          </span>
+        </div>
+
+        <div className="relative border-2 border-dashed border-gray-300 rounded-md p-6 hover:border-rose-600 transition-colors">
+          <div className="flex flex-col items-center justify-center gap-2 text-center">
+            <div className="border border-black/10 p-2 rounded">
+              <HardDriveUpload className="w-6 h-6 text-rose-600" />
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-sm text-gray-500">
+                Arrastra y suelta los planos
+              </span>
+              <span className="text-rose-600 font-semibold cursor-pointer">
+                o haz click aquí para seleccionar
+              </span>
+              <span className="text-xs text-gray-400 mt-1">
+                Máximo 10 planos, 10MB cada uno
+              </span>
+            </div>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) =>
+              handleChangeMultipleFiles(e, setPlanosFiles, setPlanosPreviews)
+            }
+            className="absolute opacity-0 w-full h-full cursor-pointer inset-0"
+          />
+        </div>
+
+        {planosPreviews.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {planosPreviews.map((preview, index) => (
+              <div
+                key={index}
+                className="relative group rounded-md overflow-hidden border border-gray-200 hover:border-rose-600 transition-colors"
+              >
+                <img
+                  src={preview.url}
+                  alt={`Plano ${index + 1}`}
+                  width={500}
+                  height={500}
+                  className="w-full h-32 object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleDeletePreviewImage(
+                      index,
+                      setPlanosFiles,
+                      setPlanosPreviews,
+                    )
+                  }
+                  className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Eliminar plano"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-1 truncate opacity-0 group-hover:opacity-100 transition-opacity">
+                  {preview.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="flex items-center gap-4 pt-4 mt-6">
         <button
           type="button"
@@ -296,6 +375,9 @@ export default function FormAgregarPropiedad() {
               galeriaFiles,
               setGaleriaFiles,
               setGaleriaPreviews,
+              planosFiles,
+              setPlanosFiles,
+              setPlanosPreviews,
             )
           }
           disabled={loading}

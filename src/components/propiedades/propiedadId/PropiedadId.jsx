@@ -79,6 +79,10 @@ const PropiedadId = () => {
       .slice()
       .sort((a, b) => a.orden - b.orden)
       .map((g) => g.url),
+    ...(propiedad.planos || [])
+      .slice()
+      .sort((a, b) => a.orden - b.orden)
+      .map((p) => p.url),
   ].filter(Boolean);
 
   const totalImagenes = imagenes.length;

@@ -45,6 +45,9 @@ const usePropiedades = () => {
     galeriaFiles,
     setGaleriaFiles,
     setGaleriaPreviews,
+    planosFiles,
+    setPlanosFiles,
+    setPlanosPreviews,
   ) => {
     e.preventDefault();
 
@@ -76,6 +79,15 @@ const usePropiedades = () => {
       if (galeriaFiles && galeriaFiles.length > 0) {
         galeriaFiles.forEach((file) => {
           formData.append("galeria", file);
+        });
+      }
+
+      // ========================================
+      // PLANOS
+      // ========================================
+      if (planosFiles && planosFiles.length > 0) {
+        planosFiles.forEach((file) => {
+          formData.append("planos", file);
         });
       }
 
@@ -113,6 +125,8 @@ const usePropiedades = () => {
         setPreview(null);
         setGaleriaFiles([]);
         setGaleriaPreviews([]);
+        setPlanosFiles && setPlanosFiles([]);
+        setPlanosPreviews && setPlanosPreviews([]);
         setOpenModalAgregarPropiedad(false);
 
         navigate(`/`);
@@ -395,6 +409,7 @@ const usePropiedades = () => {
     setLoading,
     imagenPrincipal,
     galeriaFiles,
+    planosFiles,
   ) => {
     try {
       iniciarCarga();
@@ -409,6 +424,12 @@ const usePropiedades = () => {
       if (galeriaFiles && galeriaFiles.length > 0) {
         galeriaFiles.forEach((file) => {
           formData.append("galeria", file);
+        });
+      }
+
+      if (planosFiles && planosFiles.length > 0) {
+        planosFiles.forEach((file) => {
+          formData.append("planos", file);
         });
       }
 

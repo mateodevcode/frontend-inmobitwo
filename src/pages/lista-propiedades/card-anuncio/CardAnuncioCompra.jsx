@@ -3,6 +3,7 @@ import { BsFillGeoAltFill } from "react-icons/bs";
 import { FaArchway } from "react-icons/fa6";
 import { FiVideo } from "react-icons/fi";
 import { HiOutlineTrash } from "react-icons/hi2";
+import { ImImage } from "react-icons/im";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
@@ -42,7 +43,20 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
   const [currentIndex, setCurrentIndex] = useState(0);
   const autoTimerRef = useRef(null);
 
-  const navState = { listaIds, posicion, total, filtroLabel };
+  const slug = (t) =>
+    t
+      ?.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "";
+
+  let searchUrl = `/${slug(propiedad?.operacion)}-${slug(propiedad?.tipo)}`;
+  if (propiedad?.city_name && propiedad?.state_name) {
+    searchUrl += `/${slug(propiedad.city_name)}-${slug(propiedad.state_name)}`;
+  }
+
+  const navState = { listaIds, posicion, total, filtroLabel, searchUrl };
 
   const imagenPrincipal =
     propiedad?.imagen_principal_url || "/propiedades/chalet.jpg";
@@ -57,6 +71,7 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
     OPERACION_LABEL[propiedad?.operacion] || propiedad?.operacion || "Alquiler";
 
   const galeria = propiedad?.galeria || [];
+  const planos = propiedad?.planos || [];
 
   const imagenes = [
     imagenPrincipal,
@@ -64,6 +79,10 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
       .slice()
       .sort((a, b) => a.orden - b.orden)
       .map((g) => g.url),
+    ...planos
+      .slice()
+      .sort((a, b) => a.orden - b.orden)
+      .map((p) => p.url),
   ];
 
   const totalImagenes = imagenes.length;
@@ -147,19 +166,43 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
         <div className="absolute left-2 bottom-2 flex items-center justify-center gap-2 z-10">
           <div
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "fotos" } });
+            }}
+            title="Ver fotos"
           >
-            <FaArchway className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
+            <ImImage className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
           </div>
+          {planos.length > 0 && (
+            <div
+              className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+              onClick={(e) => {
+                e.stopPropagation();
+                propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "planos" } });
+              }}
+              title="Ver planos"
+            >
+              <FaArchway className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
+            </div>
+          )}
           <div
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "3d" } });
+            }}
+            title="Visita 3D"
           >
             <FiVideo className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
           </div>
           <div
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "mapa" } });
+            }}
+            title="Ver mapa"
           >
             <BsFillGeoAltFill className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
           </div>

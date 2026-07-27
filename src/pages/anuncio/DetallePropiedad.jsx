@@ -13,7 +13,7 @@ import useFavoritos from "@/hooks/useFavoritos";
 import useTracking from "@/hooks/useTracking";
 import { useAppContext } from "@/context/AppContext";
 import { useTiempoRelativo } from "@/hooks/useTiempoRelativo";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import UbicacionMapa from "./UbicacionMapa";
 import { TbAlertOctagonFilled } from "react-icons/tb";
@@ -40,10 +40,22 @@ export default function DetallePropiedad({
 }) {
   const { favoritos } = useAppContext();
   const navigate = useNavigate();
+  const location = useLocation();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
   const { dispararEventoYRevisar } = useTracking();
   const [mostrarTelefono, setMostrarTelefono] = useState(false);
   const [descripcionAbierta, setDescripcionAbierta] = useState(false);
+
+  useEffect(() => {
+    const modo = location.state?.abrirFotoVisor;
+    if (modo && inmueble?.id) {
+      const { abrirFotoVisor, ...restState } = location.state;
+      navigate(location.pathname, { replace: true, state: restState });
+      const query =
+        modo === "mapa" ? "?mapa=1" : modo === "planos" ? "?planos=1" : "";
+      navigate(`/inmueble/${inmueble.id}/foto/1${query}`);
+    }
+  }, [inmueble?.id]);
 
   // ──────────────────────── Barra sticky al hacer scroll ────────────────────────
   const sentinelRef = useRef(null);
@@ -81,9 +93,14 @@ export default function DetallePropiedad({
       .slice()
       .sort((a, b) => a.orden - b.orden)
       .map((g) => g.url),
+    ...(inmueble?.planos || [])
+      .slice()
+      .sort((a, b) => a.orden - b.orden)
+      .map((p) => p.url),
   ].filter(Boolean);
 
   const totalImagenes = imagenes.length;
+  const totalPlanos = (inmueble?.planos || []).length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const autoTimerRef = useRef(null);
@@ -323,16 +340,14 @@ export default function DetallePropiedad({
               <ImImage className="text-base" />
               {totalImagenes} fotos
             </button>
+            {totalPlanos > 0 && (
             <button
-              onClick={() =>
-                document
-                  .getElementById("plano-section")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => navigate(`/inmueble/${inmueble.id}/foto/1?planos=1`)}
               className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
             >
-              <FaArchway /> Plano
+              <FaArchway /> {totalPlanos} planos
             </button>
+            )}
             <button
               onClick={() =>
                 document

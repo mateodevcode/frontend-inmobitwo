@@ -53,12 +53,18 @@ export function PropertyCard({ inmueble, onClose }) {
     OPERACION_LABEL[inmueble?.operacion] || inmueble?.operacion || "";
 
   const galeria = inmueble?.galeria || [];
+  const planos = inmueble?.planos || [];
+
   const imagenes = [
     imagenPrincipal,
     ...galeria
       .slice()
       .sort((a, b) => a.orden - b.orden)
       .map((g) => g.url),
+    ...planos
+      .slice()
+      .sort((a, b) => a.orden - b.orden)
+      .map((p) => p.url),
   ];
   const totalImagenes = imagenes.length;
   const isFavorited = estaEnFavoritos(favoritos, inmueble?.id);

@@ -99,19 +99,21 @@ export default function InputSearchZona({
   };
 
   const handleKeyDown = (e) => {
-    if (results.length === 0) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
+      if (results.length === 0) return;
       setIsOpen(true);
       setActiveIndex((p) => (p + 1) % results.length);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
+      if (results.length === 0) return;
       setIsOpen(true);
       setActiveIndex((p) => (p - 1 + results.length) % results.length);
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (activeIndex >= 0 && results[activeIndex])
-        handleSelectResult(results[activeIndex]);
+      if (results.length === 0) return;
+      const idx = activeIndex >= 0 ? activeIndex : 0;
+      handleSelectResult(results[idx]);
     } else if (e.key === "Escape") {
       setIsOpen(false);
       setActiveIndex(-1);

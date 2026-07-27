@@ -16,6 +16,8 @@ import usePropiedades from "../../hooks/usePropiedades";
 import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
 import * as maplibregl from "maplibre-gl";
 
+const MODOS = ["fotos", "planos", "3d", "mapa"];
+
 export default function FotoVisor() {
   const { id, fotoIndex } = useParams();
   const navigate = useNavigate();
@@ -25,7 +27,13 @@ export default function FotoVisor() {
 
   const [loading, setLoading] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
-  const [mostrarMapa, setMostrarMapa] = useState(searchParams.get("mapa") === "1");
+  const [modo, setModo] = useState(
+    searchParams.get("mapa") === "1"
+      ? "mapa"
+      : searchParams.get("planos") === "1"
+        ? "planos"
+        : "fotos",
+  );
   const mapaContainerRef = useRef(null);
   const mapaInstanceRef = useRef(null);
   const { cargarPropiedad } = usePropiedades();
@@ -38,18 +46,31 @@ export default function FotoVisor() {
 
   // ──── Mapa ────
   useEffect(() => {
-    if (!mostrarMapa || !inmueble?.latitude || !inmueble?.longitude) return;
+    if (modo !== "mapa" || !inmueble?.latitude || !inmueble?.longitude) return;
     if (mapaInstanceRef.current) return;
 
     const map = new maplibregl.Map({
       container: mapaContainerRef.current,
-      style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } }, layers: [{ id: "osm-tiles", type: "raster", source: "osm" }] },
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: "raster",
+            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256,
+          },
+        },
+        layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
+      },
       center: [inmueble.longitude, inmueble.latitude],
       zoom: 16,
       attributionControl: false,
     });
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+    map.addControl(
+      new maplibregl.NavigationControl({ showCompass: false }),
+      "bottom-right",
+    );
 
     const el = document.createElement("div");
     el.innerHTML = `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#e6007a"/><circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>`;
@@ -63,12 +84,16 @@ export default function FotoVisor() {
       map.remove();
       mapaInstanceRef.current = null;
     };
-  }, [mostrarMapa, inmueble?.latitude, inmueble?.longitude]);
+  }, [modo, inmueble?.latitude, inmueble?.longitude]);
 
   const handleCentrarMapa = () => {
     const map = mapaInstanceRef.current;
     if (map && inmueble?.latitude && inmueble?.longitude) {
-      map.flyTo({ center: [inmueble.longitude, inmueble.latitude], zoom: 16, duration: 800 });
+      map.flyTo({
+        center: [inmueble.longitude, inmueble.latitude],
+        zoom: 16,
+        duration: 800,
+      });
     }
   };
 
@@ -90,7 +115,14 @@ export default function FotoVisor() {
       .map((g) => g.url),
   ].filter(Boolean);
 
+  const planosArray = (inmueble.planos || [])
+    .slice()
+    .sort((a, b) => a.orden - b.orden)
+    .map((p) => p.url)
+    .filter(Boolean);
+
   const totalImagenes = imagenes.length;
+  const totalPlanos = planosArray.length;
   const indexActual = Math.min(
     Math.max(parseInt(fotoIndex, 10) - 1, 0),
     totalImagenes - 1,
@@ -109,15 +141,44 @@ export default function FotoVisor() {
       : null,
   ].filter(Boolean);
 
-  const irAFoto = (nuevoIndex) => {
-    const clamped =
-      ((nuevoIndex % totalImagenes) + totalImagenes) % totalImagenes;
-    navigate(`/inmueble/${id}/foto/${clamped + 1}`, { replace: true });
+  const handleNavegar = (direccion) => {
+    const idx = MODOS.indexOf(modo);
+
+    if (modo === "fotos") {
+      const nuevo = indexActual + direccion;
+      if (nuevo >= 0 && nuevo < totalImagenes) {
+        navigate(`/inmueble/${id}/foto/${nuevo + 1}`, { replace: true });
+        return;
+      }
+    }
+    if (modo === "planos" && totalPlanos > 0) {
+      const nuevo = indexActual + direccion;
+      if (nuevo >= 0 && nuevo < totalPlanos) {
+        navigate(`/inmueble/${id}/foto/${nuevo + 1}`, { replace: true });
+        return;
+      }
+    }
+    // saltar al siguiente/anterior modo, saltando planos si no hay
+    let nuevoModoIdx = (((idx + direccion) % MODOS.length) + MODOS.length) % MODOS.length;
+    let nuevoModo = MODOS[nuevoModoIdx];
+    if (nuevoModo === "planos" && totalPlanos === 0) {
+      nuevoModoIdx = (((nuevoModoIdx + direccion) % MODOS.length) + MODOS.length) % MODOS.length;
+      nuevoModo = MODOS[nuevoModoIdx];
+    }
+    setModo(nuevoModo);
+    if (nuevoModo === "fotos") {
+      const target = direccion > 0 ? 0 : totalImagenes - 1;
+      navigate(`/inmueble/${id}/foto/${target + 1}`, { replace: true });
+    }
+    if (nuevoModo === "planos" && totalPlanos > 0) {
+      const target = direccion > 0 ? 0 : totalPlanos - 1;
+      navigate(`/inmueble/${id}/foto/${target + 1}`, { replace: true });
+    }
   };
 
-  const cerrar = () => navigate(`/inmueble/${id}`);
+  const cerrar = () => navigate(-1);
 
-  // Navegación con teclado (flechas y Escape)
+  // Navegacion con teclado
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (fullscreen) {
@@ -126,74 +187,102 @@ export default function FotoVisor() {
           setFullscreen(false);
           return;
         }
-        if (e.key === "ArrowRight") irAFoto(indexActual + 1);
-        if (e.key === "ArrowLeft") irAFoto(indexActual - 1);
+        if (e.key === "ArrowRight") handleNavegar(1);
+        if (e.key === "ArrowLeft") handleNavegar(-1);
         return;
       }
-      if (e.key === "ArrowRight") irAFoto(indexActual + 1);
-      if (e.key === "ArrowLeft") irAFoto(indexActual - 1);
+      if (e.key === "ArrowRight") handleNavegar(1);
+      if (e.key === "ArrowLeft") handleNavegar(-1);
       if (e.key === "Escape") cerrar();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [indexActual, totalImagenes, fullscreen]);
+  }, [indexActual, totalImagenes, fullscreen, modo]);
+
+  const counterText = (() => {
+    switch (modo) {
+      case "fotos":
+        return `Foto ${indexActual + 1}/${totalImagenes}`;
+      case "planos":
+        return totalPlanos > 0
+          ? `Plano ${indexActual + 1}/${totalPlanos}`
+          : "Plano no disponible";
+      case "mapa":
+        return "Mapa de zona";
+      case "plano":
+        return "Plano";
+      case "3d":
+        return "Vista 3D";
+      default:
+        return "";
+    }
+  })();
+
+  const btnClass = (m) =>
+    `flex items-center gap-2 border-2 px-3 py-1.5 text-sm font-semibold cursor-pointer ${
+      modo === m
+        ? "border-[#e6007a] text-[#e6007a] bg-[#e6007a]/20"
+        : "border-black/80 text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20"
+    }`;
 
   return (
     <div className="fixed inset-0 z-2000 bg-white flex flex-col font-poppins">
       {/* ──── Header ──── */}
       {!fullscreen && (
-      <div className="w-full mx-auto border-b border-gray-200 flex items-center justify-center relative">
-        <div className="flex items-center justify-between px-6 py-3 w-8/12">
-          <div className="min-w-0">
-            <h1 className="font-bold text-gray-900 truncate">
-              {inmueble.titulo}
-            </h1>
-            <p className="text-sm text-gray-700 flex items-center gap-2 flex-wrap">
-              <span>{formatPrecioCompleto(inmueble.precio)}</span>
-              {specsLinea.map((s, i) => (
-                <span key={i} className="flex items-center gap-2">
-                  <span className="w-px h-3 bg-gray-300" />
-                  {s}
-                </span>
-              ))}
-            </p>
-          </div>
+        <div className="w-full mx-auto border-b border-gray-200 flex items-center justify-center relative">
+          <div className="flex items-center justify-between px-6 py-3 w-8/12">
+            <div className="min-w-0">
+              <h1 className="font-bold text-gray-900 truncate">
+                {inmueble.titulo}
+              </h1>
+              <p className="text-sm text-gray-700 flex items-center gap-2 flex-wrap">
+                <span>{formatPrecioCompleto(inmueble.precio)}</span>
+                {specsLinea.map((s, i) => (
+                  <span key={i} className="flex items-center gap-2">
+                    <span className="w-px h-3 bg-gray-300" />
+                    {s}
+                  </span>
+                ))}
+              </p>
+            </div>
 
-          <div className="flex items-center gap-6 shrink-0 ml-4">
-            <button className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline">
-              <IoArrowRedoOutline className="text-lg" />
-              Compartir
-            </button>
-            <button
-              onClick={(e) => handleFavorito(e, inmueble.id)}
-              className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline"
-            >
-              {isFavorited ? (
-                <TiHeartFullOutline className="text-lg text-[#e6007a]" />
-              ) : (
-                <TiHeartOutline className="text-lg" />
-              )}
-              Guardar favorito
-            </button>
-            <button className="bg-[#e6007a] text-white text-sm font-bold rounded-sm px-5 py-2 hover:bg-[#c40068] transition-colors">
-              Contactar
-            </button>
-            <button
-              onClick={cerrar}
-              className="text-gray-700 hover:text-black absolute right-4"
-              title="Cerrar"
-            >
-              <IoClose className="text-3xl" />
-            </button>
+            <div className="flex items-center gap-6 shrink-0 ml-4">
+              <button className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline">
+                <IoArrowRedoOutline className="text-lg" />
+                Compartir
+              </button>
+              <button
+                onClick={(e) => handleFavorito(e, inmueble.id)}
+                className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline"
+              >
+                {isFavorited ? (
+                  <TiHeartFullOutline className="text-lg text-[#e6007a]" />
+                ) : (
+                  <TiHeartOutline className="text-lg" />
+                )}
+                Guardar favorito
+              </button>
+              <button className="bg-[#e6007a] text-white text-sm font-bold rounded-sm px-5 py-2 hover:bg-[#c40068] transition-colors">
+                Contactar
+              </button>
+              <button
+                onClick={cerrar}
+                className="text-gray-700 hover:text-black absolute right-4"
+                title="Cerrar"
+              >
+                <IoClose className="text-3xl" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       )}
 
-      {/* ──── Imagen principal / Mapa ──── */}
-      <div className={`relative flex-1 flex items-center justify-center min-h-0 ${fullscreen ? "fixed inset-0 z-[2100] bg-black" : ""}`}>
-        {mostrarMapa && inmueble?.latitude && inmueble?.longitude ? (
+      {/* ──── Contenido principal ──── */}
+      <div
+        className={`relative flex-1 flex items-center justify-center min-h-0 ${fullscreen ? "fixed inset-0 z-[2100] bg-black" : ""}`}
+      >
+        {modo === "mapa" && inmueble?.latitude && inmueble?.longitude ? (
           <div className="w-full h-full relative">
             <div ref={mapaContainerRef} className="w-full h-full" />
             <button
@@ -204,97 +293,104 @@ export default function FotoVisor() {
               Centrar
             </button>
           </div>
+        ) : modo === "plano" ? (
+          <div className="flex items-center justify-center text-gray-400 text-lg">
+            Plano no disponible
+          </div>
+        ) : modo === "planos" && totalPlanos > 0 ? (
+          <img
+            src={planosArray[indexActual]}
+            alt={`Plano ${indexActual + 1}`}
+            className={`${fullscreen ? "w-full h-full" : "max-w-full max-h-full"} object-contain select-none`}
+          />
+        ) : modo === "3d" ? (
+          <div className="flex items-center justify-center text-gray-400 text-lg">
+            Vista 3D no disponible
+          </div>
         ) : (
-        <>
-        <img
-          src={imagenes[indexActual]}
-          alt={nombreEspacio || inmueble.titulo}
-          className={`${fullscreen ? "w-full h-full" : "max-w-full max-h-full"} object-contain select-none`}
-        />
-
-        {totalImagenes > 1 && (
           <>
+            <img
+              src={imagenes[indexActual]}
+              alt={nombreEspacio || inmueble.titulo}
+              className={`${fullscreen ? "w-full h-full" : "max-w-full max-h-full"} object-contain select-none`}
+            />
+
+        {fullscreen && (
+              <button
+                onClick={() => setFullscreen(false)}
+                className="absolute bottom-4 right-4 z-[2200] bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white rounded-lg p-3 transition-colors duration-200 cursor-pointer"
+                title="Salir de pantalla completa"
+              >
+                <BsArrowsAngleContract className="text-2xl" />
+              </button>
+            )}
+
+            {/* Flechas de navegacion entre modos (siempre visibles) */}
             <button
-              onClick={() => irAFoto(indexActual - 1)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white hover:bg-gray-50 transition duration-300 flex items-center justify-center text-2xl shadow-lg border border-black/20"
+              onClick={() => handleNavegar(-1)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 hover:bg-white transition duration-300 flex items-center justify-center text-xl shadow-lg border border-black/20 z-10"
               title="Anterior"
             >
-              <MdOutlineKeyboardArrowLeft className="text-4xl text-black" />
+              <MdOutlineKeyboardArrowLeft className="text-2xl text-black" />
             </button>
             <button
-              onClick={() => irAFoto(indexActual + 1)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white hover:bg-gray-50 transition duration-300 flex items-center justify-center text-2xl shadow-lg border border-black/20"
+              onClick={() => handleNavegar(1)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 hover:bg-white transition duration-300 flex items-center justify-center text-xl shadow-lg border border-black/20 z-10"
               title="Siguiente"
             >
-              <MdOutlineKeyboardArrowRight className="text-4xl text-black" />
+              <MdOutlineKeyboardArrowRight className="text-2xl text-black" />
             </button>
           </>
         )}
-
-        {fullscreen && (
-          <button
-            onClick={() => setFullscreen(false)}
-            className="absolute bottom-4 right-4 z-[2200] bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white rounded-lg p-3 transition-colors duration-200 cursor-pointer"
-            title="Salir de pantalla completa"
-          >
-            <BsArrowsAngleContract className="text-2xl" />
-          </button>
-        )}
-        </>)}
       </div>
 
       {/* ──── Footer ──── */}
       {!fullscreen && (
-      <div className="flex items-center justify-center border-t border-gray-200 mx-auto w-full">
-        <div className="flex items-center justify-between px-6 py-3 w-8/12">
-          <div className="w-20">
-            {/* {nombreEspacio && (
-              <p className="text-sm font-semibold text-gray-900">
-                {nombreEspacio}
-              </p>
-            )} */}
-            <p className="text-xs text-gray-500">
-              {indexActual + 1}/{totalImagenes}
-            </p>
-          </div>
+        <div className="flex items-center justify-center border-t border-gray-200 mx-auto w-full">
+          <div className="flex items-center justify-between px-6 py-3 w-8/12">
+            <div className="w-30">
+              <p className="text-xs text-gray-500">{counterText}</p>
+            </div>
 
-          <div className="hidden md:flex items-center">
+            <div className="hidden md:flex items-center">
+              <button
+                onClick={() => setModo("fotos")}
+                className={btnClass("fotos")}
+              >
+                <ImImage className="text-base" />
+                {totalImagenes} fotos
+              </button>
+              {totalPlanos > 0 && (
+                <button
+                  onClick={() => setModo("planos")}
+                  className={btnClass("planos")}
+                >
+                  <FaArchway className="text-sm" />
+                  {totalPlanos} planos
+                </button>
+              )}
+              <button onClick={() => setModo("3d")} className={btnClass("3d")}>
+                <Md3dRotation className="text-base" />
+                Visita 3D
+              </button>
+              <button
+                onClick={() => setModo(modo === "mapa" ? "fotos" : "mapa")}
+                className={btnClass("mapa")}
+              >
+                <FaMapMarkerAlt className="text-sm" />
+                Mapa
+              </button>
+            </div>
+
             <button
-              onClick={() => setMostrarMapa(false)}
-              className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer">
-              <ImImage className="text-base" />
-              {totalImagenes} fotos
-            </button>
-            <button className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer">
-              <FaArchway className="text-sm" />
-              Plano
-            </button>
-            <button className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer">
-              <Md3dRotation className="text-base" />
-              Visita 3D
-            </button>
-            <button
-              onClick={() => setMostrarMapa(!mostrarMapa)}
-              className={`flex items-center gap-2 border-2 px-3 py-1.5 text-sm font-semibold cursor-pointer ${
-                mostrarMapa
-                  ? "border-[#e6007a] text-[#e6007a] bg-[#e6007a]/20"
-                  : "border-black/80 text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20"
-              }`}
+              onClick={() => setFullscreen(true)}
+              className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline cursor-pointer"
             >
-              <FaMapMarkerAlt className="text-sm" />
-              Mapa
+              <BsArrowsAngleExpand className="text-base" />
+              {modo === "planos" ? "Ampliar plano" : "Ampliar foto"}
             </button>
           </div>
-
-          <button
-            onClick={() => setFullscreen(true)}
-            className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:underline cursor-pointer"
-          >
-            <BsArrowsAngleExpand className="text-base" />
-            Ampliar foto
-          </button>
         </div>
-      </div>
       )}
     </div>
   );

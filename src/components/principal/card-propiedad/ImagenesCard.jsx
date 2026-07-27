@@ -30,6 +30,10 @@ const ImagenesCard = ({ propiedades }) => {
       .slice()
       .sort((a, b) => a.orden - b.orden)
       .map((g) => g.url),
+    ...(propiedades.planos || [])
+      .slice()
+      .sort((a, b) => a.orden - b.orden)
+      .map((p) => p.url),
   ].filter(Boolean);
 
   const totalImagenes = imagenes.length;

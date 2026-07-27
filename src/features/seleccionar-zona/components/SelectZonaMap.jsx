@@ -4,6 +4,7 @@ import * as maplibregl from "maplibre-gl";
 import { fetchRegionsGeoJSON, fetchStatesGeoJSON, fetchCitiesGeoJSON, fetchBarrios } from "../api";
 import { ZoomControl, LocationControl } from "./MapControls";
 import MapHintBanner from "./MapHintBanner";
+import { apiBackend } from "@/api/apiBackend.js";
 
 const SELECTED_COLOR = "#e6007a";   // rosa normal (nivel seleccionado)
 const HOVER_DARK_PINK = "#99004d";  // rosa oscuro (hover en municipio/barrio)
@@ -273,18 +274,38 @@ export default function SelectZonaMap({ selectedZone, onSelectZone, operation, t
     const map = mapRef.current;
     if (!map || !selectedZone) return;
 
-    // hacer zoom a la zona seleccionada
-    let feat = null;
-    if (selectedZone.type === "region") {
-      feat = findFeature(regionRawRef.current, "slug", selectedZone.slug);
-    } else if (selectedZone.type === "departamento") {
-      feat = findFeature(dptoRawRef.current, "DPTO_CCDGO", selectedZone.daneCode);
-    } else if (selectedZone.type === "municipio") {
-      feat = findFeature(mpioRawRef.current, "MPIO_CCNCT", selectedZone.daneCode);
-    } else if (selectedZone.type === "barrio") {
-      feat = findFeature(barrioRawRef.current, "BAR_COD", selectedZone.daneCode);
+    async function doZoom() {
+      // hacer zoom a la zona seleccionada via GeoJSON
+      let feat = null;
+      if (selectedZone.type === "region") {
+        feat = findFeature(regionRawRef.current, "slug", selectedZone.slug);
+      } else if (selectedZone.type === "departamento") {
+        feat = findFeature(dptoRawRef.current, "DPTO_CCDGO", selectedZone.daneCode);
+      } else if (selectedZone.type === "municipio") {
+        feat = findFeature(mpioRawRef.current, "MPIO_CCNCT", selectedZone.daneCode);
+      } else if (selectedZone.type === "barrio") {
+        feat = findFeature(barrioRawRef.current, "BAR_COD", selectedZone.daneCode);
+      }
+      if (feat) {
+        zoomToBounds(map, featBounds(feat), selectedZone.type === "barrio" ? 60 : 40);
+        return;
+      }
+      // fallback: geocodificar el nombre y hacer flyTo (busqueda desde input)
+      try {
+        const address = `${selectedZone.name}, Colombia`;
+        const res = await apiBackend(`/api/geocode?address=${encodeURIComponent(address)}`, "GET");
+        if (res.success && res.data) {
+          const zoomLevel =
+            selectedZone.type === "region" ? 7 :
+            selectedZone.type === "departamento" ? 9 :
+            selectedZone.type === "barrio" ? 15 : 13;
+          map.flyTo({ center: [res.data.longitude, res.data.latitude], zoom: zoomLevel, duration: 1500 });
+        }
+      } catch (e) {
+        console.error("[Zona] error geocodificando zona:", e);
+      }
     }
-    if (feat) zoomToBounds(map, featBounds(feat), selectedZone.type === "barrio" ? 60 : 40);
+    doZoom();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedZone, mapReady]);
 

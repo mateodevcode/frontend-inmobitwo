@@ -406,10 +406,14 @@ export default function AddPhotosStep() {
   const [galeriaFiles, setGaleriaFiles] = useState([]);
   const [galeriaPreviews, setGaleriaPreviews] = useState([]);
 
+  // Planos
+  const [planosFiles, setPlanosFiles] = useState([]);
+  const [planosPreviews, setPlanosPreviews] = useState([]);
+
   const [showWarning, setShowWarning] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const hayFotos = !!imagenPrincipal || galeriaFiles.length > 0;
+  const hayFotos = !!imagenPrincipal || galeriaFiles.length > 0 || planosFiles.length > 0;
 
   // ─────────────────────────────────────────────
   // Imagen principal: validar + setear
@@ -467,6 +471,38 @@ export default function AddPhotosStep() {
     });
   };
 
+  // ─────────────────────────────────────────────
+  // Planos: agregar archivos (no se vuelven principal)
+  // ─────────────────────────────────────────────
+  const handlePlanosFilesSelected = (files) => {
+    const validFiles = [];
+    const newPreviews = [];
+
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) continue;
+      if (file.size > 10 * 1024 * 1024) continue;
+      validFiles.push(file);
+      newPreviews.push({ url: URL.createObjectURL(file), name: file.name });
+    }
+
+    if (validFiles.length === 0) return;
+
+    setPlanosFiles((prev) => {
+      const total = prev.length + validFiles.length;
+      if (total > 10) return prev;
+      return [...prev, ...validFiles];
+    });
+    setPlanosPreviews((prev) => [...prev, ...newPreviews]);
+  };
+
+  const handleDeletePlanoPreview = (index) => {
+    setPlanosFiles((prev) => prev.filter((_, i) => i !== index));
+    setPlanosPreviews((prev) => {
+      URL.revokeObjectURL(prev[index].url);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   // Convierte una foto de la galería en la principal (swap)
   const handleMakePrincipal = (index) => {
     const nuevaPrincipalFile = galeriaFiles[index];
@@ -495,7 +531,7 @@ export default function AddPhotosStep() {
       setShowWarning(true);
       return;
     }
-    subirFotosAnuncio(anuncioId, setLoading, imagenPrincipal, galeriaFiles);
+    subirFotosAnuncio(anuncioId, setLoading, imagenPrincipal, galeriaFiles, planosFiles);
   };
 
   const handleBack = () => {
@@ -527,6 +563,18 @@ export default function AddPhotosStep() {
             previews={galeriaPreviews}
             onDelete={handleDeleteGaleriaPreview}
             onMakePrincipal={handleMakePrincipal}
+          />
+        </div>
+
+        <div className="mt-8">
+          <GaleriaDropzone
+            onFilesSelected={handlePlanosFilesSelected}
+            count={planosFiles.length}
+          />
+          <GaleriaPreviewGrid
+            previews={planosPreviews}
+            onDelete={handleDeletePlanoPreview}
+            onMakePrincipal={() => {}}
           />
         </div>
       </div>

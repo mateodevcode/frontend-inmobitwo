@@ -21,7 +21,7 @@ const PageAnuncio = () => {
   const idVistaRegistradaRef = useRef(null);
 
   const navState = location.state || {};
-  const { listaIds, posicion, total, filtroLabel } = navState;
+  const { listaIds, posicion, total, filtroLabel, searchUrl } = navState;
 
   const onNavigateTo = useCallback(
     (direccion) => {
@@ -78,7 +78,13 @@ const PageAnuncio = () => {
           setPropiedadAEliminar(id);
           setOpenModalConfirmarEliminarPropiedad(true);
         }}
-        onClose={() => navigate(-1)}
+        onClose={() => {
+          if (searchUrl) {
+            navigate(searchUrl);
+          } else {
+            navigate(-1);
+          }
+        }}
         listaIds={listaIds}
         posicion={posicion}
         total={total}

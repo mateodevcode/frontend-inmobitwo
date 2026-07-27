@@ -18,7 +18,7 @@ const ListaPropiedades = () => {
       <div className="w-full bg-gray-100">
         <div className="flex items-start w-[90%] 2xl:w-10/12 mx-auto">
           <FiltrosPrincipal locationInfo={locationInfo} operationSlug={operationSlug} typeSlug={typeSlug} />
-          <ListadoDePropiedades />
+          <ListadoDePropiedades locationInfo={locationInfo} operationSlug={operationSlug} typeSlug={typeSlug} />
         </div>
       </div>
 

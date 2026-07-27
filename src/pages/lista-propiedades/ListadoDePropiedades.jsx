@@ -4,14 +4,42 @@ import { usePropertySearch } from "@/hooks/usePropertySearch";
 import CardAnuncioCompra from "./card-anuncio/CardAnuncioCompra";
 import CardAnuncio from "./card-anuncio/CardAnuncio";
 
-const ListadoDePropiedades = () => {
-  const { operationSlug, typeSlug, citySlug, deptSlug } = useSlugParser();
+const TYPE_LABELS = {
+  viviendas: "Viviendas",
+  habitaciones: "Habitaciones",
+  oficinas: "Oficinas",
+  locales: "Locales",
+  garajes: "Garajes",
+  terrenos: "Terrenos",
+  edificios: "Edificios",
+  "casa-o-chalet": "Casas o chalets",
+  "casa-rustica": "Casas rústicas",
+  "obra-nueva": "Obra nueva",
+  vacacional: "Vacacional",
+};
+
+function getFiltroLabel(locationInfo, typeSlug) {
+  const typeLabel = TYPE_LABELS[typeSlug] || typeSlug || "Inmuebles";
+  const locName =
+    locationInfo?.city_name ||
+    locationInfo?.state_name ||
+    locationInfo?.region_name ||
+    "resultados";
+  return `${typeLabel} de ${locName}`;
+}
+
+const ListadoDePropiedades = ({ locationInfo, operationSlug, typeSlug }) => {
+  const { citySlug, deptSlug } = useSlugParser();
   const { properties, loading, error } = usePropertySearch({
     operationSlug,
     typeSlug,
     citySlug,
     deptSlug,
   });
+
+  const listaIds = properties.map((p) => p.id);
+  const total = properties.length;
+  const filtroLabel = getFiltroLabel(locationInfo, typeSlug);
 
   return (
     <div className="w-[75%] h-full">
@@ -28,11 +56,25 @@ const ListadoDePropiedades = () => {
             No se encontraron inmuebles en esta zona.
           </div>
         )}
-        {properties.map((propiedad) =>
+        {properties.map((propiedad, index) =>
           propiedad.operacion === "venta" ? (
-            <CardAnuncioCompra propiedad={propiedad} key={propiedad.id} />
+            <CardAnuncioCompra
+              propiedad={propiedad}
+              key={propiedad.id}
+              listaIds={listaIds}
+              posicion={index}
+              total={total}
+              filtroLabel={filtroLabel}
+            />
           ) : (
-            <CardAnuncio propiedad={propiedad} key={propiedad.id} />
+            <CardAnuncio
+              propiedad={propiedad}
+              key={propiedad.id}
+              listaIds={listaIds}
+              posicion={index}
+              total={total}
+              filtroLabel={filtroLabel}
+            />
           ),
         )}
       </div>

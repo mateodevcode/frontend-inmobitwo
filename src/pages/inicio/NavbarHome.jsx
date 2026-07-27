@@ -3,15 +3,13 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TbMenu4 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
-import { getInitials } from "@/lib/getInitials";
-import { getColorForOrg } from "@/lib/getRandomTailwindColors";
+import BotonUsuario from "@/components/usuario/BotonUsuario";
 import EnlaceNav from "./modales/EnlaceNav";
 import { irArriba } from "../../utils/irArriba";
 
 const NavbarHome = () => {
   const { usuario, openModalUser, setOpenModalUser } = useAppContext();
   const navigate = useNavigate();
-  const color = getColorForOrg(usuario?.id, usuario?.name);
 
   return (
     <div className="bg-white w-full border-b border-black/5 font-poppins">
@@ -79,18 +77,7 @@ const NavbarHome = () => {
           </button>
 
           {usuario ? (
-            <div
-              className="flex gap-2 items-center relative"
-              onClick={() => setOpenModalUser(!openModalUser)}
-            >
-              <div className="hover:bg-segundo/5 absolute inset-0 rounded-full z-20" />
-              <div
-                className="w-9 h-9 p-4 rounded-full font-semibold flex items-center justify-center hover:shadow shadow-black/10 cursor-pointer select-none active:scale-95 duration-75 transition hover:bg-black"
-                style={color}
-              >
-                {getInitials(usuario?.name)}
-              </div>
-            </div>
+            <BotonUsuario onClick={() => setOpenModalUser(!openModalUser)} />
           ) : (
             <button
               className="flex items-center gap-2 text-sm font-semibold text-black/80 hover:text-tercero"

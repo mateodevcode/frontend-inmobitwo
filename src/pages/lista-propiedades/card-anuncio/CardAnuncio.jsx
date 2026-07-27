@@ -35,12 +35,14 @@ const OPERACION_LABEL = {
   alquiler: "Alquiler",
 };
 
-const CardAnuncio = ({ propiedad }) => {
+const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
   const navigate = useNavigate();
   const { favoritos } = useAppContext();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
   const [currentIndex, setCurrentIndex] = useState(0);
   const autoTimerRef = useRef(null);
+
+  const navState = { listaIds, posicion, total, filtroLabel };
 
   const imagenPrincipal =
     propiedad?.imagen_principal_url || "/propiedades/chalet.jpg";
@@ -88,7 +90,10 @@ const CardAnuncio = ({ propiedad }) => {
   }, [currentIndex]); // eslint-disable-line
 
   return (
-    <div className="flex items-center h-64 w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group">
+    <div
+      className="flex items-center h-64 w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group cursor-pointer"
+      onClick={() => propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState })}
+    >
       <div className="w-[35%] h-full bg-primero rounded-l-md relative overflow-hidden">
         <img
           src={imagenes[currentIndex]}
@@ -97,13 +102,22 @@ const CardAnuncio = ({ propiedad }) => {
         />
 
         <div className="absolute left-2 bottom-2 flex items-center justify-center gap-2">
-          <div className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none">
+          <div
+            className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+            onClick={(e) => e.stopPropagation()}
+          >
             <FaArchway className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
           </div>
-          <div className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none">
+          <div
+            className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+            onClick={(e) => e.stopPropagation()}
+          >
             <FiVideo className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
           </div>
-          <div className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none">
+          <div
+            className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+            onClick={(e) => e.stopPropagation()}
+          >
             <BsFillGeoAltFill className="text-sm text-segundo/60 group-hover:text-segundo transition-colors duration-300" />
           </div>
         </div>
@@ -143,9 +157,10 @@ const CardAnuncio = ({ propiedad }) => {
           <div className="flex items-center justify-between w-full">
             <h2
               className="font-medium text-blue-600 hover:text-blue-700 hover:underline cursor-pointer select-none px-4 pt-2"
-              onClick={() =>
-                propiedad?.id && navigate(`/inmueble/${propiedad.id}`)
-              }
+              onClick={(e) => {
+                e.stopPropagation();
+                propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState });
+              }}
             >
               {titulo}
             </h2>
@@ -185,15 +200,19 @@ const CardAnuncio = ({ propiedad }) => {
         <div className="px-4 flex items-center justify-between w-full">
           <div
             className="flex items-center gap-2 text-blue-600 cursor-pointer select-none"
-            onClick={() =>
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState });
+            }}
           >
             <PiChats className="text-lg" />
             <p className="text-sm font-semibold hover:underline">Contactar</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="cursor-pointer select-none">
+            <div
+              className="cursor-pointer select-none"
+              onClick={(e) => e.stopPropagation()}
+            >
               <HiOutlineTrash className="text-lg text-blue-600" />
             </div>
             <div

@@ -1,15 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
-import { getInitials } from "@/lib/getInitials";
+import BotonUsuario from "@/components/usuario/BotonUsuario";
+import ModalUser from "@/components/modales/ModalUser";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { items_menu } from "@/data/items_menu";
 import { irArriba } from "@/utils/irArriba";
-import { getColorForOrg } from "@/lib/getRandomTailwindColors";
 
 const HeaderInmobitwo = () => {
-  const { usuario, openModalHamburguesa, setOpenModalHamburguesa } =
+  const { openModalHamburguesa, setOpenModalHamburguesa, setOpenModalUser } =
     useAppContext();
-  const color = getColorForOrg(usuario.id, usuario.name);
   const navigate = useNavigate();
   const location = useLocation();
   const segmento = location.pathname.split("/usuario/")[1];
@@ -51,21 +50,7 @@ const HeaderInmobitwo = () => {
             })}
           </nav>
 
-          <div
-            className="flex gap-2 items-center relative"
-            onClick={() => {
-              navigate("/usuario/tus-datos/perfil");
-              irArriba();
-            }}
-          >
-            <div className="hover:bg-segundo/5 absolute inset-0 rounded-full z-20" />
-            <div
-              className="w-9 h-9 p-4 rounded-full font-semibold flex items-center justify-center hover:shadow shadow-black/10 cursor-pointer select-none active:scale-95 duration-75 transition hover:bg-black text-sm"
-              style={color}
-            >
-              {getInitials(usuario?.name)}
-            </div>
-          </div>
+          <BotonUsuario onClick={() => setOpenModalUser(true)} />
 
           <button
             className="p-2 hover:bg-rose-100 rounded-md flex md:hidden cursor-pointer select-none"
@@ -77,6 +62,7 @@ const HeaderInmobitwo = () => {
           </button>
         </div>
       </div>
+      <ModalUser />
     </header>
   );
 };

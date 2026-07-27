@@ -28,7 +28,15 @@ import { useNavigate } from "react-router-dom";
 
 const AUTOPLAY_SECONDS = 10;
 
-export default function DetallePropiedad({ inmueble, onClose }) {
+export default function DetallePropiedad({
+  inmueble,
+  onClose,
+  listaIds,
+  posicion,
+  total,
+  filtroLabel,
+  onNavigateTo,
+}) {
   const { favoritos } = useAppContext();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
   const { dispararEventoYRevisar } = useTracking();
@@ -201,24 +209,42 @@ export default function DetallePropiedad({ inmueble, onClose }) {
 
       {/* ──── Botón cerrar (barra superior existente) ──── */}
       <div className="w-full h-12 bg-white flex items-center">
-        <div className="mx-auto w-9/12 flex items-center justify-between">
+        <div className="mx-auto w-9/12 flex items-center justify-between gap-4">
           <button
             onClick={onClose}
             className="flex items-center justify-center cursor-pointer select-none gap-2 font-poppins text-blue-600 hover:underline hover:text-blue-700"
           >
-            <MdOutlineKeyboardDoubleArrowLeft className="text-2xl" />
-            <span>Viviendas de oviedo</span>
+            <MdOutlineKeyboardDoubleArrowLeft className="text-2xl shrink-0" />
+            <span className="truncate">
+              {filtroLabel || "Volver a resultados"}
+            </span>
           </button>
 
-          <p>1 de 1.232 viviendas</p>
+          {listaIds && listaIds.length > 0 && (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => onNavigateTo("anterior")}
+                disabled={posicion <= 0}
+                className="flex items-center justify-center cursor-pointer select-none gap-1 font-poppins text-blue-600 hover:underline hover:text-blue-700 disabled:text-gray-300 disabled:cursor-default disabled:no-underline"
+              >
+                <MdOutlineKeyboardArrowLeft className="text-2xl" />
+                <span className="text-sm">Anterior</span>
+              </button>
 
-          <button
-            onClick={onClose}
-            className="flex items-center justify-center cursor-pointer select-none gap-2 font-poppins text-blue-600 hover:underline hover:text-blue-700"
-          >
-            <span>Siguiente</span>
-            <MdKeyboardArrowRight className="text-2xl" />
-          </button>
+              <p className="text-sm text-gray-500 whitespace-nowrap">
+                {posicion + 1} de {total || listaIds.length} viviendas
+              </p>
+
+              <button
+                onClick={() => onNavigateTo("siguiente")}
+                disabled={posicion >= (total || listaIds.length) - 1}
+                className="flex items-center justify-center cursor-pointer select-none gap-1 font-poppins text-blue-600 hover:underline hover:text-blue-700 disabled:text-gray-300 disabled:cursor-default disabled:no-underline"
+              >
+                <span className="text-sm">Siguiente</span>
+                <MdOutlineKeyboardArrowRight className="text-2xl" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

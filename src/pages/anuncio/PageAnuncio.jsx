@@ -1,13 +1,14 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import NavbarHome from "../inicio/NavbarHome";
 import DetallePropiedad from "./DetallePropiedad";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import usePropiedades from "../../hooks/usePropiedades";
 import { useAppContext } from "@/context/AppContext.js";
 import useTracking from "@/hooks/useTracking";
 
 const PageAnuncio = () => {
   const { id } = useParams();
+  const location = useLocation();
   const { cargarPropiedad } = usePropiedades();
   const {
     propiedad,
@@ -18,6 +19,27 @@ const PageAnuncio = () => {
   const { dispararEventoYRevisar } = useTracking();
 
   const idVistaRegistradaRef = useRef(null);
+
+  const navState = location.state || {};
+  const { listaIds, posicion, total, filtroLabel } = navState;
+
+  const onNavigateTo = useCallback(
+    (direccion) => {
+      if (!listaIds || listaIds.length === 0) return;
+      const nuevoIndex = posicion + (direccion === "siguiente" ? 1 : -1);
+      if (nuevoIndex < 0 || nuevoIndex >= listaIds.length) return;
+      navigate(`/inmueble/${listaIds[nuevoIndex]}`, {
+        state: {
+          listaIds,
+          posicion: nuevoIndex,
+          total,
+          filtroLabel,
+        },
+        replace: true,
+      });
+    },
+    [listaIds, posicion, total, filtroLabel, navigate],
+  );
 
   useEffect(() => {
     const entrada = Date.now();
@@ -57,6 +79,11 @@ const PageAnuncio = () => {
           setOpenModalConfirmarEliminarPropiedad(true);
         }}
         onClose={() => navigate(-1)}
+        listaIds={listaIds}
+        posicion={posicion}
+        total={total}
+        filtroLabel={filtroLabel}
+        onNavigateTo={onNavigateTo}
       />
     </div>
   );

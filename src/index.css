@@ -78,18 +78,7 @@
 }
 
 
-path.leaflet-interactive:focus,
-path.leaflet-interactive {
-  outline: none;
-}
 
-
-.leaflet-container .leaflet-interactive {
-  cursor: grab !important;
-}
-.leaflet-container.leaflet-dragging .leaflet-interactive {
-  cursor: grabbing !important;
-}
 
 /* Chincheta mapa inmuebles */
 

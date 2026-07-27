@@ -1,37 +1,18 @@
 // src/components/publicar-anuncio/components/Addressmapmodal.jsx
 //
-// Modal de confirmación de ubicación. Reutiliza el patrón de Dialog de
+// Modal de confirmacion de ubicacion. Reutiliza el patron de Dialog de
 // Headless UI v2 que ya usamos en "Nadie contacta a un anuncio sin fotos".
-//
-// Flujo:
-//  1. El padre llama a geocode (vía tu apiBackend) y pasa el resultado aquí,
-//     O pasa null si Nominatim no encontró nada (404) — en ese caso el mapa
-//     se centra en las coordenadas de la CIUDAD elegida en el paso 3.
-//  2. El usuario puede arrastrar el pin para ajustar.
-//  3. Al confirmar, se llama onConfirm({ lat, lng }).
-//
-// Requiere: npm install leaflet react-leaflet
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogPanel,
   DialogTitle,
   DialogBackdrop,
 } from "@headlessui/react";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import L from "leaflet";
-// El CSS de Leaflet se importa UNA VEZ en src/main.jsx, no aquí.
-// Si lo importas dentro de este componente, Vite puede tree-shakearlo
-// o cargarlo después del primer render, dejando el marker invisible
-// (su <div> existe en el DOM pero queda con width/height: 0 sin el CSS).
+import * as maplibregl from "maplibre-gl";
 import { X, AlertTriangle } from "lucide-react";
 
-// Leaflet por defecto busca sus iconos en una ruta relativa que no existe
-// en builds de Vite. En vez de depender de un PNG externo (unpkg.com puede
-// fallar por CSP, ad-blockers, o problemas de red sin dar error visible),
-// usamos un ícono SVG inline en un divIcon — cero dependencia de red,
-// garantizado que se renderiza.
 const pinSvg = `
   <svg width="32" height="42" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg">
     <path d="M16 0C7.163 0 0 7.163 0 16c0 11 16 26 16 26s16-15 16-26C32 7.163 24.837 0 16 0z" fill="#9d174d"/>
@@ -39,64 +20,20 @@ const pinSvg = `
   </svg>
 `;
 
-const markerIcon = L.divIcon({
-  html: pinSvg,
-  className: "", // evita que Leaflet aplique su clase default con background propio
-  iconSize: [32, 42],
-  iconAnchor: [16, 42], // la punta del pin (abajo, centrado) apunta a la coordenada exacta
-});
-
-// Umbral bajo el cual mostramos el aviso de "verifica la ubicación".
-// Nominatim devuelve importance entre 0 y 1; en la práctica, matches
-// de calle exacta suelen rondar 0.5-0.7, así que 0.4 es un corte razonable.
 const LOW_CONFIDENCE_THRESHOLD = 0.4;
-
-// Recentra el mapa cuando cambian las coordenadas (ej. el usuario cerró
-// y reabrió el modal con una dirección distinta). También fuerza un
-// recálculo de tamaño: si el modal anima su entrada (Dialog de Headless UI),
-// Leaflet puede medir el contenedor como 0x0 en el primer render, dejando
-// los tiles y el marker mal posicionados o invisibles.
-function RecenterOnChange({ position }) {
-  const map = useMap();
-
-  useEffect(() => {
-    map.invalidateSize();
-    map.setView(position, map.getZoom());
-  }, [position]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return null;
-}
-
-function DraggableMarker({ position, onPositionChange }) {
-  const markerRef = useRef(null);
-
-  const handleDragEnd = useCallback(() => {
-    const marker = markerRef.current;
-    if (marker) {
-      const { lat, lng } = marker.getLatLng();
-      onPositionChange({ lat, lng });
-    }
-  }, [onPositionChange]);
-
-  return (
-    <Marker
-      position={position}
-      draggable
-      icon={markerIcon}
-      ref={markerRef}
-      eventHandlers={{ dragend: handleDragEnd }}
-    />
-  );
-}
 
 export default function AddressMapModal({
   open,
   onClose,
   onConfirm,
-  geocodeResult, // { latitude, longitude, displayName, importance } | null
-  fallbackPosition, // { latitude, longitude } de la ciudad elegida, usado si geocodeResult es null
+  geocodeResult,
+  fallbackPosition,
 }) {
-  // Posición inicial: el resultado de Nominatim si existe, si no la ciudad.
+  const mapContainerRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markerRef = useRef(null);
+  const positionRef = useRef(null);
+
   const initialLat =
     geocodeResult?.latitude ?? fallbackPosition?.latitude ?? 40.4168;
   const initialLng =
@@ -107,24 +44,103 @@ export default function AddressMapModal({
     lng: initialLng,
   });
 
-  // BUG CORREGIDO: useState solo usa su valor inicial en el primer render.
-  // Si el modal ya estaba montado (o React reutiliza la instancia) y
-  // geocodeResult/fallbackPosition cambian después — por ejemplo, el usuario
-  // cierra el modal, cambia la dirección, y vuelve a abrir — el state
-  // `position` se quedaba con las coordenadas viejas (el fallback de Madrid),
-  // aunque el mapa visualmente sí se recentraba via `map.setView()`.
-  // Este efecto vuelve a sincronizar el state cada vez que cambian los
-  // props de entrada, mientras el modal esté abierto.
   useEffect(() => {
     if (open) {
       setPosition({ lat: initialLat, lng: initialLng });
     }
   }, [open, initialLat, initialLng]);
 
-  const notFoundExact = !geocodeResult; // Nominatim no encontró la dirección (404)
+  const notFoundExact = !geocodeResult;
   const lowConfidence =
     geocodeResult?.importance != null &&
     geocodeResult.importance < LOW_CONFIDENCE_THRESHOLD;
+
+  // ──── Inicializar / destruir mapa al abrir/cerrar modal ────
+  useEffect(() => {
+    if (!open) return;
+    console.log("[AddressMapModal] Creando mapa...");
+
+    // Pequeno delay para que el Dialog termine su animacion y el contenedor tenga tamano
+    const timer = setTimeout(() => {
+      if (!mapContainerRef.current) return;
+
+      const map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        style: {
+          version: 8,
+          sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } },
+          layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
+        },
+        center: [initialLng, initialLat],
+        zoom: 16,
+        attributionControl: false,
+      });
+
+      positionRef.current = { lat: initialLat, lng: initialLng };
+      mapInstanceRef.current = map;
+
+      map.on("load", () => {
+        console.log("[AddressMapModal] Mapa cargado, agregando marker");
+        createMarker(map);
+      });
+
+      map.on("error", (e) => {
+        console.error("[AddressMapModal] Error del mapa:", e);
+      });
+    }, 150);
+
+    return () => {
+      clearTimeout(timer);
+      if (mapInstanceRef.current) {
+        console.log("[AddressMapModal] Destruyendo mapa");
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+        markerRef.current = null;
+      }
+    };
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ──── Actualizar posicion del marker cuando cambia position ────
+  useEffect(() => {
+    if (!markerRef.current) return;
+    markerRef.current.setLngLat([position.lng, position.lat]);
+  }, [position]);
+
+  // ──── Actualizar centro cuando cambia initialLat/initialLng ────
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+    map.flyTo({ center: [initialLng, initialLat] });
+    positionRef.current = { lat: initialLat, lng: initialLng };
+  }, [initialLat, initialLng]);
+
+  function createMarker(map) {
+    const el = document.createElement("div");
+    el.innerHTML = pinSvg;
+    el.style.cursor = "grab";
+
+    const marker = new maplibregl.Marker({
+      element: el,
+      anchor: "bottom",
+      draggable: true,
+    })
+      .setLngLat([positionRef.current.lng, positionRef.current.lat])
+      .addTo(map);
+
+    marker.on("dragstart", () => {
+      el.style.cursor = "grabbing";
+    });
+
+    marker.on("dragend", () => {
+      el.style.cursor = "grab";
+      const lngLat = marker.getLngLat();
+      const newPos = { lat: lngLat.lat, lng: lngLat.lng };
+      positionRef.current = newPos;
+      setPosition(newPos);
+    });
+
+    markerRef.current = marker;
+  }
 
   function handleConfirm() {
     onConfirm({ lat: position.lat, lng: position.lng });
@@ -141,7 +157,7 @@ export default function AddressMapModal({
         >
           <div className="mb-4 flex items-start justify-between gap-4">
             <DialogTitle className="text-2xl font-bold text-slate-900">
-              Confirma la ubicación
+              Confirma la ubicacion
             </DialogTitle>
             <button
               type="button"
@@ -153,14 +169,13 @@ export default function AddressMapModal({
             </button>
           </div>
 
-          {/* Avisos según el resultado de geocodificación */}
           {notFoundExact && (
             <div className="mb-4 flex items-start gap-3 rounded-md bg-amber-50 px-4 py-3">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
               <p className="text-base text-slate-900">
-                No pudimos localizar esa dirección exacta. Te mostramos el mapa
+                No pudimos localizar esa direccion exacta. Te mostramos el mapa
                 centrado en la ciudad que elegiste — arrastra el pin hasta la
-                ubicación correcta.
+                ubicacion correcta.
               </p>
             </div>
           )}
@@ -169,33 +184,18 @@ export default function AddressMapModal({
             <div className="mb-4 flex items-start gap-3 rounded-md bg-amber-50 px-4 py-3">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
               <p className="text-base text-slate-900">
-                Verifica que el pin esté en el lugar correcto antes de
+                Verifica que el pin este en el lugar correcto antes de
                 confirmar.
               </p>
             </div>
           )}
 
           <p className="mb-4 text-base text-slate-700">
-            Arrastra el pin si necesitas ajustar la ubicación exacta.
+            Arrastra el pin si necesitas ajustar la ubicacion exacta.
           </p>
 
           <div className="mb-5 h-96 w-full overflow-hidden rounded-md border border-slate-200">
-            <MapContainer
-              center={[position.lat, position.lng]}
-              zoom={16}
-              scrollWheelZoom
-              style={{ height: "100%", width: "100%" }}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <RecenterOnChange position={[initialLat, initialLng]} />
-              <DraggableMarker
-                position={position}
-                onPositionChange={setPosition}
-              />
-            </MapContainer>
+            <div ref={mapContainerRef} className="w-full h-full" />
           </div>
 
           <p className="mb-5 text-sm text-slate-500">
@@ -216,7 +216,7 @@ export default function AddressMapModal({
               onClick={handleConfirm}
               className="rounded-md bg-fuchsia-800 px-6 py-3 text-base font-bold text-white hover:bg-fuchsia-900"
             >
-              Confirmar ubicación
+              Confirmar ubicacion
             </button>
           </div>
         </DialogPanel>

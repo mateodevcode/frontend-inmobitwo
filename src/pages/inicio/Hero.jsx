@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AnimatedTitle from "./AnimatedTitle";
 import InputSearchPrincipal from "./modales/InputSearchPrincipal";
@@ -21,7 +21,7 @@ const Hero = ({
   const [query, setQuery] = useState("");
   const [selectedGeo, setSelectedGeo] = useState(null);
 
-  const handleSearchSubmit = () => {
+  useEffect(() => {
     if (!selectedGeo) return;
 
     const operationSlug = MAPPING_OPERACIONES[tab] || tab;
@@ -37,7 +37,7 @@ const Hero = ({
     }
 
     navigate(`/${firstSegment}/${secondSegment}`);
-  };
+  }, [selectedGeo]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <section className="w-full flex justify-center font-poppins">
@@ -102,12 +102,17 @@ const Hero = ({
             />
 
             <button
-              onClick={handleSearchSubmit}
+              onClick={() => {
+                if (!selectedGeo || query.trim() === "") return;
+                navigate(
+                  `/${MAPPING_OPERACIONES[tab] || tab}-${tipo.slug}/${selectedGeo.type === "region" ? selectedGeo.regionSlug : selectedGeo.type === "departamento" ? selectedGeo.departmentSlug : `${selectedGeo.citySlug}-${selectedGeo.departmentSlug}`}`,
+                );
+              }}
               disabled={!selectedGeo || query.trim() === ""}
-              className={`relative flex items-center gap-2 px-8 h-11 select-none overflow-hidden group before:absolute before:inset-0 before:bg-tercero before:w-0 before:transition-all before:duration-500 before:ease-in-out before:z-0 w-28 ${
+              className={`relative flex items-center justify-center gap-2 px-8 h-11 select-none overflow-hidden group before:absolute before:inset-0 before:bg-tercero before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 w-28 ${
                 !selectedGeo || query.trim() === ""
-                  ? "bg-black/40 text-white/60 cursor-not-allowed before:hidden"
-                  : "bg-black text-white cursor-pointer hover:before:w-full"
+                  ? "bg-black/80 text-white/90"
+                  : "bg-black text-white cursor-pointer"
               }`}
             >
               <p className="text-sm relative z-10 group-hover:text-white transition-colors duration-300 font-semibold">

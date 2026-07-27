@@ -65,7 +65,14 @@ export default function InputSearchZona({
   }, [activeIndex]);
 
   const handleSelectResult = (item) => {
-    if (item.tipo === "departamento") {
+    if (item.tipo === "region") {
+      setQuery(item.region_name);
+      onSelectZone({
+        type: "region",
+        name: item.region_name,
+        slug: item.region_slug,
+      });
+    } else if (item.tipo === "departamento") {
       setQuery(item.state_name);
       onSelectZone({
         type: "departamento",
@@ -80,8 +87,6 @@ export default function InputSearchZona({
         name: item.city_name,
         dptoDaneCode: item.state_dane_code,
       });
-    } else {
-      setQuery(item.region_name);
     }
     setIsOpen(false);
     setActiveIndex(-1);

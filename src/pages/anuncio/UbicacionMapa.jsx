@@ -1,38 +1,36 @@
 import { useEffect, useRef } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { VITE_MAPTILER_KEY } from "@/config/config.js";
+import * as maplibregl from "maplibre-gl";
 
 export default function UbicacionMapa({ lat, lng }) {
-  const mapRef = useRef(null);
+  const mapContainerRef = useRef(null);
   const instanceRef = useRef(null);
+  const coordsRef = useRef({ lat, lng });
+
+  useEffect(() => { coordsRef.current = { lat, lng }; }, [lat, lng]);
 
   useEffect(() => {
     if (!lat || !lng || instanceRef.current) return;
 
-    const map = L.map(mapRef.current, {
-      zoomControl: false,
-      attributionControl: false,
-      dragging: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      touchZoom: false,
-      center: [lat, lng],
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: {
+        version: 8,
+        sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } },
+        layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
+      },
+      center: [lng, lat],
       zoom: 15,
+      attributionControl: false,
     });
 
-    L.tileLayer(
-      `https://api.maptiler.com/maps/streets-v4/{z}/{x}/{y}.png?key=${VITE_MAPTILER_KEY}`,
-      { attribution: "", maxZoom: 20, tileSize: 512, zoomOffset: -1 },
-    ).addTo(map);
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
 
-    const icon = L.divIcon({
-      html: `<div class="price-pin-simple"></div>`,
-      className: "",
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
-    });
-    L.marker([lat, lng], { icon }).addTo(map);
+    const el = document.createElement("div");
+    el.innerHTML = `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#e6007a"/><circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>`;
+
+    new maplibregl.Marker({ element: el, anchor: "bottom" })
+      .setLngLat([lng, lat])
+      .addTo(map);
 
     instanceRef.current = map;
 
@@ -51,12 +49,26 @@ export default function UbicacionMapa({ lat, lng }) {
     );
   };
 
+  const handleCentrar = () => {
+    const map = instanceRef.current;
+    const c = coordsRef.current;
+    if (map && c.lat && c.lng) {
+      map.flyTo({ center: [c.lng, c.lat], zoom: 15, duration: 800 });
+    }
+  };
+
   return (
     <div>
-      <div
-        ref={mapRef}
-        className="w-full h-64 rounded-sm border border-gray-200"
-      />
+      <div className="relative w-full h-64 rounded-sm border border-gray-200">
+        <div ref={mapContainerRef} className="w-full h-full rounded-sm" />
+        <button
+          onClick={handleCentrar}
+          className="absolute top-2 right-9 bg-white border border-gray-300 rounded-sm px-2 py-1 text-xs font-semibold shadow hover:bg-gray-100 z-10"
+          title="Centrar mapa"
+        >
+          Centrar
+        </button>
+      </div>
       <button
         onClick={handleAmpliar}
         className="text-sm font-semibold text-blue-600 hover:underline mt-2"

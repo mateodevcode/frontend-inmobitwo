@@ -13,6 +13,7 @@ import useFavoritos from "@/hooks/useFavoritos";
 import useTracking from "@/hooks/useTracking";
 import { useAppContext } from "@/context/AppContext";
 import { useTiempoRelativo } from "@/hooks/useTiempoRelativo";
+import { useNavigate } from "react-router-dom";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import UbicacionMapa from "./UbicacionMapa";
 import { TbAlertOctagonFilled } from "react-icons/tb";
@@ -24,7 +25,7 @@ import { GiHistogram } from "react-icons/gi";
 import { AiOutlineEdit } from "react-icons/ai";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import { BiNotepad } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -38,11 +39,11 @@ export default function DetallePropiedad({
   onNavigateTo,
 }) {
   const { favoritos } = useAppContext();
+  const navigate = useNavigate();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
   const { dispararEventoYRevisar } = useTracking();
   const [mostrarTelefono, setMostrarTelefono] = useState(false);
   const [descripcionAbierta, setDescripcionAbierta] = useState(false);
-  const navigate = useNavigate();
 
   // ──────────────────────── Barra sticky al hacer scroll ────────────────────────
   const sentinelRef = useRef(null);
@@ -316,11 +317,7 @@ export default function DetallePropiedad({
 
           <div className="flex items-center gap-3 mt-3">
             <button
-              onClick={() =>
-                document
-                  .getElementById("fotos-section")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => navigate(`/inmueble/${inmueble.id}/foto/1`)}
               className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
             >
               <ImImage className="text-base" />
@@ -329,7 +326,7 @@ export default function DetallePropiedad({
             <button
               onClick={() =>
                 document
-                  .getElementById("ubicacion-section")
+                  .getElementById("plano-section")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
               className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
@@ -339,7 +336,7 @@ export default function DetallePropiedad({
             <button
               onClick={() =>
                 document
-                  .getElementById("ubicacion-section")
+                  .getElementById("tour-section")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
               className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
@@ -347,11 +344,7 @@ export default function DetallePropiedad({
               <Md3dRotation /> Vista 3D
             </button>
             <button
-              onClick={() =>
-                document
-                  .getElementById("ubicacion-section")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={() => navigate(`/inmueble/${inmueble.id}/foto/1?mapa=1`)}
               className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
             >
               <FaMapMarkerAlt /> Mapa
@@ -374,23 +367,6 @@ export default function DetallePropiedad({
                     <span className="text-sm">Ver mapa</span>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">
-                  {[inmueble.barrio_name, inmueble.city_name]
-                    .filter(Boolean)
-                    .join(", ")}{" "}
-                  {inmueble.lat && inmueble.lng && (
-                    <button
-                      onClick={() =>
-                        document
-                          .getElementById("ubicacion-section")
-                          ?.scrollIntoView({ behavior: "smooth" })
-                      }
-                      className="text-blue-600 hover:underline font-medium ml-1"
-                    >
-                      Ver mapa
-                    </button>
-                  )}
-                </p>
                 <p className="text-xs text-rose-600 mt-2">{tiempo}</p>
               </div>
             </div>
@@ -634,7 +610,7 @@ export default function DetallePropiedad({
           </div>
 
           {/* Ubicación */}
-          {inmueble.lat && inmueble.lng && (
+          {inmueble.latitude && inmueble.longitude && (
             <div
               id="ubicacion-section"
               className="py-5 border-b border-gray-200"
@@ -652,7 +628,7 @@ export default function DetallePropiedad({
                   </p>
                 )}
               </div>
-              <UbicacionMapa lat={inmueble.lat} lng={inmueble.lng} />
+              <UbicacionMapa lat={inmueble.latitude} lng={inmueble.longitude} />
             </div>
           )}
 

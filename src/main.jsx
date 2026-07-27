@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "sonner";
 import "./index.css";
-import "leaflet/dist/leaflet.css"; // ← necesario para que los markers de Leaflet se vean
+import "maplibre-gl/dist/maplibre-gl.css"; // ← MapLibre GL JS
 import { AppProvider } from "./context/AppProvider.jsx";
 import { TenantProvider } from "./context/TenantProvider.jsx"; // ← NUEVO
 import App from "./App.jsx"; // ← NUEVO: ahora App.jsx sí se usa (puerta del tenant)

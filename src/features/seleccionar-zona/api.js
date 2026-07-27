@@ -2,6 +2,12 @@
 import { apiBackend } from "@/api/apiBackend.js";
 import { MAPPING_TIPOS } from "@/data/mappings_busqueda.js";
 
+export async function fetchRegionsGeoJSON() {
+  const res = await apiBackend("/api/regions/geojson");
+  if (!res.success) throw new Error(res.error || "Error cargando regiones");
+  return res.data;
+}
+
 export async function fetchStatesGeoJSON() {
   const res = await apiBackend("/api/states/geojson");
   if (!res.success) throw new Error(res.error || "Error cargando departamentos");

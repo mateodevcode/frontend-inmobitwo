@@ -1,38 +1,17 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import * as maplibregl from "maplibre-gl";
 import { usePropertySearch } from "../hooks/usePropertySearch";
-import { MapPin, Home as HomeIcon } from "lucide-react";
-import L from "leaflet";
-import { renderToString } from "react-dom/server";
+import { Home as HomeIcon } from "lucide-react";
 
-import { useMap } from "react-leaflet";
+const pinSvg = `
+  <svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#e6007a"/>
+    <circle cx="12.5" cy="12.5" r="5" fill="white"/>
+  </svg>
+`;
 
-// Componente que escucha cuando cambian las coordenadas y mueve el mapa automáticamente
-function MapCameraController({ center }) {
-  const map = useMap();
-  useEffect(() => {
-    if (center) {
-      // Mueve la cámara de forma instantánea a la nueva posición geográfica
-      map.setView(center, map.getZoom());
-    }
-  }, [center, map]);
-  return null;
-}
-
-// Estilo del pin del mapa para que se vea limpio y no rompa por falta de assets locales de Leaflet
-const customIcon = new L.Icon({
-  iconUrl: MapPin,
-  iconRetinaUrl: "https://unpkg.com",
-  shadowUrl: "https://unpkg.com",
-  iconSize: [25, 41], // 👈 Corregido: Dimensiones estándar en píxeles [ancho, alto]
-  iconAnchor: [12, 41], // 👈 Corregido: Punto del icono que se ancla a la coordenada exacta [X, Y]
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41], // 👈 Corregido: Tamaño de la sombra del marcador [ancho, alto]
-});
-
-// Diccionarios de traducción de Slugs de la URL a los términos exactos de tu Base de Datos
 const MAPPING_OPERACIONES = {
   venta: "venta",
   alquiler: "alquiler",
@@ -55,13 +34,18 @@ export default function PropertySearchScreen() {
   const { operationAndType, cityAndDepartment } = useParams();
   const navigate = useNavigate();
 
-  const [searchParams, setSearchParams] = useState(null);
+  const mapContainerRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
 
-  // 1. Extraer y validar los Slugs de la URL dinámicamente
+  const [searchParams, setSearchParams] = useState(null);
+  const [popupInfo, setPopupInfo] = useState(null);
+  const popupRef = useRef(null);
+
   useEffect(() => {
     try {
       if (!operationAndType.includes("-") || !cityAndDepartment.includes("-")) {
-        throw new Error("Formato de URL inválido");
+        throw new Error("Formato de URL invalido");
       }
 
       const [rawOperation, ...typeParts] = operationAndType.split("-");
@@ -74,7 +58,7 @@ export default function PropertySearchScreen() {
       const operacionLimpia = MAPPING_OPERACIONES[rawOperation.toLowerCase()];
       const tipoLimpio = MAPPING_TIPOS[rawType.toLowerCase()] || rawType;
 
-      if (!operacionLimpia) throw new Error("Operación no válida");
+      if (!operacionLimpia) throw new Error("Operacion no valida");
 
       setSearchParams({
         operation: operacionLimpia,
@@ -83,15 +67,13 @@ export default function PropertySearchScreen() {
         departmentSlug: rawDepartment.toLowerCase(),
       });
     } catch (error) {
-      toast.error("La zona o tipo de búsqueda no es válida.");
+      toast.error("La zona o tipo de busqueda no es valida.");
       navigate("/", { replace: true });
     }
   }, [operationAndType, cityAndDepartment, navigate]);
 
-  // 2. Consumir la API de backend-inmobitwo usando nuestro Hook
   const { properties, loading, error } = usePropertySearch(searchParams);
 
-  // Coordenadas fallback (Bogotá) en caso de que la lista venga vacía para centrar el mapa
   const defaultCenter = [4.60971, -74.08175];
 
   const mapCenter =
@@ -99,12 +81,123 @@ export default function PropertySearchScreen() {
       ? [properties[0].latitude, properties[0].longitude]
       : defaultCenter;
 
-  // 👈 LOG 1: Abre la consola del navegador (F12) y dinos qué imprime esto
-  console.log("Coordenadas calculadas para centrar el mapa:", mapCenter);
+  // ──── Inicializar mapa ────
+  useEffect(() => {
+    if (mapInstanceRef.current) return;
+    console.log("[PropertySearch] Creando mapa...");
+
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: {
+        version: 8,
+        sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } },
+        layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
+      },
+      center: [mapCenter[1], mapCenter[0]],
+      zoom: 12,
+      attributionControl: false,
+    });
+
+    map.addControl(new maplibregl.AttributionControl({ compact: true }));
+    mapInstanceRef.current = map;
+
+    map.on("load", () => {
+      console.log("[PropertySearch] Mapa cargado");
+    });
+
+    map.on("error", (e) => {
+      console.error("[PropertySearch] Error del mapa:", e);
+    });
+
+    return () => {
+      console.log("[PropertySearch] Destruyendo mapa");
+      map.remove();
+      mapInstanceRef.current = null;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ──── Sincronizar centro del mapa ────
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !map.isStyleLoaded()) return;
+    console.log("[PropertySearch] Centrando mapa en:", mapCenter);
+    map.flyTo({ center: [mapCenter[1], mapCenter[0]] });
+  }, [mapCenter]);
+
+  // ──── Renderizar markers ────
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !map.isStyleLoaded()) {
+      console.log("[PropertySearch] renderMarkers: mapa no listo");
+      return;
+    }
+
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
+
+    console.log(
+      `[PropertySearch] Renderizando ${properties.length} markers`,
+    );
+
+    properties.forEach((item) => {
+      if (!item.latitude || !item.longitude) return;
+
+      const el = document.createElement("div");
+      el.innerHTML = pinSvg;
+      el.className = "cursor-pointer";
+      el.addEventListener("click", () => {
+        setPopupInfo(item);
+      });
+
+      const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
+        .setLngLat([item.longitude, item.latitude])
+        .addTo(map);
+      markersRef.current.push(marker);
+    });
+  }, [properties]);
+
+  // ──── Manejar popup nativo de MapLibre ────
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    if (popupRef.current) {
+      popupRef.current.remove();
+      popupRef.current = null;
+    }
+
+    if (!popupInfo) return;
+
+    const popupContent = document.createElement("div");
+    popupContent.className = "p-1 font-poppins max-w-44";
+    popupContent.innerHTML = `
+      <p class="text-xs font-bold text-black/90 line-clamp-1">${popupInfo.titulo || ""}</p>
+      <p class="text-xs font-extrabold text-[#e6007a] mt-1" style="color: #e6007a; font-weight: 800;">$ ${Number(popupInfo.price).toLocaleString("es-CO")}</p>
+    `;
+
+    const btn = document.createElement("button");
+    btn.className =
+      "mt-2 w-full text-center text-[10px] bg-black text-white py-1 rounded-xs font-semibold cursor-pointer";
+    btn.textContent = "Ver detalle";
+    btn.addEventListener("click", () => navigate(`/inmueble/${popupInfo.id}`));
+    popupContent.appendChild(btn);
+
+    const popup = new maplibregl.Popup({ offset: 30, closeButton: false })
+      .setLngLat([popupInfo.longitude, popupInfo.latitude])
+      .setDOMContent(popupContent)
+      .addTo(map);
+
+    popup.on("close", () => setPopupInfo(null));
+    popupRef.current = popup;
+
+    return () => {
+      popup.remove();
+      popupRef.current = null;
+    };
+  }, [popupInfo, navigate]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 min-h-screen w-full pt-11 bg-white font-poppins">
-      {/* COLUMNA IZQUIERDA: Listado de Inmuebles (5 de 12 columnas) */}
       <div className="md:col-span-5 p-6 overflow-y-auto h-[calc(100vh-44px)] border-r border-black/5">
         <div className="mb-6">
           <h1 className="text-xl font-bold text-black/90 capitalize mb-1">
@@ -131,15 +224,14 @@ export default function PropertySearchScreen() {
           <div className="text-center py-12 border border-dashed border-black/10 rounded-sm bg-gray-50/50">
             <HomeIcon className="mx-auto text-black/20 mb-3" size={32} />
             <p className="text-sm font-medium text-black/60">
-              No hay inmuebles publicados aquí aún.
+              No hay inmuebles publicados aqui aun.
             </p>
             <p className="text-xs text-black/40 mt-1">
-              Sé el primero en publicar un anuncio en esta zona.
+              Se el primero en publicar un anuncio en esta zona.
             </p>
           </div>
         )}
 
-        {/* Mapeo de Tarjetas de Inmuebles */}
         <div className="flex flex-col gap-5">
           {properties.map((item) => (
             <div
@@ -147,7 +239,6 @@ export default function PropertySearchScreen() {
               className="flex flex-col sm:flex-row border border-black/10 bg-white hover:shadow-md transition-shadow duration-300 rounded-sm overflow-hidden cursor-pointer group"
               onClick={() => navigate(`/inmueble/${item.id}`)}
             >
-              {/* Imagen */}
               <div className="w-full sm:w-44 h-40 bg-black/5 relative shrink-0">
                 <img
                   src={
@@ -157,14 +248,24 @@ export default function PropertySearchScreen() {
                   className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
                 />
               </div>
-              {/* Información de la tarjeta */}
               <div className="p-4 flex flex-col justify-between flex-1">
                 <div>
                   <h2 className="text-base font-bold text-black/80 line-clamp-1 group-hover:text-tercero transition-colors">
                     {item.titulo || "Inmueble destacado"}
                   </h2>
                   <p className="flex items-center gap-1 text-xs text-black/40 mt-1">
-                    <MapPin size={12} /> {item.direccion}
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>{" "}
+                    {item.direccion}
                   </p>
                 </div>
                 <div className="mt-4 flex items-baseline justify-between">
@@ -187,52 +288,8 @@ export default function PropertySearchScreen() {
         </div>
       </div>
 
-      {/* COLUMNA DERECHA: Mapa Interactivo Gratuito (7 de 12 columnas) */}
       <div className="hidden md:block md:col-span-7 h-[calc(100vh-44px)] sticky top-11 z-10 bg-gray-100">
-        <MapContainer
-          center={mapCenter}
-          zoom={12}
-          className="w-full h-full"
-          scrollWheelZoom={true}
-        >
-          {/* Capa base de mapas limpios de CartoDB (Estilo Idealista Minimalista) */}
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-          />
-          {/* 👈 INYECTA ESTA LÍNEA AQUÍ: Moverá la cámara automáticamente a Barranquilla */}
-          <MapCameraController center={mapCenter} />
-
-          {/* Renderizado de pines dinámicos en el mapa */}
-          {properties.map(
-            (item) =>
-              item.latitude &&
-              item.longitude && (
-                <Marker
-                  key={item.id}
-                  position={[item.latitude, item.longitude]}
-                  icon={customIcon}
-                >
-                  <Popup>
-                    <div className="p-1 font-poppins max-w-44">
-                      <p className="text-xs font-bold text-black/90 line-clamp-1">
-                        {item.titulo}
-                      </p>
-                      <p className="text-xs font-extrabold text-tercero mt-1">
-                        $ {Number(item.price).toLocaleString("es-CO")}
-                      </p>
-                      <button
-                        onClick={() => navigate(`/inmueble/${item.id}`)}
-                        className="mt-2 w-full text-center text-[10px] bg-black text-white py-1 rounded-xs font-semibold cursor-pointer"
-                      >
-                        Ver detalle
-                      </button>
-                    </div>
-                  </Popup>
-                </Marker>
-              ),
-          )}
-        </MapContainer>
+        <div ref={mapContainerRef} className="w-full h-full" />
       </div>
     </div>
   );

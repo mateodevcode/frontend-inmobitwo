@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
@@ -8,21 +8,26 @@ import { TiHeartFullOutline, TiHeartOutline } from "react-icons/ti";
 import { IoArrowRedoOutline, IoClose } from "react-icons/io5";
 import { ImImage } from "react-icons/im";
 import { FaArchway, FaMapMarkerAlt } from "react-icons/fa";
-import { Md3dRotation } from "react-icons/md";
+import { Md3dRotation, MdMyLocation } from "react-icons/md";
 import useFavoritos from "@/hooks/useFavoritos";
 import { useAppContext } from "@/context/AppContext";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import usePropiedades from "../../hooks/usePropiedades";
 import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
+import * as maplibregl from "maplibre-gl";
 
 export default function FotoVisor() {
   const { id, fotoIndex } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { favoritos, propiedad: inmueble } = useAppContext();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
 
   const [loading, setLoading] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [mostrarMapa, setMostrarMapa] = useState(searchParams.get("mapa") === "1");
+  const mapaContainerRef = useRef(null);
+  const mapaInstanceRef = useRef(null);
   const { cargarPropiedad } = usePropiedades();
 
   useEffect(() => {
@@ -30,6 +35,42 @@ export default function FotoVisor() {
       cargarPropiedad(id);
     }
   }, [id]);
+
+  // ──── Mapa ────
+  useEffect(() => {
+    if (!mostrarMapa || !inmueble?.latitude || !inmueble?.longitude) return;
+    if (mapaInstanceRef.current) return;
+
+    const map = new maplibregl.Map({
+      container: mapaContainerRef.current,
+      style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } }, layers: [{ id: "osm-tiles", type: "raster", source: "osm" }] },
+      center: [inmueble.longitude, inmueble.latitude],
+      zoom: 16,
+      attributionControl: false,
+    });
+
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+
+    const el = document.createElement("div");
+    el.innerHTML = `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#e6007a"/><circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>`;
+    new maplibregl.Marker({ element: el, anchor: "bottom" })
+      .setLngLat([inmueble.longitude, inmueble.latitude])
+      .addTo(map);
+
+    mapaInstanceRef.current = map;
+
+    return () => {
+      map.remove();
+      mapaInstanceRef.current = null;
+    };
+  }, [mostrarMapa, inmueble?.latitude, inmueble?.longitude]);
+
+  const handleCentrarMapa = () => {
+    const map = mapaInstanceRef.current;
+    if (map && inmueble?.latitude && inmueble?.longitude) {
+      map.flyTo({ center: [inmueble.longitude, inmueble.latitude], zoom: 16, duration: 800 });
+    }
+  };
 
   if (loading) {
     return (
@@ -150,8 +191,21 @@ export default function FotoVisor() {
       </div>
       )}
 
-      {/* ──── Imagen principal ──── */}
+      {/* ──── Imagen principal / Mapa ──── */}
       <div className={`relative flex-1 flex items-center justify-center min-h-0 ${fullscreen ? "fixed inset-0 z-[2100] bg-black" : ""}`}>
+        {mostrarMapa && inmueble?.latitude && inmueble?.longitude ? (
+          <div className="w-full h-full relative">
+            <div ref={mapaContainerRef} className="w-full h-full" />
+            <button
+              onClick={handleCentrarMapa}
+              className="absolute top-3 right-12 bg-white border border-gray-300 rounded-sm px-3 py-1.5 text-xs font-semibold shadow hover:bg-gray-100 z-10 flex items-center gap-1"
+            >
+              <MdMyLocation className="text-sm" />
+              Centrar
+            </button>
+          </div>
+        ) : (
+        <>
         <img
           src={imagenes[indexActual]}
           alt={nombreEspacio || inmueble.titulo}
@@ -186,6 +240,7 @@ export default function FotoVisor() {
             <BsArrowsAngleContract className="text-2xl" />
           </button>
         )}
+        </>)}
       </div>
 
       {/* ──── Footer ──── */}
@@ -204,7 +259,9 @@ export default function FotoVisor() {
           </div>
 
           <div className="hidden md:flex items-center">
-            <button className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer">
+            <button
+              onClick={() => setMostrarMapa(false)}
+              className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer">
               <ImImage className="text-base" />
               {totalImagenes} fotos
             </button>
@@ -216,7 +273,14 @@ export default function FotoVisor() {
               <Md3dRotation className="text-base" />
               Visita 3D
             </button>
-            <button className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer">
+            <button
+              onClick={() => setMostrarMapa(!mostrarMapa)}
+              className={`flex items-center gap-2 border-2 px-3 py-1.5 text-sm font-semibold cursor-pointer ${
+                mostrarMapa
+                  ? "border-[#e6007a] text-[#e6007a] bg-[#e6007a]/20"
+                  : "border-black/80 text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20"
+              }`}
+            >
               <FaMapMarkerAlt className="text-sm" />
               Mapa
             </button>

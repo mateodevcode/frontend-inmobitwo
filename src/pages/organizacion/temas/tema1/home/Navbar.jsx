@@ -38,7 +38,6 @@ const Navbar = () => {
             <img
               src="/logo/logo-hor.png"
               alt="logo"
-              className
               className="h-full w-full"
             />
           </div>

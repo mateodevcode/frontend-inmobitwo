@@ -58,7 +58,7 @@ const NavbarHome = () => {
             </span>
           </div>
           {/* Links */}
-          <nav className="flex items-center gap-8 h-full">
+          <nav className="md:flex items-center gap-8 h-full hidden">
             {Object.keys(MENUS).map((title) => (
               <EnlaceNav key={title} title={title}>
                 {MENUS[title].map((col) => (

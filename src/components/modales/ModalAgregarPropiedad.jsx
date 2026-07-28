@@ -33,9 +33,13 @@ const ModalAgregarPropiedad = () => {
             className="w-full h-svh flex flex-col overflow-hidden"
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
             exit={{ opacity: 0, scale: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            transition={{
+              type: "spring",
+              damping: 25,
+              stiffness: 300,
+              duration: 0.3,
+            }}
           >
             {/* Header */}
             <button

@@ -40,5 +40,6 @@ export function useSlugParser() {
     geoSegment,
     firstSegment,
     isSingleSegment,
+    isCustomPolygon: geoSegment === "zona-personalizada",
   };
 }

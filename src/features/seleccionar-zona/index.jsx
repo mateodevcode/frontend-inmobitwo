@@ -1,10 +1,10 @@
 // src/features/seleccionar-zona/index.jsx
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import SelectZonaMap from "./components/SelectZonaMap";
 import { useSelectZona } from "./hooks/useSelectZona";
 import { buildSearchUrl } from "./utils/urlBuilder";
-import { fetchStatesGeoJSON } from "./api";
+import { fetchStatesGeoJSON, fetchInmueblesEnPoligono } from "./api";
 import { TfiMapAlt } from "react-icons/tfi";
 import { PiTrashSimple } from "react-icons/pi";
 import InputSearchZona from "./components/InputSearchZona";
@@ -21,8 +21,11 @@ function parseOperationAndType(raw) {
 export default function SeleccionarZonaPage() {
   const { operationAndType } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { operation, tipoInmueble } = parseOperationAndType(operationAndType);
+
+  const drawFromUrl = searchParams.get("draw") === "true";
 
   const {
     selectedZone,
@@ -32,6 +35,11 @@ export default function SeleccionarZonaPage() {
     loading,
   } = useSelectZona();
   const [deptNames, setDeptNames] = useState({});
+  const [drawMode, setDrawMode] = useState(drawFromUrl);
+  const [customPolygon, setCustomPolygon] = useState(null);
+  const [polygonProps, setPolygonProps] = useState([]);
+  const [polygonPropCount, setPolygonPropCount] = useState(0);
+  const [polygonLoading, setPolygonLoading] = useState(false);
 
   useEffect(() => {
     fetchStatesGeoJSON().then((data) => {
@@ -47,13 +55,54 @@ export default function SeleccionarZonaPage() {
     selectZone(zone, op, tipo);
   };
 
+  const handlePolygonChange = useCallback(async (geojson) => {
+    if (!geojson) {
+      setCustomPolygon(null);
+      setPolygonProps([]);
+      setPolygonPropCount(0);
+      return;
+    }
+    setCustomPolygon(geojson);
+    setPolygonLoading(true);
+    try {
+      const result = await fetchInmueblesEnPoligono(geojson, operation, tipoInmueble);
+      setPolygonPropCount(result.total || 0);
+      setPolygonProps(result.propiedades || []);
+    } catch {
+      setPolygonPropCount(0);
+      setPolygonProps([]);
+    } finally {
+      setPolygonLoading(false);
+    }
+  }, [operation, tipoInmueble]);
+
+  const handleToggleDrawMode = useCallback((active) => {
+    setDrawMode(active);
+    if (active) {
+      setSearchParams({ draw: "true" }, { replace: true });
+      clearZone();
+    } else {
+      setSearchParams({}, { replace: true });
+      setCustomPolygon(null);
+      setPolygonProps([]);
+      setPolygonPropCount(0);
+    }
+  }, [setSearchParams, clearZone]);
+
   const handleVerInmuebles = () => {
+    if (customPolygon) {
+      const polygonKey = `poly_${Date.now()}`;
+      try {
+        sessionStorage.setItem(polygonKey, JSON.stringify(customPolygon));
+        sessionStorage.setItem(`${polygonKey}_op`, operation);
+        sessionStorage.setItem(`${polygonKey}_tipo`, tipoInmueble);
+      } catch {}
+      navigate(`/${operation}-${tipoInmueble}/zona-personalizada?polyKey=${polygonKey}`);
+      return;
+    }
+
     const url = buildSearchUrl(
-      {
-        ...selectedZone,
-        operation,
-        tipoInmueble,
-      },
+      { ...selectedZone, operation, tipoInmueble },
       deptNames,
     );
     if (url) navigate(url);
@@ -62,16 +111,20 @@ export default function SeleccionarZonaPage() {
   return (
     <div className="flex flex-col w-screen h-screen relative bg-white font-poppins">
       <header className="flex items-center gap-5 px-6 py-4 border-b border-gray-200 bg-white z-1000 shrink-0 w-full justify-between">
-        <h1 className="text-xl text-gray-800 m-0">Seleccionar zonas</h1>
-        <InputSearchZona
-          onSelectZone={(zone) =>
-            handleSelectZone(zone, operation, tipoInmueble)
-          }
-          operation={operation}
-          tipoInmueble={tipoInmueble}
-          className="w-100 border-2"
-          showX={true}
-        />
+        <h1 className="text-xl text-gray-800 m-0">
+          {drawMode ? "Dibujar tu zona" : "Seleccionar zonas"}
+        </h1>
+        {!drawMode && (
+          <InputSearchZona
+            onSelectZone={(zone) =>
+              handleSelectZone(zone, operation, tipoInmueble)
+            }
+            operation={operation}
+            tipoInmueble={tipoInmueble}
+            className="w-100 border-2"
+            showX={true}
+          />
+        )}
         <button
           className="py-2 px-4 border-none bg-transparent text-gray-500 cursor-pointer text-sm hover:text-[#e6007a]"
           onClick={() => navigate(-1)}
@@ -86,10 +139,17 @@ export default function SeleccionarZonaPage() {
           onSelectZone={handleSelectZone}
           operation={operation}
           tipoInmueble={tipoInmueble}
+          drawMode={drawMode}
+          onToggleDrawMode={handleToggleDrawMode}
+          onPolygonChange={handlePolygonChange}
+          polygonProperties={polygonProps}
+          polygonPropCount={polygonPropCount}
+          polygonLoading={polygonLoading}
+          onVerInmuebles={handleVerInmuebles}
         />
       </div>
 
-      {selectedZone && (
+      {!drawMode && selectedZone && (
         <div className="absolute top-24 left-5 bg-white rounded shadow-lg p-4 min-w-90 z-1000 font-poppins min-h-44 flex flex-col justify-between">
           <div>
             <div className="text-xl font-semibold text-gray-800 m-0 mb-3 flex items-center gap-3">

@@ -7,12 +7,13 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import { PiChats } from "react-icons/pi";
-import { BsFillGeoAltFill, BsTelephone } from "react-icons/bs";
+import { BsFillGeoAltFill, BsTelephone, BsImage } from "react-icons/bs";
 import { TiHeartFullOutline, TiHeartOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import useFavoritos from "@/hooks/useFavoritos";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import { fetchPropiedadResumen } from "./api";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -40,6 +41,7 @@ export function PropertyCard({ inmueble, onClose }) {
   const { favoritos } = useAppContext();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [extra, setExtra] = useState(null);
   const autoTimerRef = useRef(null);
 
   const imagenPrincipal =
@@ -68,6 +70,9 @@ export function PropertyCard({ inmueble, onClose }) {
   ];
   const totalImagenes = imagenes.length;
   const isFavorited = estaEnFavoritos(favoritos, inmueble?.id);
+  const hasPlanos = (extra?.planos_count || 0) > 0;
+
+  const navState = inmueble?.operacion ? { operacion: inmueble.operacion } : {};
 
   const goTo = useCallback(
     (index) => {
@@ -90,15 +95,25 @@ export function PropertyCard({ inmueble, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
-  // Resetear al cambiar de inmueble seleccionado
   useEffect(() => {
     setCurrentIndex(0);
+    if (inmueble?.id) {
+      setExtra(null);
+      fetchPropiedadResumen(inmueble.id).then(setExtra);
+    }
   }, [inmueble?.id]);
 
   if (!inmueble) return null;
 
+  const handleGoToDetalle = () => {
+    if (inmueble?.id) navigate(`/inmueble/${inmueble.id}`);
+  };
+
   return (
-    <div className="absolute top-16 right-4 z-1000 w-80 bg-white shadow-xl overflow-hidden">
+    <div
+      className="absolute top-16 right-4 z-1000 w-80 bg-white shadow-xl overflow-hidden cursor-pointer"
+      onClick={handleGoToDetalle}
+    >
       {/* ──── Imagen ──── */}
       <div className="relative w-full h-48 bg-gray-100 group">
         <img
@@ -108,7 +123,7 @@ export function PropertyCard({ inmueble, onClose }) {
         />
 
         <button
-          onClick={onClose}
+          onClick={(e) => { e.stopPropagation(); onClose?.(); }}
           className="absolute top-2 right-2 z-10 bg-white/90 rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold hover:bg-white"
           title="Cerrar"
         >
@@ -116,13 +131,46 @@ export function PropertyCard({ inmueble, onClose }) {
         </button>
 
         <div className="absolute left-2 bottom-2 flex items-center justify-center gap-2">
-          <div className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none">
-            <FaArchway className="text-sm text-black" />
+          <div
+            className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+            title="Ver fotos"
+            onClick={(e) => {
+              e.stopPropagation();
+              inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "fotos" } });
+            }}
+          >
+            <BsImage className="text-sm text-black" />
           </div>
-          <div className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none">
+          <div
+            className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+            title="Visita 3D"
+            onClick={(e) => {
+              e.stopPropagation();
+              inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "3d" } });
+            }}
+          >
             <FiVideo className="text-sm text-black" />
           </div>
-          <div className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none">
+          {hasPlanos && (
+            <div
+              className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+              title="Ver planos"
+              onClick={(e) => {
+                e.stopPropagation();
+                inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "planos" } });
+              }}
+            >
+              <FaArchway className="text-sm text-black" />
+            </div>
+          )}
+          <div
+            className="bg-white hover:bg-white/70 rounded p-2 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
+            title="Ver en mapa"
+            onClick={(e) => {
+              e.stopPropagation();
+              inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "mapa" } });
+            }}
+          >
             <BsFillGeoAltFill className="text-sm text-black" />
           </div>
         </div>
@@ -160,13 +208,7 @@ export function PropertyCard({ inmueble, onClose }) {
       {/* ──── Contenido ──── */}
       <div className="p-3 h-44 flex flex-col justify-between">
         <div>
-          {" "}
-          <h2
-            className="font-medium text-sm text-blue-600 hover:text-blue-700 hover:underline cursor-pointer select-none mb-1 line-clamp-2"
-            onClick={() =>
-              inmueble?.id && navigate(`/inmueble/${inmueble.id}`)
-            }
-          >
+          <h2 className="font-medium text-sm text-blue-600 mb-1 line-clamp-2">
             {titulo}
           </h2>
           <div className="flex items-center gap-2 text-black">
@@ -207,21 +249,33 @@ export function PropertyCard({ inmueble, onClose }) {
         <div className="flex items-center justify-between w-full mt-3 pt-2 border-t border-gray-100">
           <div
             className="flex items-center gap-1.5 text-blue-600 cursor-pointer select-none"
-            onClick={() =>
-              inmueble?.id && navigate(`/inmueble/${inmueble.id}`)
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              if (inmueble?.id) navigate(`/inmueble/${inmueble.id}`);
+            }}
           >
             <PiChats className="text-base" />
             <p className="text-xs font-semibold hover:underline">Contactar</p>
           </div>
-          <div className="flex items-center gap-1.5 text-blue-600 cursor-pointer select-none">
+          <div
+            className="flex items-center gap-1.5 text-blue-600 cursor-pointer select-none"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <BsTelephone className="text-sm" />
             <p className="text-xs font-semibold hover:underline">
               Ver teléfono
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="cursor-pointer select-none">
+            <div
+              className="cursor-pointer select-none"
+              title="Eliminar"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
               <HiOutlineTrash className="text-base text-blue-600" />
             </div>
             <div

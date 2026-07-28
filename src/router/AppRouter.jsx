@@ -211,6 +211,10 @@ const AppRouter = () => {
           element={<MapaInmueblesPage />}
         />
         <Route
+          path="/:operationAndType/zona-personalizada"
+          element={<ListaPropiedades />}
+        />
+        <Route
           path="/:operationAndType/:cityAndDepartment"
           element={<ListaPropiedades />}
         />

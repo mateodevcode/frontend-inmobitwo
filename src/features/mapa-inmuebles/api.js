@@ -15,3 +15,9 @@ export async function fetchInmueblesEnBbox({ minLat, minLng, maxLat, maxLng, ope
   if (!res.success) throw new Error(res.error || "Error cargando inmuebles");
   return res.data || [];
 }
+
+export async function fetchPropiedadResumen(id) {
+  const res = await apiBackend(`/propiedades/${id}/resumen`);
+  if (!res.success) return null;
+  return res.data;
+}

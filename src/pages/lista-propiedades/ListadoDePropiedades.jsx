@@ -18,7 +18,8 @@ const TYPE_LABELS = {
   vacacional: "Vacacional",
 };
 
-function getFiltroLabel(locationInfo, typeSlug) {
+function getFiltroLabel(locationInfo, typeSlug, isCustomPolygon) {
+  if (isCustomPolygon) return "Zona personalizada";
   const typeLabel = TYPE_LABELS[typeSlug] || typeSlug || "Inmuebles";
   const locName =
     locationInfo?.city_name ||
@@ -28,18 +29,22 @@ function getFiltroLabel(locationInfo, typeSlug) {
   return `${typeLabel} de ${locName}`;
 }
 
-const ListadoDePropiedades = ({ locationInfo, operationSlug, typeSlug }) => {
+const ListadoDePropiedades = ({ locationInfo, operationSlug, typeSlug, polygonProps, isCustomPolygon }) => {
   const { citySlug, deptSlug } = useSlugParser();
-  const { properties, loading, error } = usePropertySearch({
+  const { properties: searchProperties, loading: searchLoading, error: searchError } = usePropertySearch({
     operationSlug,
     typeSlug,
-    citySlug,
-    deptSlug,
+    citySlug: isCustomPolygon ? "" : citySlug,
+    deptSlug: isCustomPolygon ? "" : deptSlug,
   });
+
+  const properties = isCustomPolygon ? (polygonProps?.propiedades || []) : searchProperties;
+  const loading = isCustomPolygon ? (!polygonProps) : searchLoading;
+  const error = isCustomPolygon ? null : searchError;
 
   const listaIds = properties.map((p) => p.id);
   const total = properties.length;
-  const filtroLabel = getFiltroLabel(locationInfo, typeSlug);
+  const filtroLabel = getFiltroLabel(locationInfo, typeSlug, isCustomPolygon);
 
   return (
     <div className="w-[75%] h-full">

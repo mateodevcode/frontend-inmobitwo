@@ -16,6 +16,11 @@ export function buildSearchUrl(selectedZone, deptNames = {}) {
   const op = selectedZone.operation || "venta";
   const tipo = selectedZone.tipoInmueble || "viviendas";
 
+  if (selectedZone.type === "custom_polygon") {
+    const polygonKey = selectedZone.polygonKey;
+    return `/${op}-${tipo}/zona-personalizada?polyKey=${polygonKey}`;
+  }
+
   let locationSlug;
 
   switch (selectedZone.type) {

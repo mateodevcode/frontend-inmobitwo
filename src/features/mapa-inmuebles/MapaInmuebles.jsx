@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import * as maplibregl from "maplibre-gl";
 import Supercluster from "supercluster";
 import { fetchInmueblesEnBbox } from "./api";
-import { formatPrecioPin } from "@/utils/formatPrecio";
+import { createClusterIcon, createPricePin } from "./mapPins";
 import { PropertyCard } from "./PropertyCard";
 import {
   ZoomControl,
@@ -21,21 +21,6 @@ function slugify(text) {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-function createClusterIcon(count) {
-  const el = document.createElement("div");
-  el.className =
-    "flex items-center justify-center w-10 h-10 rounded-full bg-[#e6007a] text-white text-sm font-bold shadow-lg cursor-pointer";
-  el.textContent = count;
-  return el;
-}
-
-function createPricePin(props, isSelected) {
-  const el = document.createElement("div");
-  el.className = `price-pin${isSelected ? " selected" : ""}`;
-  el.textContent = formatPrecioPin(props.precio, props.operacion);
-  return el;
 }
 
 export default function MapaInmuebles({
@@ -305,8 +290,8 @@ export default function MapaInmuebles({
       <div ref={mapContainerRef} className="w-full h-full" />
       {mapReady && map && (
         <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-2 items-end">
-          <LocationControl map={map} />
           <ZoomControl map={map} />
+          <LocationControl map={map} />
         </div>
       )}
       {selectedInmueble && (

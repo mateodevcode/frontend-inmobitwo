@@ -39,3 +39,15 @@ export async function fetchGeoCount(type, daneCode, operation, tipoInmuebleSlug)
   if (!res.success) return 0;
   return res.data.total || 0;
 }
+
+export async function fetchInmueblesEnPoligono(polygon, operation, tipoInmuebleSlug) {
+  const inmueble = expandTipoInmueble(tipoInmuebleSlug);
+  const body = {
+    polygon,
+    operation: operation || undefined,
+    tipoInmueble: inmueble || undefined,
+  };
+  const res = await apiBackend("/api/inmuebles-en-poligono", "POST", body);
+  if (!res.success) return { total: 0, propiedades: [] };
+  return res.data;
+}

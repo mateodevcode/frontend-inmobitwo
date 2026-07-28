@@ -82,11 +82,13 @@ export default function EnlaceNav({
           className={`${basePanelClasses} z-50 ${panelClassName}`}
         >
           {panelWidth === "full" ? (
-            <div className="flex items-center justify-center gap-8 p-8 h-full">
-              {children}
+            <div className="w-full mx-auto flex items-center justify-center">
+              <div className="w-9/12 flex gap-16 ">{children}</div>
             </div>
           ) : (
-            <div className="p-2">{children}</div>
+            <div className="w-full mx-auto flex items-center justify-center">
+              <div className="w-9/12 flex gap-16 ">{children}</div>
+            </div>
           )}
         </motion.div>
       )}

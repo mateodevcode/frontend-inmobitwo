@@ -6,10 +6,33 @@ import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
 import EnlaceNav from "./modales/EnlaceNav";
 import { irArriba } from "../../utils/irArriba";
+import { MENUS } from "../../data/menus";
 
 const NavbarHome = () => {
   const { usuario, openModalUser, setOpenModalUser } = useAppContext();
   const navigate = useNavigate();
+
+  function Columna({ heading, links }) {
+    return (
+      <div>
+        <h4 className="text-[13px] font-bold text-black mb-4 tracking-wide font-poppins">
+          {heading}
+        </h4>
+        <ul className="flex flex-col gap-3">
+          {links.map((link) => (
+            <li key={link}>
+              <a
+                href="#"
+                className="text-[15px] text-[#0057D9] hover:underline whitespace-nowrap"
+              >
+                {link}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white w-full border-b border-black/5 font-poppins">
@@ -35,28 +58,18 @@ const NavbarHome = () => {
             </span>
           </div>
           {/* Links */}
-          <nav className="hidden md:flex items-center gap-8">
-            <EnlaceNav title="Propietarios">
-              <div>
-                <ul>
-                  <li>Hola</li>
-                </ul>
-              </div>
-            </EnlaceNav>
-            <EnlaceNav title="Busca casa">
-              <div>
-                <ul>
-                  <li>Hola</li>
-                </ul>
-              </div>
-            </EnlaceNav>
-            <EnlaceNav title="Hipotecas">
-              <div>
-                <ul>
-                  <li>Hola</li>
-                </ul>
-              </div>
-            </EnlaceNav>
+          <nav className="flex items-center gap-8 h-full">
+            {Object.keys(MENUS).map((title) => (
+              <EnlaceNav key={title} title={title}>
+                {MENUS[title].map((col) => (
+                  <Columna
+                    key={col.heading}
+                    heading={col.heading}
+                    links={col.links}
+                  />
+                ))}
+              </EnlaceNav>
+            ))}
           </nav>
         </div>
 

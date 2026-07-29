@@ -92,7 +92,7 @@ function ContactDataSection({
 }) {
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      <h2 className="text-3xl font-bold text-slate-900 mt-10">
+      <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-10">
         Tus datos de contacto
       </h2>
 

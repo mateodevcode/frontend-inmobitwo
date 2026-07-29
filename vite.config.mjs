@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
 
   server: {
+    host: "0.0.0.0",
     proxy: {
       // Ejemplo:
       // "/api": {
@@ -15,6 +16,7 @@ export default defineConfig({
     },
     allowedHosts: [
       "https://extensions-activation-bathroom-shop.trycloudflare.com",
+      "10.44.22.72",
     ],
   },
 

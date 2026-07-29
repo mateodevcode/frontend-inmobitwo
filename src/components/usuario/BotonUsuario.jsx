@@ -40,7 +40,7 @@ const BotonUsuario = ({
 
   return (
     <div
-      className={`flex gap-2 items-center relative cursor-pointer select-none ${className}`}
+      className={`md:flex gap-2 items-center relative cursor-pointer select-none hidden ${className}`}
       onClick={onClick}
     >
       <div className="hover:bg-segundo/5 absolute inset-0 rounded-full z-20" />

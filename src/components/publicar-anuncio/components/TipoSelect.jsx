@@ -46,7 +46,7 @@ const TipoSelect = ({
       <Listbox value={selected} onChange={handleChange}>
         {({ open }) => (
           <div className="relative" id="property-select-block">
-            <label className="mb-3 block text-2xl font-semibold text-slate-900">
+            <label className="mb-3 block text-xl md:text-2xl font-semibold text-slate-900">
               {label}
             </label>
 

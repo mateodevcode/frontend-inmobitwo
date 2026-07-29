@@ -8,7 +8,9 @@ import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { apiBackend } from "@/api/apiBackend";
 import { useNavigate } from "react-router-dom";
 import { ModalContinuarAnuncio } from "@/components/publicar-anuncio/ModalContinuarAnuncio";
-import useResetForm, { mapearApiAFormDataPropiedad } from "@/hooks/useResetForm";
+import useResetForm, {
+  mapearApiAFormDataPropiedad,
+} from "@/hooks/useResetForm";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 
 const PublicarAnuncio = () => {
@@ -107,7 +109,7 @@ const PublicarAnuncio = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <HeaderPublicarAnuncio />
 
       {modalContinuar && (

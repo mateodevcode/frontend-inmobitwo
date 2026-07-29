@@ -107,7 +107,12 @@ function PrincipalDropzone({ preview, onFileSelected }) {
 /* ============================================================
    DROPZONE — Galería (múltiples archivos)
    ============================================================ */
-function GaleriaDropzone({ onFilesSelected, count, max = 10 }) {
+function GaleriaDropzone({
+  titulo = "Galería de fotos",
+  onFilesSelected,
+  count,
+  max = 10,
+}) {
   const inputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -128,9 +133,7 @@ function GaleriaDropzone({ onFilesSelected, count, max = 10 }) {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <p className="text-base font-semibold text-slate-900">
-          Galería de fotos
-        </p>
+        <p className="text-base font-semibold text-slate-900">{titulo}</p>
         <span className="text-sm text-slate-400">
           {count} / {max} fotos
         </span>
@@ -232,7 +235,7 @@ function InfoBannerBlue({ children }) {
   return (
     <div className="flex items-start gap-3 rounded-md border border-blue-200 bg-blue-50 px-4 py-3.5">
       <Info className="mt-0.5 h-5 w-5 shrink-0 fill-blue-600 text-blue-50" />
-      <p className="text-base text-slate-900">{children}</p>
+      <p className="text-sm md:text-base text-slate-900">{children}</p>
     </div>
   );
 }
@@ -243,7 +246,9 @@ function InfoBannerBlue({ children }) {
 function TipsList({ title, tips }) {
   return (
     <div className="rounded-md border border-slate-200 px-5 py-5">
-      <h3 className="mb-4 text-xl font-bold text-slate-900">{title}</h3>
+      <h3 className="mb-4 text-lg md:text-xl font-bold text-slate-900">
+        {title}
+      </h3>
       <ul className="flex flex-col gap-4">
         {tips.map((tip, i) => (
           <li key={i} className="flex items-start gap-3">
@@ -251,7 +256,7 @@ function TipsList({ title, tips }) {
               className="mt-0.5 h-5 w-5 shrink-0 text-slate-700"
               strokeWidth={1.75}
             />
-            <p className="text-base text-slate-900">{tip.text}</p>
+            <p className="text-sm md:text-base text-slate-900">{tip.text}</p>
           </li>
         ))}
       </ul>
@@ -269,7 +274,7 @@ function WizardFooter({ onBack, onContinue, loading, continueLabel }) {
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-lg text-slate-400 hover:text-slate-600"
+          className="flex items-center gap-1 text-base md:text-lg text-slate-400 hover:text-slate-600"
         >
           <ChevronLeft className="h-5 w-5" />
           Volver
@@ -279,7 +284,7 @@ function WizardFooter({ onBack, onContinue, loading, continueLabel }) {
           type="button"
           onClick={onContinue}
           disabled={loading}
-          className="rounded-md border-2 border-rose-500 px-6 py-3 text-lg font-bold text-rose-600 hover:bg-rose-50 active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
+          className="rounded-md border-2 border-rose-500 px-6 py-3 text-base md:text-lg font-bold text-rose-600 hover:bg-rose-50 active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
         >
           {loading ? "Guardando..." : continueLabel}
         </button>
@@ -413,7 +418,8 @@ export default function AddPhotosStep() {
   const [showWarning, setShowWarning] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const hayFotos = !!imagenPrincipal || galeriaFiles.length > 0 || planosFiles.length > 0;
+  const hayFotos =
+    !!imagenPrincipal || galeriaFiles.length > 0 || planosFiles.length > 0;
 
   // ─────────────────────────────────────────────
   // Imagen principal: validar + setear
@@ -531,7 +537,13 @@ export default function AddPhotosStep() {
       setShowWarning(true);
       return;
     }
-    subirFotosAnuncio(anuncioId, setLoading, imagenPrincipal, galeriaFiles, planosFiles);
+    subirFotosAnuncio(
+      anuncioId,
+      setLoading,
+      imagenPrincipal,
+      galeriaFiles,
+      planosFiles,
+    );
   };
 
   const handleBack = () => {
@@ -540,8 +552,8 @@ export default function AddPhotosStep() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-6 font-montserrat relative mb-40">
-      <div className="rounded-lg p-8">
-        <h2 className="mb-2 text-3xl font-bold text-slate-900">
+      <div className="rounded-lg md:p-8 p-6">
+        <h2 className="mb-2 text-2xl md:text-3xl font-bold text-slate-900">
           Añadir fotos a tu anuncio
         </h2>
         <p className="mb-6 text-base text-slate-500">
@@ -558,6 +570,7 @@ export default function AddPhotosStep() {
           <GaleriaDropzone
             onFilesSelected={handleGaleriaFilesSelected}
             count={galeriaFiles.length}
+            titulo="Galería de fotos"
           />
           <GaleriaPreviewGrid
             previews={galeriaPreviews}
@@ -570,6 +583,7 @@ export default function AddPhotosStep() {
           <GaleriaDropzone
             onFilesSelected={handlePlanosFilesSelected}
             count={planosFiles.length}
+            titulo="Fotos de los planos"
           />
           <GaleriaPreviewGrid
             previews={planosPreviews}

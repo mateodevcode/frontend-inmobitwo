@@ -2,9 +2,9 @@ import { AdvantageColumn } from "./AdvantageColumn";
 
 export function AdvantagesSection() {
   return (
-    <section className="py-10">
-      <div className="w-9/12 mx-auto">
-        <h2 className="mb-8 text-3xl font-bold text-slate-900">
+    <section className="md:py-10 py-8">
+      <div className="w-10/12 md:w-9/12 mx-auto">
+        <h2 className="mb-8 text-2xl md:text-3xl font-bold text-slate-900">
           Ventajas de publicar en inmobitwo
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

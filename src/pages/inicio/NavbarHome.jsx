@@ -5,11 +5,19 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
 import EnlaceNav from "./modales/EnlaceNav";
+import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 import { irArriba } from "../../utils/irArriba";
 import { MENUS } from "../../data/menus";
+import { logo } from "@/data/logo";
 
 const NavbarHome = () => {
-  const { usuario, openModalUser, setOpenModalUser } = useAppContext();
+  const {
+    usuario,
+    openModalUser,
+    setOpenModalUser,
+    openModalHamburguesa,
+    setOpenModalHamburguesa,
+  } = useAppContext();
   const navigate = useNavigate();
 
   function Columna({ heading, links }) {
@@ -48,8 +56,8 @@ const NavbarHome = () => {
           >
             <div className="w-9 h-9">
               <img
-                src="/logo/logo.png"
-                alt="/logo inmobitwo"
+                src={logo.src}
+                alt={logo.alt}
                 className="object-center w-full h-full"
               />
             </div>
@@ -103,10 +111,15 @@ const NavbarHome = () => {
         </div>
 
         {/* Menu hamburguesa */}
-        <button className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden">
+        <button
+          className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden"
+          onClick={() => setOpenModalHamburguesa(!openModalHamburguesa)}
+        >
           <TbMenu4 className="text-2xl text-black" />
         </button>
       </div>
+
+      <ModalHamburguesa />
     </div>
   );
 };

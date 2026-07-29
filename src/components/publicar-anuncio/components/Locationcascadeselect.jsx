@@ -24,7 +24,7 @@ function GeoSelect({
 }) {
   return (
     <Field>
-      <Label className="mb-2 block text-lg font-semibold text-slate-900">
+      <Label className="mb-2 block md:text-lg font-semibold text-slate-900">
         {label}
       </Label>
       <Listbox value={value} onChange={onChange} disabled={disabled}>

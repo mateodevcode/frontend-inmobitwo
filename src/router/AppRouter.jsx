@@ -18,7 +18,7 @@ import NotFound from "@/pages/NotFound.jsx";
 import Login from "@/components/login/Login.jsx";
 import Registro from "@/components/registro/Registro.jsx";
 import PublicarAnuncio from "@/pages/PublicarAnuncio.jsx";
-import InfoPublicarAnuncio from "@/pages/InfoPublicarAnuncio.jsx";
+import InfoPublicarAnuncio from "@/pages/publicar-anuncio/InfoPublicarAnuncio.jsx";
 import MisAnuncios from "@/pages/MisAnuncios.jsx";
 import Anuncio from "@/pages/Anuncio.jsx";
 import MiPerfil from "@/pages/MiPerfil.jsx";

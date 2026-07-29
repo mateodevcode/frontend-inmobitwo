@@ -89,8 +89,8 @@ export default function LocationForm({ onLocationConfirmed }) {
   }
 
   return (
-    <div className="flex max-w-xl flex-col gap-6 mt-10 font-montserrat">
-      <h2 className="text-2xl font-bold text-slate-900">
+    <div className="flex max-w-xl flex-col gap-6 mt-6 md:mt-10 font-montserrat">
+      <h2 className="text-xl md:text-2xl font-bold text-slate-900">
         Ubicación del inmueble
       </h2>
 

@@ -68,7 +68,13 @@ export default function AddressMapModal({
         container: mapContainerRef.current,
         style: {
           version: 8,
-          sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } },
+          sources: {
+            osm: {
+              type: "raster",
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+              tileSize: 256,
+            },
+          },
           layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
         },
         center: [initialLng, initialLat],
@@ -150,13 +156,13 @@ export default function AddressMapModal({
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop className="fixed inset-0 bg-black/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150" />
 
-      <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+      <div className="fixed inset-0 flex w-screen items-center justify-center font-poppins">
         <DialogPanel
           transition
-          className="w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
+          className="w-full max-w-2xl h-dvh rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
         >
           <div className="mb-4 flex items-start justify-between gap-4">
-            <DialogTitle className="text-2xl font-bold text-slate-900">
+            <DialogTitle className="text-xl font-semibold text-slate-900">
               Confirma la ubicacion
             </DialogTitle>
             <button
@@ -183,18 +189,18 @@ export default function AddressMapModal({
           {!notFoundExact && lowConfidence && (
             <div className="mb-4 flex items-start gap-3 rounded-md bg-amber-50 px-4 py-3">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-              <p className="text-base text-slate-900">
+              <p className="text-sm text-slate-900">
                 Verifica que el pin este en el lugar correcto antes de
                 confirmar.
               </p>
             </div>
           )}
 
-          <p className="mb-4 text-base text-slate-700">
+          <p className="mb-4 text-sm text-slate-700">
             Arrastra el pin si necesitas ajustar la ubicacion exacta.
           </p>
 
-          <div className="mb-5 h-96 w-full overflow-hidden rounded-md border border-slate-200">
+          <div className="mb-5 h-80 md:h-80 w-full overflow-hidden rounded-md border border-slate-200">
             <div ref={mapContainerRef} className="w-full h-full" />
           </div>
 
@@ -203,7 +209,7 @@ export default function AddressMapModal({
             {position.lng.toFixed(6)}
           </p>
 
-          <div className="flex items-center justify-end gap-4 border-t border-slate-200 pt-5">
+          <div className="flex items-center justify-between md:justify-end gap-4 border-t border-slate-200 pt-5">
             <button
               type="button"
               onClick={onClose}
@@ -214,7 +220,7 @@ export default function AddressMapModal({
             <button
               type="button"
               onClick={handleConfirm}
-              className="rounded-md bg-fuchsia-800 px-6 py-3 text-base font-bold text-white hover:bg-fuchsia-900"
+              className="rounded-md bg-fuchsia-800 px-6 py-3 text-base font-semibold text-white hover:bg-fuchsia-900"
             >
               Confirmar ubicacion
             </button>

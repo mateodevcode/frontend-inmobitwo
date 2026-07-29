@@ -284,7 +284,8 @@ const RATING_LETTERS = ["A", "B", "C", "D", "E", "F", "G"];
    ============================================================ */
 
 export default function PropertyCharacteristicsForm() {
-  const { setContentNumber, formDataPropiedad, setFormDataPropiedad } = useAppContext();
+  const { setContentNumber, formDataPropiedad, setFormDataPropiedad } =
+    useAppContext();
   const { publicarDataAnuncio } = usePropiedades();
   const [loading, setLoading] = useState(false);
   const [tipoPiso, setTipoPiso] = useState([]);
@@ -323,7 +324,7 @@ export default function PropertyCharacteristicsForm() {
     <div className="flex max-w-2xl flex-col gap-10 font-montserrat">
       {/* ---- Características del piso ---- */}
       <div className="flex flex-col gap-7 mt-10">
-        <h2 className="text-3xl font-bold text-slate-900">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
           Características del piso
         </h2>
 
@@ -478,10 +479,10 @@ export default function PropertyCharacteristicsForm() {
       {/* ---- ¿Qué inquilinos buscas? ---- */}
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="mb-1 text-3xl font-bold text-slate-900">
+          <h2 className="mb-1 text-2xl md:text-3xl font-bold text-slate-900">
             ¿Qué inquilinos buscas?
           </h2>
-          <p className="text-base text-slate-700">
+          <p className="text-base text-slate-700 mt-4">
             Esta sección ayuda a que te contacten los inquilinos que más cuadran
             con tu vivienda.
           </p>
@@ -584,7 +585,7 @@ export default function PropertyCharacteristicsForm() {
 
       {/* ---- Precio del inmueble ---- */}
       <div className="flex flex-col gap-3">
-        <h2 className="text-3xl font-bold text-slate-900">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
           Precio del inmueble
         </h2>
 
@@ -618,10 +619,10 @@ export default function PropertyCharacteristicsForm() {
       {/* ---- Descripción del anuncio ---- */}
       <div className="flex flex-col gap-4">
         <div>
-          <h2 className="mb-1 text-3xl font-bold text-slate-900">
+          <h2 className="mb-1 text-2xl md:text-3xl font-bold text-slate-900">
             Descripción del anuncio
           </h2>
-          <p className="text-base text-slate-700">
+          <p className="text-base text-slate-700 mt-4">
             Aprovecha para comentar cosas que no te hayamos preguntado y no
             estén en las fotos: el suelo de parqué, el tipo de calefacción,
             ¿tiene tendedero?

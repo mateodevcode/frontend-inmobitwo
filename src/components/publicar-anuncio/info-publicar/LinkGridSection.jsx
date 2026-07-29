@@ -7,7 +7,7 @@ import { LinkColumn } from "@/components/publicar-anuncio/info-publicar/LinkColu
 
 export function LinksGridSection() {
   return (
-    <section className="py-14">
+    <section className="md:py-14 py-8">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3 w-10/12 mx-auto">
         <LinkColumn title="¿Buscas inmueble?" links={BUSCAS_INMUEBLE_LINKS} />
         <LinkColumn

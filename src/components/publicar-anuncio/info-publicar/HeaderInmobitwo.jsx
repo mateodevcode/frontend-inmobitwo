@@ -2,9 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
 import ModalUser from "@/components/modales/ModalUser";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { items_menu } from "@/data/items_menu";
 import { irArriba } from "@/utils/irArriba";
+import { TbMenu4 } from "react-icons/tb";
+import { logo } from "@/data/logo";
 
 const HeaderInmobitwo = () => {
   const { openModalHamburguesa, setOpenModalHamburguesa, setOpenModalUser } =
@@ -15,7 +16,7 @@ const HeaderInmobitwo = () => {
 
   return (
     <header className="bg-white flex items-center w-full justify-between">
-      <div className="flex items-center w-9/12 justify-between mx-auto">
+      <div className="flex items-center w-11/12 justify-between mx-auto">
         <div
           className="flex items-center gap-2 select-none py-5"
           onClick={() => {
@@ -25,8 +26,8 @@ const HeaderInmobitwo = () => {
         >
           <div className="w-9 h-9">
             <img
-              src="/logo/logo.png"
-              alt="logo inmobitwo"
+              src={logo.src}
+              alt={logo.alt}
               className="object-center w-full h-full"
             />
           </div>
@@ -53,12 +54,12 @@ const HeaderInmobitwo = () => {
           <BotonUsuario onClick={() => setOpenModalUser(true)} />
 
           <button
-            className="p-2 hover:bg-rose-100 rounded-md flex md:hidden cursor-pointer select-none"
+            className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden"
             onClick={() => {
               setOpenModalHamburguesa(!openModalHamburguesa);
             }}
           >
-            <RxHamburgerMenu className="text-2xl text-black" />
+            <TbMenu4 className="text-2xl text-black" />
           </button>
         </div>
       </div>

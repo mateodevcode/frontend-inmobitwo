@@ -19,7 +19,7 @@ function RadioOption({ option, disabled = false }) {
       <span>
         <Label
           as="p"
-          className="text-lg group-data-checked:text-rose-600 text-slate-900"
+          className="md:text-lg group-data-checked:text-rose-600 text-slate-900"
         >
           {option.label}
         </Label>
@@ -42,7 +42,9 @@ function OperationField({
 }) {
   return (
     <div className="mt-6">
-      <h2 className="mb-2 text-2xl font-semibold text-slate-900">Operación</h2>
+      <h2 className="mb-2 text-xl md:text-2xl font-semibold text-slate-900">
+        Operación
+      </h2>
       <RadioGroup value={value} onChange={onChange} className="flex flex-col">
         {options.map((opt) => (
           <RadioOption
@@ -100,7 +102,7 @@ export default function OperationForm() {
   }, [formDataPropiedad.tipo]);
 
   return (
-    <div className="flex max-w-xl flex-col gap-8 font-poppins mt-6">
+    <div className="flex max-w-xl flex-col gap-8 font-poppins md:mt-6">
       <OperationField
         value={
           OPERATION_OPTIONS.find(
@@ -117,7 +119,8 @@ export default function OperationForm() {
         }}
         formDataPropiedad={formDataPropiedad}
       />
-      {(formDataPropiedad.operacion === "alquiler" || formDataPropiedad.operacion === "alquiler-vacacional") && (
+      {(formDataPropiedad.operacion === "alquiler" ||
+        formDataPropiedad.operacion === "alquiler-vacacional") && (
         <RentalTypeField value={rentalType} onChange={setRentalType} />
       )}
     </div>

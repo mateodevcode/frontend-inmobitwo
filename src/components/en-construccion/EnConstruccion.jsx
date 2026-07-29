@@ -1,4 +1,5 @@
 import { MdOutlineConstruction } from "react-icons/md";
+import { logo } from "@/data/logo";
 
 const EnConstruccion = ({ title = "Esta sección" }) => {
   return (
@@ -6,8 +7,8 @@ const EnConstruccion = ({ title = "Esta sección" }) => {
       <div className="flex items-center gap-2 select-none">
         <div className="w-9 h-9">
           <img
-            src="/logo/logo.png"
-            alt="/logo inmobitwo"
+            src={logo.src}
+            alt={logo.alt}
             className="object-center w-full h-full"
           />
         </div>

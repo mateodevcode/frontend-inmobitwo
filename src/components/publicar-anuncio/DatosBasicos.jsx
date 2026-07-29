@@ -28,11 +28,13 @@ const DatosBasicos = () => {
   };
 
   return (
-    <div className="flex items-start mb-40">
+    <div className="flex items-center md:items-start mb-40 md:flex-row flex-col">
       {/* FormData */}
-      <div className="w-1/2 h-full text-black font-montserrat">
-        <div className="flex flex-col w-120 mx-auto">
-          <h3 className="font-bold text-4xl mt-8">Pon tu anuncio aquí</h3>
+      <div className="w-11/12 md:w-1/2 h-full text-black font-montserrat">
+        <div className="flex flex-col w-full md:w-120 mx-auto">
+          <h3 className="font-bold text-2xl md:text-3xl mt-8">
+            Pon tu anuncio aquí
+          </h3>
           <div className="flex flex-col mt-6">
             <TipoSelect
               value={selected}
@@ -41,9 +43,8 @@ const DatosBasicos = () => {
             />
           </div>
 
-          {/* Publicar como inmobiliaria — solo si el usuario pertenece a una */}
           {organizaciones.length > 0 && (
-            <label className="flex items-center gap-3 mt-4 p-3 rounded-lg border border-black/10 cursor-pointer select-none hover:bg-stone-50">
+            <label className="flex items-center gap-3 mt-4 p-3 rounded-lg border border-black/10 cursor-pointer select-none hover:bg-stone-50 w-full">
               <input
                 type="checkbox"
                 checked={esDeOrganizacion}
@@ -76,7 +77,7 @@ const DatosBasicos = () => {
         </div>
       </div>
       {/* Informativo */}
-      <div className="w-1/2 h-full">
+      <div className="w-full md:w-1/2 h-full">
         <Informacion />
       </div>
     </div>

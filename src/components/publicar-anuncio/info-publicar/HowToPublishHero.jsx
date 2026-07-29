@@ -21,10 +21,10 @@ export function HowToPublishHero() {
   ];
 
   return (
-    <section className="bg-septimo py-10">
-      <div className="mx-auto w-11/12 md:w-8/12 flex flex-col gap-8 rounded-lg bg-white p-10 md:flex-row md:items-center md:justify-between md:gap-12 shadow-lg shadow-black/20">
+    <section className="bg-septimo md:py-10 py-5">
+      <div className="mx-auto w-11/12 md:w-8/12 flex flex-col gap-8 rounded-lg bg-white md:p-10 p-7 md:flex-row md:items-center md:justify-between md:gap-12 shadow-lg shadow-black/20">
         <div className="flex-1">
-          <h1 className="mb-6 text-3xl font-bold text-slate-900 md:text-3xl">
+          <h1 className="mb-6 font-bold text-slate-900 md:text-3xl text-2xl">
             Cómo poner un anuncio en inmobitwo
           </h1>
 
@@ -35,12 +35,12 @@ export function HowToPublishHero() {
                   className="mt-1 h-5 w-5 shrink-0 text-emerald-600"
                   strokeWidth={2.5}
                 />
-                <p className="text-lg text-slate-900">{text}</p>
+                <p className="text-base text-slate-900">{text}</p>
               </li>
             ))}
           </ul>
 
-          <p className="mb-6 text-lg text-slate-900">
+          <p className="mb-6 text-base text-slate-900">
             Para vender o alquilar más rápido{" "}
             <a href="#" className="text-blue-600 hover:underline">
               contacta con una agencia inmobiliaria

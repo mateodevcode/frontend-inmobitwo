@@ -2,9 +2,9 @@ import { ServiceCard } from "./ServiceCard";
 
 export function ServicesSection() {
   return (
-    <section className="bg-slate-100 py-14">
-      <div className="mx-auto w-9/12">
-        <h2 className="mb-8 text-3xl font-bold text-slate-900">
+    <section className="bg-slate-100 md:py-14 py-8">
+      <div className="mx-auto md:w-9/12 w-10/12">
+        <h2 className="mb-8 md:text-3xl text-2xl font-bold text-slate-900">
           Algunos servicios para facilitarte la venta o alquiler de tu inmueble
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

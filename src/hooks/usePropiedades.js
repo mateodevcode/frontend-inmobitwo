@@ -1,5 +1,5 @@
 // src/hooks/usePropiedades.js
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
@@ -584,6 +584,17 @@ const usePropiedades = () => {
     }
   };
 
+  const cargarCountMisAnuncios = useCallback(async () => {
+    try {
+      const res = await apiBackend("/propiedades/mis-anuncios");
+      if (res.success) return res.data.length;
+      return 0;
+    } catch (error) {
+      console.error("Error cargando count mis anuncios:", error);
+      return 0;
+    }
+  }, []);
+
   return {
     actualizarPropiedad,
     eliminarPropiedad,
@@ -603,6 +614,7 @@ const usePropiedades = () => {
     cargarPropiedades,
     cargarPropiedadesInicio,
     cargarPropiedadesMisAnuncios,
+    cargarCountMisAnuncios,
     limpiarPropiedades,
   };
 };

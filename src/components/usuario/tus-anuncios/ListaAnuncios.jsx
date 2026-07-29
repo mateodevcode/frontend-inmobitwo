@@ -11,7 +11,7 @@ const ListaAnuncios = ({ propiedades }) => {
   const { actualizarPropiedad } = usePropiedades();
 
   return (
-    <div className="flex flex-col font-montserrat gap-2 mx-auto p-8">
+    <div className="flex flex-col font-montserrat gap-2 mx-auto md:p-8 p-4">
       {propiedades?.map((pro, i) => {
         return (
           <div
@@ -51,13 +51,13 @@ const ListaAnuncios = ({ propiedades }) => {
             <div className="flex flex-col gap-1 w-full md:w-1/2 h-full">
               <div className="h-full w-full flex flex-col items-center bg-stone-100">
                 <div className="flex items-center justify-center p-4 gap-2">
-                  <p className="font-bold text-2xl">
+                  <p className="font-bold text-xl md:text-2xl">
                     {pro.estado === "publicado" ? "Activo" : "Desactivado"}
                   </p>
                   {pro.estado === "publicado" ? (
-                    <FaCheckCircle className="text-2xl text-green-600" />
+                    <FaCheckCircle className="text-xl md:text-2xl text-green-600" />
                   ) : (
-                    <IoAlertCircle className="text-2xl text-blue-900" />
+                    <IoAlertCircle className="text-xl md:text-2xl text-blue-900" />
                   )}
                 </div>
                 <p className="text-center px-4">

@@ -7,7 +7,7 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
 
   if (!locationInfo) {
     return (
-      <div className="flex items-center gap-2 mt-2 text-sm">
+      <div className="flex items-center gap-2 mt-2 md:text-sm text-xs">
         <Link to="/" className="text-blue-600 hover:underline">
           inmobitwo
         </Link>
@@ -26,7 +26,7 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
   const tieneRegion = !esRegion && locationInfo.region_name;
 
   return (
-    <div className="flex items-center gap-2 mt-2 text-sm">
+    <div className="flex items-center gap-2 mt-2 md:text-sm text-xs">
       <Link to="/" className="text-blue-600 hover:underline">
         inmobitwo
       </Link>

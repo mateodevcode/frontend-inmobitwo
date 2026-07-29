@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TipoSelect from "./components/TipoSelect";
 import { PROPERTY_TYPES } from "@/data/property_types";
 import OperationForm from "@/components/publicar-anuncio/components/OperationForm";
@@ -7,6 +7,7 @@ import Informacion from "@/components/publicar-anuncio/components/Informacion";
 import FloorDoorBlockForm from "@/components/publicar-anuncio/components/FloorDoorBlockForm";
 import ContactForm from "@/components/publicar-anuncio/components/ContactForm";
 import { useAppContext } from "@/context/AppContext";
+import useOrganizaciones from "@/hooks/useOrganizaciones";
 
 const DatosBasicos = () => {
   const [selected, setSelected] = useState(null);
@@ -18,6 +19,12 @@ const DatosBasicos = () => {
   } = useAppContext();
 
   const esDeOrganizacion = !!formDataPropiedad?.es_de_organizacion;
+
+  const { cargarMisOrganizaciones } = useOrganizaciones();
+
+  useEffect(() => {
+    cargarMisOrganizaciones();
+  }, []);
 
   const handleToggleOrganizacion = (checked) => {
     setFormDataPropiedad((prev) => ({

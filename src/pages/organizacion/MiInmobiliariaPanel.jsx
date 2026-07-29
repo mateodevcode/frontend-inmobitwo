@@ -1,5 +1,5 @@
 // src/pages/organizacion/MiInmobiliariaPanel.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext.js";
 import useOrganizaciones from "@/hooks/useOrganizaciones.js";
@@ -14,9 +14,13 @@ import TemaSelector from "@/pages/organizacion/TemaSelector.jsx";
 // ────────────────────────────────────────────────────────────────
 const MiInmobiliariaPanel = () => {
   const { organizaciones, setOrganizaciones } = useAppContext();
-  const { actualizarOrganizacion } = useOrganizaciones();
+  const { actualizarOrganizacion, cargarMisOrganizaciones } = useOrganizaciones();
 
   const organizacion = organizaciones[0];
+
+  useEffect(() => {
+    cargarMisOrganizaciones();
+  }, []);
 
   const [formData, setFormData] = useState({
     nombre: organizacion?.nombre || "",

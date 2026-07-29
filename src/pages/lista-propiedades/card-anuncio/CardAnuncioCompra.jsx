@@ -36,7 +36,13 @@ const OPERACION_LABEL = {
   alquiler: "Alquiler",
 };
 
-const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
+const CardAnuncioCompra = ({
+  propiedad,
+  listaIds,
+  posicion,
+  total,
+  filtroLabel,
+}) => {
   const navigate = useNavigate();
   const { favoritos } = useAppContext();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
@@ -116,10 +122,13 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
 
   return (
     <div
-      className="flex items-center h-96 w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group cursor-pointer"
-      onClick={() => propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState })}
+      className="flex items-center md:flex-row flex-col md:h-96 h-full w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group cursor-pointer"
+      onClick={() =>
+        propiedad?.id &&
+        navigate(`/inmueble/${propiedad.id}`, { state: navState })
+      }
     >
-      <div className="w-[50%] h-full bg-primero rounded-l-md relative overflow-hidden">
+      <div className="w-full md:w-[50%] h-96 bg-primero rounded-l-md relative overflow-hidden">
         <img
           src={imagenes[currentIndex]}
           alt={titulo}
@@ -168,7 +177,10 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "fotos" } });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, {
+                  state: { ...navState, abrirFotoVisor: "fotos" },
+                });
             }}
             title="Ver fotos"
           >
@@ -179,7 +191,10 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
               className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
               onClick={(e) => {
                 e.stopPropagation();
-                propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "planos" } });
+                propiedad?.id &&
+                  navigate(`/inmueble/${propiedad.id}`, {
+                    state: { ...navState, abrirFotoVisor: "planos" },
+                  });
               }}
               title="Ver planos"
             >
@@ -190,7 +205,10 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "3d" } });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, {
+                  state: { ...navState, abrirFotoVisor: "3d" },
+                });
             }}
             title="Visita 3D"
           >
@@ -200,7 +218,10 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "mapa" } });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, {
+                  state: { ...navState, abrirFotoVisor: "mapa" },
+                });
             }}
             title="Ver mapa"
           >
@@ -242,14 +263,15 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
         </div>
       </div>
 
-      <div className="w-[50%] bg-primero h-full rounded-r-md relative pb-3 flex flex-col justify-between">
+      <div className="w-full md:w-[50%] bg-primero min-h-72 rounded-r-md relative pb-3 flex flex-col justify-between">
         <div className="flex flex-col">
           <div className="flex items-center justify-between w-full">
             <h2
               className="font-medium text-blue-600 hover:text-blue-700 hover:underline cursor-pointer select-none px-4 pt-2"
               onClick={(e) => {
                 e.stopPropagation();
-                propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState });
+                propiedad?.id &&
+                  navigate(`/inmueble/${propiedad.id}`, { state: navState });
               }}
             >
               {titulo}
@@ -275,7 +297,7 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
               )}
             </div>
 
-            <div className="text-sm flex items-center gap-2">
+            <div className="text-sm flex md:items-center items-start gap-2 md:flex-row flex-col">
               <p>2 hab. 85 m² 7ª planta exterior con ascensor</p>
               <p className="text-red-600">5 horas</p>
             </div>
@@ -296,7 +318,8 @@ const CardAnuncioCompra = ({ propiedad, listaIds, posicion, total, filtroLabel }
             className="flex items-center gap-2 text-blue-600 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, { state: navState });
             }}
           >
             <PiChats className="text-lg" />

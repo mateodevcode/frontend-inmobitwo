@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 const BotonGuardarBusqueda = () => {
   return (
-    <div className="bg-septimo w-[25%] h-full rounded-sm flex items-center justify-center flex-col gap-4">
+    <div className="bg-septimo w-full md:w-[25%] h-full rounded-sm hidden md:flex items-center justify-center flex-col gap-4">
       <h3 className="text-segundo text-sm font-semibold">
         Nuevos anuncios en tu email
       </h3>

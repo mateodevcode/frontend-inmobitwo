@@ -9,7 +9,7 @@ import { toCapitalize } from "../../lib/toCapitalize";
 import BotonAdminOrganizaciones from "./BotonAdminOrganizaciones";
 
 const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
-  const { organizaciones, setOrganizaciones, usuario } = useAppContext();
+  const { organizaciones, usuario } = useAppContext();
   const navigate = useNavigate();
   const { cargarMisOrganizaciones } = useOrganizaciones();
   const [cargando, setCargando] = useState(true);
@@ -18,21 +18,12 @@ const MiOrganizacionesSidebar = ({ itemSelect, setItemSelect }) => {
     : `/inmobiliarias/${organizaciones[0]?.slug}`;
 
   useEffect(() => {
-    const cargar = async () => {
-      if (!usuario) {
-        setCargando(false);
-        return;
-      }
-      setCargando(true);
-      const res = await cargarMisOrganizaciones();
-      if (res.success) {
-        setOrganizaciones(res.data);
-      }
+    if (!usuario) {
       setCargando(false);
-    };
-
-    cargar();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      return;
+    }
+    setCargando(true);
+    cargarMisOrganizaciones().finally(() => setCargando(false));
   }, [usuario]);
 
   if (cargando) {

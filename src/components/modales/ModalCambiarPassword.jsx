@@ -203,7 +203,7 @@ const ModalCambiarPassword = () => {
               <button
                 type="submit"
                 disabled={!puedeGuardar || loading}
-                className="w-full mt-6 rounded-md bg-rose-600 px-6 py-3 text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="w-full mt-6 rounded-md bg-rose-600 px-6 py-3 text-lg font-semibold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed transition"
               >
                 {loading ? "Guardando..." : "Guardar nueva contraseña"}
               </button>

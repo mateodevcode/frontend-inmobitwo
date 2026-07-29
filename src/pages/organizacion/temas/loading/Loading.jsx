@@ -15,7 +15,7 @@
  * tailwind.config.js (ver abajo del archivo).
  */
 
-const Loading = ({ logo = "/logo/logo-hor.png", type = "opcion1" }) => {
+const Loading = ({ logo = "/logo/logo.png", type = "opcion1" }) => {
   const renderLoader = () => {
     switch (type) {
       // Spinner clásico (borde girando)
@@ -65,10 +65,8 @@ const Loading = ({ logo = "/logo/logo-hor.png", type = "opcion1" }) => {
   };
 
   return (
-    <div className="bg-white h-screen w-full flex flex-col items-center justify-center gap-8 font-poppins">
-      <div
-        className={`w-40 md:w-56 ${type === "opcion3" ? "animate-pulse" : ""}`}
-      >
+    <div className="bg-white h-[50svh] w-full flex flex-col items-center justify-center gap-8 font-poppins">
+      <div className={`w-14 ${type === "opcion3" ? "animate-pulse" : ""}`}>
         <img src={logo} alt="logo" className="h-full w-full object-contain" />
       </div>
 

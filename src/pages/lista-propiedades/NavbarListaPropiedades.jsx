@@ -4,12 +4,19 @@ import { TbMenu4 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
+import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 import EnlaceNav from "@/pages/inicio/modales/EnlaceNav";
 import { irArriba } from "../../utils/irArriba";
 import { logo } from "@/data/logo";
 
 const NavbarListaPropiedades = () => {
-  const { usuario, openModalUser, setOpenModalUser } = useAppContext();
+  const {
+    usuario,
+    openModalUser,
+    setOpenModalUser,
+    openModalHamburguesa,
+    setOpenModalHamburguesa,
+  } = useAppContext();
   const navigate = useNavigate();
 
   return (
@@ -91,10 +98,14 @@ const NavbarListaPropiedades = () => {
         </div>
 
         {/* Menu hamburguesa */}
-        <button className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden">
+        <button
+          className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden"
+          onClick={() => setOpenModalHamburguesa(!openModalHamburguesa)}
+        >
           <TbMenu4 className="text-2xl text-black" />
         </button>
       </div>
+      <ModalHamburguesa />
     </div>
   );
 };

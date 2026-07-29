@@ -111,7 +111,7 @@ export function PropertyCard({ inmueble, onClose }) {
 
   return (
     <div
-      className="absolute top-16 right-4 z-1000 w-80 bg-white shadow-xl overflow-hidden cursor-pointer"
+      className="absolute top-30 right-2 md:top-16 md:right-4 z-1000 w-80 bg-white shadow-xl overflow-hidden cursor-pointer"
       onClick={handleGoToDetalle}
     >
       {/* ──── Imagen ──── */}
@@ -123,7 +123,10 @@ export function PropertyCard({ inmueble, onClose }) {
         />
 
         <button
-          onClick={(e) => { e.stopPropagation(); onClose?.(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose?.();
+          }}
           className="absolute top-2 right-2 z-10 bg-white/90 rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold hover:bg-white"
           title="Cerrar"
         >
@@ -136,7 +139,10 @@ export function PropertyCard({ inmueble, onClose }) {
             title="Ver fotos"
             onClick={(e) => {
               e.stopPropagation();
-              inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "fotos" } });
+              inmueble?.id &&
+                navigate(`/inmueble/${inmueble.id}`, {
+                  state: { ...navState, abrirFotoVisor: "fotos" },
+                });
             }}
           >
             <BsImage className="text-sm text-black" />
@@ -146,7 +152,10 @@ export function PropertyCard({ inmueble, onClose }) {
             title="Visita 3D"
             onClick={(e) => {
               e.stopPropagation();
-              inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "3d" } });
+              inmueble?.id &&
+                navigate(`/inmueble/${inmueble.id}`, {
+                  state: { ...navState, abrirFotoVisor: "3d" },
+                });
             }}
           >
             <FiVideo className="text-sm text-black" />
@@ -157,7 +166,10 @@ export function PropertyCard({ inmueble, onClose }) {
               title="Ver planos"
               onClick={(e) => {
                 e.stopPropagation();
-                inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "planos" } });
+                inmueble?.id &&
+                  navigate(`/inmueble/${inmueble.id}`, {
+                    state: { ...navState, abrirFotoVisor: "planos" },
+                  });
               }}
             >
               <FaArchway className="text-sm text-black" />
@@ -168,7 +180,10 @@ export function PropertyCard({ inmueble, onClose }) {
             title="Ver en mapa"
             onClick={(e) => {
               e.stopPropagation();
-              inmueble?.id && navigate(`/inmueble/${inmueble.id}`, { state: { ...navState, abrirFotoVisor: "mapa" } });
+              inmueble?.id &&
+                navigate(`/inmueble/${inmueble.id}`, {
+                  state: { ...navState, abrirFotoVisor: "mapa" },
+                });
             }}
           >
             <BsFillGeoAltFill className="text-sm text-black" />

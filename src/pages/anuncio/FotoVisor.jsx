@@ -159,10 +159,13 @@ export default function FotoVisor() {
       }
     }
     // saltar al siguiente/anterior modo, saltando planos si no hay
-    let nuevoModoIdx = (((idx + direccion) % MODOS.length) + MODOS.length) % MODOS.length;
+    let nuevoModoIdx =
+      (((idx + direccion) % MODOS.length) + MODOS.length) % MODOS.length;
     let nuevoModo = MODOS[nuevoModoIdx];
     if (nuevoModo === "planos" && totalPlanos === 0) {
-      nuevoModoIdx = (((nuevoModoIdx + direccion) % MODOS.length) + MODOS.length) % MODOS.length;
+      nuevoModoIdx =
+        (((nuevoModoIdx + direccion) % MODOS.length) + MODOS.length) %
+        MODOS.length;
       nuevoModo = MODOS[nuevoModoIdx];
     }
     setModo(nuevoModo);
@@ -231,7 +234,7 @@ export default function FotoVisor() {
       {/* ──── Header ──── */}
       {!fullscreen && (
         <div className="w-full mx-auto border-b border-gray-200 flex items-center justify-center relative">
-          <div className="flex items-center justify-between px-6 py-3 w-8/12">
+          <div className="flex items-center justify-between px-6 py-3 w-full md:w-8/12">
             <div className="min-w-0">
               <h1 className="font-bold text-gray-900 truncate">
                 {inmueble.titulo}
@@ -268,7 +271,7 @@ export default function FotoVisor() {
               </button>
               <button
                 onClick={cerrar}
-                className="text-gray-700 hover:text-black absolute right-4"
+                className="text-gray-700 hover:text-black absolute right-4 hidden md:flex"
                 title="Cerrar"
               >
                 <IoClose className="text-3xl" />
@@ -280,7 +283,7 @@ export default function FotoVisor() {
 
       {/* ──── Contenido principal ──── */}
       <div
-        className={`relative flex-1 flex items-center justify-center min-h-0 ${fullscreen ? "fixed inset-0 z-[2100] bg-black" : ""}`}
+        className={`relative flex-1 flex items-center justify-center min-h-0 ${fullscreen ? "fixed inset-0 z-2100 bg-black" : ""}`}
       >
         {modo === "mapa" && inmueble?.latitude && inmueble?.longitude ? (
           <div className="w-full h-full relative">
@@ -315,10 +318,10 @@ export default function FotoVisor() {
               className={`${fullscreen ? "w-full h-full" : "max-w-full max-h-full"} object-contain select-none`}
             />
 
-        {fullscreen && (
+            {fullscreen && (
               <button
                 onClick={() => setFullscreen(false)}
-                className="absolute bottom-4 right-4 z-[2200] bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white rounded-lg p-3 transition-colors duration-200 cursor-pointer"
+                className="absolute bottom-4 right-4 z-2200 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white rounded-lg p-3 transition-colors duration-200 cursor-pointer"
                 title="Salir de pantalla completa"
               >
                 <BsArrowsAngleContract className="text-2xl" />
@@ -347,12 +350,12 @@ export default function FotoVisor() {
       {/* ──── Footer ──── */}
       {!fullscreen && (
         <div className="flex items-center justify-center border-t border-gray-200 mx-auto w-full">
-          <div className="flex items-center justify-between px-6 py-3 w-8/12">
-            <div className="w-30">
+          <div className="flex items-center md:flex-row flex-col justify-between px-6 py-3 w-full md:w-8/12 gap-4">
+            <div className="md:w-30">
               <p className="text-xs text-gray-500">{counterText}</p>
             </div>
 
-            <div className="hidden md:flex items-center">
+            <div className="flex items-center">
               <button
                 onClick={() => setModo("fotos")}
                 className={btnClass("fotos")}

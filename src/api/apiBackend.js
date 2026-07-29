@@ -1,5 +1,6 @@
 // src/api/apiBackend.js
 import { URL_BACKEND } from "@/config/config.js";
+import { obtenerTokenFresco } from "@/api/refreshToken.js";
 
 export async function apiBackend(endpoint, metodo = "GET", datos = null) {
   try {
@@ -29,13 +30,14 @@ export async function apiBackend(endpoint, metodo = "GET", datos = null) {
 
     // Si el access_token expiró, intentar renovarlo automáticamente
     if (res.status === 401 && token) {
-      const renovado = await renovarToken();
+      const renovado = await obtenerTokenFresco();
       if (renovado) {
         const nuevoToken = localStorage.getItem("access_token");
         const reintento = await fetch(url, {
           method: metodo,
           headers: {
-            ...headers,
+            "Content-Type": "application/json",
+            "X-Tenant-Host": window.location.host,
             Authorization: `Bearer ${nuevoToken}`,
           },
           credentials: "include",
@@ -62,27 +64,6 @@ export async function apiBackend(endpoint, metodo = "GET", datos = null) {
       data: null,
       status: 500,
     };
-  }
-}
-
-// ─────────────────────────────────────────────
-// Renueva el access_token usando el refresh_token (cookie httpOnly)
-// ─────────────────────────────────────────────
-async function renovarToken() {
-  try {
-    const res = await fetch(`${URL_BACKEND}/auth/refresh`, {
-      method: "POST",
-      credentials: "include", // envía la cookie httpOnly automáticamente
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    if (data.success && data.data?.accessToken) {
-      localStorage.setItem("access_token", data.data.accessToken);
-      return true;
-    }
-    return false;
-  } catch {
-    return false;
   }
 }
 

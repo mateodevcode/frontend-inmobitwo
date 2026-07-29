@@ -26,7 +26,6 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import { BiNotepad } from "react-icons/bi";
 
-
 const AUTOPLAY_SECONDS = 10;
 
 export default function DetallePropiedad({
@@ -178,13 +177,13 @@ export default function DetallePropiedad({
     <div className="bg-gray-100 relative">
       {/* ──── Barra sticky (aparece al scrollear pasado el bloque de precio) ──── */}
       <div
-        className={`fixed top-0 left-0 right-0 z-[1200] bg-white shadow-md transition-all duration-300 ease-out ${
+        className={`fixed top-0 left-0 right-0 z-1200 bg-white shadow-md transition-all duration-300 ease-out ${
           mostrarBarraSticky
             ? "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 pointer-events-none"
         }`}
       >
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4 px-5 py-2.5 font-poppins">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-4 px-5 py-2.5 font-poppins bg-amber-400">
           <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={onClose}
@@ -226,8 +225,8 @@ export default function DetallePropiedad({
       </div>
 
       {/* ──── Botón cerrar (barra superior existente) ──── */}
-      <div className="w-full h-12 bg-white flex items-center">
-        <div className="mx-auto w-9/12 flex items-center justify-between gap-4">
+      <div className="w-full md:h-12 h-24 bg-white flex items-center">
+        <div className="mx-auto w-9/12 flex items-center md:flex-row flex-col justify-between gap-4">
           <button
             onClick={onClose}
             className="flex items-center justify-center cursor-pointer select-none gap-2 font-poppins text-blue-600 hover:underline hover:text-blue-700"
@@ -332,21 +331,23 @@ export default function DetallePropiedad({
             )}
           </div>
 
-          <div className="flex items-center gap-3 mt-3">
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mt-3">
             <button
               onClick={() => navigate(`/inmueble/${inmueble.id}/foto/1`)}
-              className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
+              className="flex items-center justify-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
             >
               <ImImage className="text-base" />
               {totalImagenes} fotos
             </button>
             {totalPlanos > 0 && (
-            <button
-              onClick={() => navigate(`/inmueble/${inmueble.id}/foto/1?planos=1`)}
-              className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
-            >
-              <FaArchway /> {totalPlanos} planos
-            </button>
+              <button
+                onClick={() =>
+                  navigate(`/inmueble/${inmueble.id}/foto/1?planos=1`)
+                }
+                className="flex items-center justify-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
+              >
+                <FaArchway /> {totalPlanos} planos
+              </button>
             )}
             <button
               onClick={() =>
@@ -354,13 +355,13 @@ export default function DetallePropiedad({
                   .getElementById("tour-section")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
-              className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
+              className="flex items-center justify-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
             >
               <Md3dRotation /> Vista 3D
             </button>
             <button
               onClick={() => navigate(`/inmueble/${inmueble.id}/foto/1?mapa=1`)}
-              className="flex items-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
+              className="flex items-center justify-center gap-2 border-2 border-black/80 px-3 py-1.5 text-sm font-semibold text-gray-800 hover:border-[#e6007a] hover:text-[#e6007a] hover:bg-[#e6007a]/20 cursor-pointer"
             >
               <FaMapMarkerAlt /> Mapa
             </button>
@@ -370,14 +371,14 @@ export default function DetallePropiedad({
           <div className="mt-4 pb-4 border-b border-gray-200">
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 font-montserrat">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-montserrat">
                   Piso en venta en calle 17
                 </h1>
-                <div className="flex items-center gap-2">
-                  <p className="text-black/60">
+                <div className="flex md:items-center items-start gap-2 md:flex-row flex-col">
+                  <p className="text-black/60 md:text-base text-sm">
                     Auditorio-Seminario-Parque de Invierno, Oviedo
                   </p>
-                  <div className="flex items-center gap-1 text-blue-600 hover:underline cursor-pointer select-none">
+                  <div className="flex items-center gap-1 text-blue-600 hover:underline cursor-pointer select-none md:text-base text-sm">
                     <FaMapMarkerAlt className="" />
                     <span className="text-sm">Ver mapa</span>
                   </div>
@@ -386,21 +387,25 @@ export default function DetallePropiedad({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-3">
-              <p className="text-2xl font-bold text-gray-900 font-montserrat">
-                {formatPrecioCompleto(inmueble.precio)}
-              </p>
-              {inmueble.operacion === "alquiler" && (
-                <p className="text-base text-gray-500">/mes</p>
-              )}
-              <p className="text-lg font-bold font-montserrat ml-2 text-red-600 line-through">
-                {formatPrecioCompleto(28000000)}
-              </p>
-              <div className="flex items-center text-red-600">
-                <GoArrowDown />
-                <p className="text-lg font-semibold font-montserrat ml-1">
-                  {((inmueble.precio / 280000000) * 100).toFixed()} %
+            <div className="flex md:items-center gap-2 mt-3 md:flex-row flex-col items-start">
+              <div className="flex items-center">
+                <p className="text-2xl font-bold text-gray-900 font-montserrat">
+                  {formatPrecioCompleto(inmueble.precio)}
                 </p>
+                {inmueble.operacion === "alquiler" && (
+                  <p className="text-base text-gray-500">/mes</p>
+                )}
+              </div>
+              <div className="flex items-center gap-1">
+                <p className="text-lg font-bold font-montserrat ml-2 text-red-600 line-through">
+                  {formatPrecioCompleto(28000000)}
+                </p>
+                <div className="flex items-center text-red-600">
+                  <GoArrowDown />
+                  <p className="text-lg font-semibold font-montserrat ml-1">
+                    {((inmueble.precio / 280000000) * 100).toFixed()} %
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -416,7 +421,7 @@ export default function DetallePropiedad({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2 mt-4 md:text-base text-sm">
               <span>90 m2</span>
               <div className="w-px h-5 bg-black/40" />
               <span>3 hab.</span>
@@ -444,14 +449,14 @@ export default function DetallePropiedad({
               </button>
               <button className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline">
                 <HiOutlineTrash className="text-lg" />
-                Descartar
+                <span className="hidden md:flex">Descartar</span>
               </button>
               <button
                 onClick={handleCompartirClick}
                 className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:underline"
               >
                 <IoArrowRedoOutline className="text-lg" />
-                Compartir
+                <span className="hidden md:flex">Compartir</span>
               </button>
             </div>
           </div>

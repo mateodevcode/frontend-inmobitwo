@@ -13,17 +13,12 @@ export const rutasFrontend = [
   {
     seccion: "General",
     items: [
-      { path: "/", nombre: "Feed", auth: "privada" },
+      { path: "/", nombre: "Inicio (landing page)", auth: "pública" },
+      { path: "/feed", nombre: "Feed (home autenticado)", auth: "privada" },
       {
         path: "/lista-propiedades",
         nombre: "Lista de propiedades (prueba)",
         auth: "pública",
-      },
-      {
-        path: "/propiedades/:id",
-        nombre: "Detalle de propiedad",
-        auth: "privada",
-        param: true,
       },
       { path: "/leads", nombre: "Leads", auth: "privada" },
       { path: "/logs", nombre: "Logs", auth: "privada" },
@@ -48,6 +43,58 @@ export const rutasFrontend = [
         path: "/info/publicar-anuncio/publicar",
         nombre: "Wizard de publicación",
         auth: "privada",
+      },
+    ],
+  },
+  {
+    seccion: "Propiedades",
+    items: [
+      {
+        path: "/propiedades/:id",
+        nombre: "Detalle de propiedad",
+        auth: "privada",
+        param: true,
+      },
+      {
+        path: "/inmueble/:id",
+        nombre: "Anuncio público",
+        auth: "pública",
+        param: true,
+      },
+      {
+        path: "/inmueble/:id/foto/:fotoIndex",
+        nombre: "Foto visor",
+        auth: "pública",
+        param: true,
+      },
+    ],
+  },
+  {
+    seccion: "Búsqueda (dinámicas, tipo Idealista)",
+    items: [
+      {
+        path: "/:operationAndType/:cityAndDepartment",
+        nombre: "Lista de propiedades por ciudad",
+        auth: "pública",
+        param: true,
+      },
+      {
+        path: "/:operationAndType/:cityAndDepartment/mapa",
+        nombre: "Mapa de inmuebles por ciudad",
+        auth: "pública",
+        param: true,
+      },
+      {
+        path: "/:operationAndType/zona-personalizada",
+        nombre: "Lista zona personalizada",
+        auth: "pública",
+        param: true,
+      },
+      {
+        path: "/busqueda-multizona/:operationAndType",
+        nombre: "Seleccionar zona en mapa",
+        auth: "pública",
+        param: true,
       },
     ],
   },
@@ -83,7 +130,19 @@ export const rutasFrontend = [
     items: [
       {
         path: "/inmobiliarias/:slug",
-        nombre: "Escaparate público",
+        nombre: "Escaparate público (home)",
+        auth: "pública",
+        param: true,
+      },
+      {
+        path: "/inmobiliarias/:slug/sobre-nosotros",
+        nombre: "Escaparate — Sobre nosotros",
+        auth: "pública",
+        param: true,
+      },
+      {
+        path: "/inmobiliarias/:slug/contacto",
+        nombre: "Escaparate — Contacto",
         auth: "pública",
         param: true,
       },
@@ -163,13 +222,20 @@ export const rutasBackend = [
     items: [
       { metodo: "GET", path: "/propiedades", auth: "pública" },
       { metodo: "GET", path: "/propiedades/inicio", auth: "pública" },
-      { metodo: "GET", path: "/propiedades/mis-anuncios", auth: "pública ⚠️" },
+      { metodo: "GET", path: "/propiedades/mis-anuncios", auth: "token" },
+      { metodo: "GET", path: "/propiedades/search-slugs", auth: "pública" },
+      {
+        metodo: "GET",
+        path: "/propiedades/inmuebles-en-bbox",
+        auth: "pública",
+      },
       {
         metodo: "GET",
         path: "/propiedades/organizacion/:slug",
         auth: "pública",
       },
       { metodo: "GET", path: "/propiedades/:id", auth: "pública" },
+      { metodo: "GET", path: "/propiedades/:id/resumen", auth: "pública" },
       { metodo: "POST", path: "/propiedades", auth: "token" },
       { metodo: "PATCH", path: "/propiedades/:id", auth: "token" },
       { metodo: "DELETE", path: "/propiedades/:id", auth: "token" },
@@ -288,11 +354,20 @@ export const rutasBackend = [
     ],
   },
   {
-    seccion: "Geografía",
+    seccion: "Geografía / GeoJSON / Geocoding",
     items: [
       { metodo: "GET", path: "/api/countries", auth: "pública" },
       { metodo: "GET", path: "/api/states", auth: "pública" },
       { metodo: "GET", path: "/api/cities", auth: "pública" },
+      { metodo: "GET", path: "/api/suggest-cities", auth: "pública" },
+      { metodo: "GET", path: "/api/location-info", auth: "pública" },
+      { metodo: "GET", path: "/api/regions/geojson", auth: "pública" },
+      { metodo: "GET", path: "/api/states/geojson", auth: "pública" },
+      { metodo: "GET", path: "/api/cities/geojson", auth: "pública" },
+      { metodo: "GET", path: "/api/barrios", auth: "pública" },
+      { metodo: "GET", path: "/api/geo-count", auth: "pública" },
+      { metodo: "GET", path: "/api/location-geojson", auth: "pública" },
+      { metodo: "POST", path: "/api/inmuebles-en-poligono", auth: "pública" },
       { metodo: "GET", path: "/api/geocode", auth: "pública" },
     ],
   },

@@ -142,16 +142,52 @@ export default function MapaInmuebles({
 
   function renderBoundary(map, geom) {
     if (map.getSource("zonaboundary")) {
-      map.getSource("zonaboundary").setData({ type: "Feature", geometry: geom, properties: {} });
+      map
+        .getSource("zonaboundary")
+        .setData({ type: "Feature", geometry: geom, properties: {} });
     } else {
-      map.addSource("zonaboundary", { type: "geojson", data: { type: "Feature", geometry: geom, properties: {} } });
-      map.addLayer({ id: "zona-fill", type: "fill", source: "zonaboundary", paint: { "fill-color": "#e6007a", "fill-opacity": 0.15 } });
-      map.addLayer({ id: "zona-line", type: "line", source: "zonaboundary", paint: { "line-color": "#e6007a", "line-width": 2, "line-opacity": 0.6 } });
+      map.addSource("zonaboundary", {
+        type: "geojson",
+        data: { type: "Feature", geometry: geom, properties: {} },
+      });
+      map.addLayer({
+        id: "zona-fill",
+        type: "fill",
+        source: "zonaboundary",
+        paint: { "fill-color": "#e6007a", "fill-opacity": 0.15 },
+      });
+      map.addLayer({
+        id: "zona-line",
+        type: "line",
+        source: "zonaboundary",
+        paint: {
+          "line-color": "#e6007a",
+          "line-width": 2,
+          "line-opacity": 0.6,
+        },
+      });
     }
-    let x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
-    function walk(c) { if (typeof c[0] === "number") { if (c[0] < x1) x1 = c[0]; if (c[0] > x2) x2 = c[0]; if (c[1] < y1) y1 = c[1]; if (c[1] > y2) y2 = c[1]; } else c.forEach(walk); }
+    let x1 = Infinity,
+      y1 = Infinity,
+      x2 = -Infinity,
+      y2 = -Infinity;
+    function walk(c) {
+      if (typeof c[0] === "number") {
+        if (c[0] < x1) x1 = c[0];
+        if (c[0] > x2) x2 = c[0];
+        if (c[1] < y1) y1 = c[1];
+        if (c[1] > y2) y2 = c[1];
+      } else c.forEach(walk);
+    }
     walk(geom.coordinates || []);
-    if (x1 !== Infinity) map.fitBounds([[x1, y1], [x2, y2]], { padding: 40, duration: 1000, maxZoom: 14 });
+    if (x1 !== Infinity)
+      map.fitBounds(
+        [
+          [x1, y1],
+          [x2, y2],
+        ],
+        { padding: 40, duration: 1000, maxZoom: 14 },
+      );
   }
 
   // 1. Crear mapa (debe ir PRIMERO)
@@ -256,7 +292,12 @@ export default function MapaInmuebles({
       );
       if (res.success && res.data) {
         const { latitude, longitude } = res.data;
-        map.flyTo({ center: [longitude, latitude], zoom: zone.type === "region" ? 7 : zone.type === "departamento" ? 9 : 13, duration: 1500 });
+        map.flyTo({
+          center: [longitude, latitude],
+          zoom:
+            zone.type === "region" ? 7 : zone.type === "departamento" ? 9 : 13,
+          duration: 1500,
+        });
       }
     } catch (e) {
       console.error("[MapaInmuebles] error geocodificando zona:", e);
@@ -300,7 +341,7 @@ export default function MapaInmuebles({
           onClose={() => setSelectedInmueble(null)}
         />
       )}
-      <div className="absolute top-3 right-4 z-10">
+      <div className="absolute top-16 md:top-3 right-2 md:right-4 z-10">
         <InputSearchZona
           onSelectZone={(zone) =>
             handleSelectZone(zone, operation, tipoInmueble)

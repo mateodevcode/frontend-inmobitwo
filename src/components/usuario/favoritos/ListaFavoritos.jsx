@@ -69,13 +69,13 @@ const ListaFavoritos = ({ propiedades }) => {
             <div className="flex flex-col gap-1 w-full md:w-1/2 h-full">
               <div className="h-full w-full flex flex-col items-center bg-stone-100">
                 <div className="flex items-center justify-center p-4 gap-2">
-                  <p className="font-bold text-2xl">
+                  <p className="font-bold text-xl md:text-2xl">
                     {pro.estado === "publicado" ? "Activo" : "Desactivado"}
                   </p>
                   {pro.estado === "publicado" ? (
-                    <FaCheckCircle className="text-2xl text-green-600" />
+                    <FaCheckCircle className="text-xl md:text-2xl text-green-600" />
                   ) : (
-                    <IoAlertCircle className="text-2xl text-blue-900" />
+                    <IoAlertCircle className="text-xl md:text-2xl text-blue-900" />
                   )}
                 </div>
                 <p className="text-center px-4">
@@ -86,7 +86,7 @@ const ListaFavoritos = ({ propiedades }) => {
                 <button
                   onClick={(e) => handleQuitarFavorito(e, pro.id)}
                   disabled={removingId === pro.id}
-                  className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium disabled:opacity-50 mt-4"
+                  className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium disabled:opacity-50 mt-4 pb-4 md:pb-0"
                 >
                   <TiHeartFullOutline className="text-xl" />
                   {removingId === pro.id
@@ -104,7 +104,7 @@ const ListaFavoritos = ({ propiedades }) => {
 
                 <div className="flex flex-col items-center p-2 my-2">
                   <button
-                    className="text-xl font-semibold text-blue-700 hover:underline cursor-pointer select-none active:scale-95 duration-75 transition"
+                    className="text-base md:text-lg font-semibold text-blue-700 hover:underline cursor-pointer select-none active:scale-95 duration-75 transition"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/inmueble/${pro.id}`);

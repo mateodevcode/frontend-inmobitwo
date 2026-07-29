@@ -1101,7 +1101,7 @@ export default function SelectZonaMap({
       />
 
       {/* ──── Botón toggle dibujo/selección (top-right) ──── */}
-      <div className="absolute top-4 right-4 z-50 flex flex-col gap-2">
+      <div className="absolute top-3 md:top-4 right-3 md:right-4 z-50 flex flex-col gap-2">
         <div className="rounded-md overflow-hidden shadow-lg border-2 border-black/80 bg-white">
           <button
             className={`flex items-center gap-2 px-5 py-2.5 cursor-pointer text-sm font-poppins font-semibold transition-colors ${
@@ -1128,7 +1128,7 @@ export default function SelectZonaMap({
           </button>
         </div>
         {drawMode && drawLayerRef.current && (
-          <div className="rounded-full overflow-hidden shadow-lg border-2 border-black/80 bg-white">
+          <div className="rounded-md overflow-hidden shadow-lg border-2 border-black/80 bg-white">
             <button
               className="flex items-center gap-2 px-5 py-2.5 bg-gray-50 cursor-pointer text-sm text-black/80 font-poppins font-semibold hover:bg-white w-full"
               title="Borrar polígono"
@@ -1151,20 +1151,20 @@ export default function SelectZonaMap({
       </div>
 
       {mapReady && map && (
-        <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-2">
+        <div className="absolute bottom-16 md:bottom-4 right-3 md:right-4 z-10 flex flex-col gap-2 items-end">
           <ZoomControl map={map} />
           {!drawMode && <LocationControl map={map} />}
         </div>
       )}
 
       {isDrawingActive && mapReady && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/80 text-white px-5 py-2 rounded-full text-sm z-40 pointer-events-none font-poppins">
+        <div className="absolute top-16 md:top-4 left-1/2 -translate-x-1/2 bg-black/80 text-white px-5 py-2 rounded-md text-sm z-40 pointer-events-none font-poppins w-80 md:w-130 text-center">
           Haz clic para marcar vértices. Doble clic para cerrar el polígono.
         </div>
       )}
 
       {drawMode && mapReady && !drawArmed && !drawLayerRef.current && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div className="absolute bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-50">
           <button
             className="flex items-center gap-2 px-5 py-2.5 rounded-md shadow-lg border-2 border-black/80 bg-[#e6007a] text-white cursor-pointer text-sm font-poppins font-semibold hover:bg-[#c40068] transition-colors"
             onClick={handleStartDrawing}
@@ -1176,7 +1176,7 @@ export default function SelectZonaMap({
       )}
 
       {drawMode && mapReady && drawLayerRef.current && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div className="absolute bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-50">
           <button
             className="flex items-center gap-2 px-6 py-3 rounded-md shadow-lg border-2 border-black/80 bg-[#e6007a] text-white cursor-pointer text-sm font-poppins font-semibold hover:bg-[#c40068] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={onVerInmuebles}

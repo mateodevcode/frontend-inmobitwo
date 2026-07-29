@@ -95,22 +95,22 @@ const Acceso = () => {
       <HeaderInmobitwo />
       <HeadPerfilAcceso />
 
-      <div className="w-10/12 min-h-svh mb-20">
+      <div className="w-11/12 md:w-10/12 min-h-svh mb-8 md:mb-20">
         {formDataUsuario.email_verificado && (
-          <div className="w-2/3 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between border border-black/10 mt-8">
+          <div className="w-full md:w-150 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between border border-black/10 mt-8">
             <div>
-              <h3 className="text-xl font-bold text-black">
+              <h3 className="text-lg md:text-xl font-bold text-black">
                 Protege tu cuenta con verificación por email al iniciar sesión
               </h3>
 
               <div className="flex items-center gap-4 bg-green-100 p-2 px-4 my-4">
                 <FaCheckCircle className="text-green-700 text-xl" />
-                <p className="text-lg font-semibold text-green-800">
+                <p className="text-base md:text-lg font-semibold text-green-800">
                   Verificación en dos pasos activada
                 </p>
               </div>
 
-              <p className="text-lg mt-2 text-black/90">
+              <p className="text-base md:text-lg mt-2 text-black/90">
                 Tus datos cuentan con una seguridad adicional. Al iniciar
                 sesión, recibirás un código de verificación en el correo {email}{" "}
                 para verificar tu identidad.
@@ -123,7 +123,7 @@ const Acceso = () => {
               disabled={loading}
               onClick={handleDesactivar}
             >
-              <p className="font-semibold text-lg">
+              <p className="font-semibold text-base md:text-lg">
                 Desactivar verificación por email
               </p>
             </button>
@@ -131,7 +131,7 @@ const Acceso = () => {
         )}
 
         {!formDataUsuario.email_verificado && (
-          <div className="w-2/3 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between border border-black/10 mt-8">
+          <div className="w-full md:w-150 bg-stone-50 shadow-sm shadow-black/20 p-6 md:p-8 flex flex-col justify-between border border-black/10 mt-8">
             <div>
               <h3 className="text-xl font-bold text-black">
                 Verifica tu correo electrónico para proteger tu cuenta
@@ -139,12 +139,12 @@ const Acceso = () => {
 
               <div className="flex items-center gap-4 bg-black/5 p-2 px-4 my-4">
                 <GoAlert className="text-black text-xl" />
-                <p className="text-lg font-semibold text-black">
+                <p className="text-base md:text-lg font-semibold text-black">
                   Email sin verificar
                 </p>
               </div>
 
-              <p className="text-lg mt-2 text-black/90">
+              <p className="text-base md:text-lg mt-2 text-black/90">
                 Tu dirección de correo {email} aún no ha sido verificada.
                 Verifícala para activar la seguridad adicional y poder recibir
                 códigos al iniciar sesión.
@@ -153,13 +153,13 @@ const Acceso = () => {
 
             {!codigoEnviado ? (
               <button
-                className="flex items-center gap-2 text-white cursor-pointer select-none hover:bg-black/80 bg-black mt-4 py-2 px-4 rounded-md justify-center w-sm active:scale-95 duration-75 transition disabled:opacity-50"
+                className="flex items-center gap-2 text-white cursor-pointer select-none hover:bg-black/80 bg-black mt-4 py-2 px-4 rounded-md justify-center w-full md:w-80 active:scale-95 duration-75 transition disabled:opacity-50"
                 type="button"
                 disabled={loading}
                 onClick={handleEnviarCodigo}
               >
-                <IoMailOutline className="text-2xl" />
-                <p className="font-semibold text-lg">
+                <IoMailOutline className="text-lg md:text-xl" />
+                <p className="font-semibold text-base">
                   Enviar correo de verificación
                 </p>
               </button>
@@ -205,10 +205,10 @@ const Acceso = () => {
           </div>
         )}
 
-        <div className="w-2/3 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between border border-black/10 mt-8">
+        <div className="w-full md:w-150 bg-stone-50 shadow-sm shadow-black/20 p-6 md:p-8 flex flex-col justify-between border border-black/10 mt-6 md:mt-8">
           <div>
             <h3 className="text-xl font-bold text-black">Email de acceso</h3>
-            <p className="text-lg mt-2 text-black/90">
+            <p className="text-base md:text-lg mt-2 text-black/90">
               Tus datos cuentan con una seguridad adicional. Al iniciar sesión,
               recibirás un código SMS en el móvil{" "}
               {phoneFormatter(formDataUsuario.telefono)} para verificar tu
@@ -216,18 +216,18 @@ const Acceso = () => {
             </p>
           </div>
 
-          <div className="bg-stone-100 p-2 border border-black/10 w-96 px-4 mt-4">
-            <p className="text-lg text-black">{email}</p>
+          <div className="bg-stone-100 p-2 border border-black/10 w-full md:w-96 px-4 mt-4">
+            <p className="text-base md:text-lg text-black">{email}</p>
           </div>
 
           <button className="flex items-center gap-2 text-amber-700 mt-4">
-            <p className="text-lg">
+            <p className="text-base md:text-lg">
               Si quieres modificar tu email llama al 917882791
             </p>
           </button>
         </div>
 
-        <div className="w-2/3 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between border border-black/10 mt-8">
+        <div className="w-full md:w-150 bg-stone-50 shadow-sm shadow-black/20 p-6 md:p-8 flex flex-col justify-between border border-black/10 mt-8">
           <div>
             <h3 className="text-xl font-bold text-black">Contraseña</h3>
           </div>
@@ -237,7 +237,9 @@ const Acceso = () => {
             type="button"
             onClick={() => setOpenModalCambiarPassword(true)}
           >
-            <p className="font-semibold text-lg">Cambiar contraseña</p>
+            <p className="font-semibold text-base md:text-lg">
+              Cambiar contraseña
+            </p>
           </button>
         </div>
       </div>

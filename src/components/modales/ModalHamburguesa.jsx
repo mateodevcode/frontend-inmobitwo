@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppContext } from "@/context/AppContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getInitials } from "@/lib/getInitials";
 import { formatFirstTwoNames } from "@/lib/formatFirstTwoNames";
 import { MdLogout } from "react-icons/md";
 import useAuth from "@/hooks/useAuth";
+import usePropiedades from "@/hooks/usePropiedades";
 import { logo } from "@/data/logo";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
@@ -18,10 +19,11 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
     openModalHamburguesa,
     setOpenModalHamburguesa,
     usuario,
-    propiedades,
   } = useAppContext();
   const { handleCerrarSesion } = useAuth();
+  const { cargarCountMisAnuncios } = usePropiedades();
   const navigate = useNavigate();
+  const [countMisAnuncios, setCountMisAnuncios] = useState(0);
 
   const TAMANOS = {
     sm: "w-7 h-7 text-xs",
@@ -40,6 +42,14 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
       document.body.style.overflow = "";
     }
   }, [openModalHamburguesa]);
+
+  useEffect(() => {
+    if (!openModalHamburguesa || !usuario?.id) return;
+    (async () => {
+      const count = await cargarCountMisAnuncios();
+      setCountMisAnuncios(count);
+    })();
+  }, [openModalHamburguesa, usuario?.id, cargarCountMisAnuncios]);
 
   const avatar = usuario.image_url ? (
     <img
@@ -150,7 +160,7 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
                               </div>
                               <div className="text-base">
                                 {item.id === "mis-anuncios" &&
-                                  `(${propiedades?.length || 0})`}
+                                  `(${countMisAnuncios})`}
                               </div>
                             </div>
                           );

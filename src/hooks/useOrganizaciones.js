@@ -1,10 +1,11 @@
 // src/hooks/useOrganizaciones.js
+import { useCallback } from "react";
 import { toast } from "sonner";
 import { apiBackend } from "@/api/apiBackend.js";
 import { useAppContext } from "@/context/AppContext.js";
 
 const useOrganizaciones = () => {
-  const { iniciarCarga, terminarCarga } = useAppContext();
+  const { iniciarCarga, terminarCarga, setOrganizaciones } = useAppContext();
 
   // ─────────────────────────────────────────────
   // Crear organización (queda 'pendiente' de aprobación)
@@ -61,9 +62,17 @@ const useOrganizaciones = () => {
   // "Mi organización" — para el sidebar / dashboard del agency_admin
   // Trae todas las organizaciones donde el usuario logueado es miembro activo.
   // ─────────────────────────────────────────────
-  const cargarMisOrganizaciones = async () => {
-    return apiBackend("/organizaciones/mias");
-  };
+  const cargarMisOrganizaciones = useCallback(async () => {
+    try {
+      iniciarCarga();
+      const res = await apiBackend("/organizaciones/mias");
+      if (res.success) setOrganizaciones(res.data ?? []);
+    } catch (error) {
+      console.error("Error cargando organizaciones:", error);
+    } finally {
+      terminarCarga();
+    }
+  }, []);
 
   // ─────────────────────────────────────────────
   // Consultar organización por slug (para /inmobiliarias/:slug)

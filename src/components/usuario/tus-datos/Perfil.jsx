@@ -4,16 +4,17 @@ import { getInitials } from "@/lib/getInitials";
 import { useAppContext } from "@/context/AppContext";
 import { MdOutlineModeEdit } from "react-icons/md";
 import HeadPerfilAcceso from "./HeadPerfilAcceso";
-import { AiOutlineDelete } from "react-icons/ai";
-import { data_perfil_usuario } from "@/data/data_perfil_usuario";
 import { useEffect, useState } from "react";
 import { apiBackend } from "@/api/apiBackend.js";
 import useUsuarios from "@/hooks/useUsuarios";
 import { mapearApiAFormDataUsuario } from "@/hooks/useResetForm";
 import { useNavigate } from "react-router-dom";
 import { irArriba } from "@/utils/irArriba";
+import { getColorForOrg } from "@/lib/getRandomTailwindColors";
+import { data_perfil_usuario } from "@/data/data_perfil_usuario";
+import { HiOutlineTrash } from "react-icons/hi2";
 
-const Perfil = () => {
+const Perfil = ({ tamano = "lg" }) => {
   const {
     usuario,
     iniciarCarga,
@@ -28,6 +29,31 @@ const Perfil = () => {
   const [imagenPrincipal, setImagenPrincipal] = useState(null);
   const [previewPrincipal, setPreviewPrincipal] = useState(null);
   const [eliminarFoto, setEliminarFoto] = useState(false);
+
+  const TAMANOS = {
+    sm: "w-7 h-7 text-xs",
+    md: "w-9 h-9 text-sm",
+    lg: "w-10 h-10 text-base",
+  };
+
+  const { name } = usuario;
+  const color = getColorForOrg(usuario.id, name);
+  const sizeClass = TAMANOS[tamano] || TAMANOS.md;
+
+  const avatar = usuario.image_url ? (
+    <img
+      src={usuario.image_url}
+      alt={name}
+      className={`${sizeClass} rounded-full object-cover border-2 border-white shadow-sm shrink-0`}
+    />
+  ) : (
+    <div
+      className={`${sizeClass} p-4 rounded-full font-semibold flex items-center justify-center hover:shadow shadow-black/10 active:scale-95 duration-75 transition shrink-0`}
+      style={color}
+    >
+      {getInitials(name)}
+    </div>
+  );
 
   const cargarUsuario = async (usuarioId) => {
     try {
@@ -55,56 +81,44 @@ const Perfil = () => {
   }, [usuario.id]);
 
   return (
-    <div className="flex flex-col font-montserrat relative items-center">
+    <div className="flex flex-col font-poppins relative items-center">
       <HeaderInmobitwo />
       <HeadPerfilAcceso />
 
       {/* contenido */}
-      <div className="w-10/12 min-h-svh mb-20">
-        <div className="flex items-center my-8 gap-4 text-blue-700 cursor-pointer select-none hover:text-blue-600">
-          <SlidersHorizontal className="text-2xl" />
-          <p className="text-xl font-semibold hover:underline">
+      <div className="w-11/12 md:w-10/12 min-h-svh mb-8 md:mb-20">
+        <div className="flex items-start md:items-center my-8 gap-4 text-blue-700 cursor-pointer select-none hover:text-blue-600">
+          <SlidersHorizontal className="text-xl md:text-2xl" />
+          <p className="text-base md:text-xl font-semibold hover:underline">
             Gestionar las notificaciones y el idioma
           </p>
         </div>
 
         {/* Tus datos */}
-        <div className="w-11/12 md:w-2/3 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between border border-black/10">
+        <div className="w-12/12 md:w-150 bg-stone-50 shadow-sm shadow-black/20 p-6 md:p-8 flex flex-col justify-between border border-black/10">
           <div>
             <h3 className="text-xl font-bold text-black">Tus datos</h3>
-            <p className="text-lg mt-2 text-black/80">
+            <p className="text-base md:text-lg mt-2 text-black/80">
               Estos datos solo se mostrarán cuando contactes con anunciantes o
               publiques un anuncio en inmobitwo.
             </p>
             <div className="my-4">
-              <div className="flex gap-6 items-center">
-                {previewPrincipal || formDataUsuario.image_url ? (
-                  <div className="w-36 h-36 rounded-full font-semibold flex items-center justify-center text-5xl relative">
-                    <img
-                      src={previewPrincipal || formDataUsuario.image_url}
-                      alt={formDataUsuario.name}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-36 h-36 text-rose-400 bg-rose-200 p-4 rounded-full font-semibold flex items-center justify-center text-5xl">
-                    {getInitials(formDataUsuario.name)}
-                  </div>
-                )}
+              <div className="flex gap-3 md:items-center items-start">
+                {avatar}
                 <div className="flex flex-col">
                   {editarUsuario ? (
-                    <p className="text-xl text-black">
+                    <p className="text-sm md:text-base text-black/60">
                       Una buena foto transmite más confianza
                     </p>
                   ) : (
-                    <p className="font-semibold text-black text-xl">
+                    <p className="font-semibold text-black text-base md:text-lg">
                       {formDataUsuario.name}
                     </p>
                   )}
                   {editarUsuario ? (
-                    <div className="text-xl flex items-center gap-6 mt-2">
+                    <div className="text-xl flex items-center gap-6">
                       {editarUsuario && !formDataUsuario.image_url && (
-                        <button className="text-blue-700 font-semibold hover:underline hover:text-blue-600 cursor-pointer select-none active:scale-95 duration-75 transition relative">
+                        <button className="text-blue-700 font-semibold hover:underline hover:text-blue-600 cursor-pointer select-none active:scale-95 duration-75 transition relative text-sm md:text-base">
                           <input
                             type="file"
                             accept="image/*"
@@ -156,7 +170,9 @@ const Perfil = () => {
                       )}
                     </div>
                   ) : (
-                    <p className="text-xl lowercase">{formDataUsuario.email}</p>
+                    <p className="text-base md:text-lg lowercase -mt-1">
+                      {formDataUsuario.email}
+                    </p>
                   )}
                 </div>
               </div>
@@ -164,19 +180,23 @@ const Perfil = () => {
 
             {editarUsuario && (
               <>
-                <div className="flex flex-col gap-2 mt-8">
-                  <p className="font-semibold text-lg text-black">Nombre</p>
+                <div className="flex flex-col gap-2 mt-6 md:mt-8">
+                  <p className="font-semibold text-base md:text-lg text-black">
+                    Nombre
+                  </p>
                   <input
                     type="text"
                     value={formDataUsuario.name}
                     name="name"
                     onChange={handleChange}
-                    className="border border-black/50 p-3 w-80 text-black"
+                    className="border border-black/50 p-3 w-full md:w-80 text-black"
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 mt-8">
-                  <p className="font-semibold text-lg text-black">Teléfono</p>
+                <div className="flex flex-col gap-2 md:mt-8 mt-6">
+                  <p className="font-semibold text-base md:text-lg text-black">
+                    Teléfono
+                  </p>
                   <div className="flex flex-row items-center relative">
                     <p className="p-3 border-r border-black/50 absolute">+34</p>
                     <input
@@ -184,7 +204,7 @@ const Perfil = () => {
                       value={formDataUsuario.telefono ?? ""}
                       name="telefono"
                       onChange={handleChange}
-                      className="p-3 text-black border border-black/50 w-80 pl-16"
+                      className="p-3 text-black border border-black/50 w-full md:w-80 pl-16"
                     />
                   </div>
                 </div>
@@ -198,7 +218,7 @@ const Perfil = () => {
                 Tus datos de acceso
               </p>
               <button
-                className="text-lg font-semibold text-blue-700 hover:text-blue-600 cursor-pointer select-none active:scale-95 duration-75 transition mt-2"
+                className="text-lg text-blue-700 hover:text-blue-600 cursor-pointer select-none active:scale-95 duration-75 transition mt-2"
                 onClick={() => {
                   navigate("/usuario/tus-datos/acceso");
                   irArriba();
@@ -212,7 +232,7 @@ const Perfil = () => {
           {editarUsuario ? (
             <div className="flex items-center gap-4">
               <button
-                className="rounded-md bg-rose-600 px-6 py-2 text-lg md:text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none mt-8"
+                className="rounded-md bg-rose-600 px-6 py-3 md:py-2 text-sm md:text-lg font-semibold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none mt-8"
                 type="button"
                 onClick={async (e) => {
                   const res = await actualizarUsuario(
@@ -233,7 +253,7 @@ const Perfil = () => {
                 {loading ? "Cargando" : "Guardar cambios"}
               </button>
               <button
-                className="rounded-md bg-black px-6 py-2 text-lg md:text-lg font-bold text-white hover:bg-black/80 active:scale-[0.99] cursor-pointer select-none mt-8"
+                className="rounded-md bg-black px-6 py-3 md:py-2 text-sm md:text-lg font-semibold text-white hover:bg-black/80 active:scale-[0.99] cursor-pointer select-none mt-8"
                 type="button"
                 onClick={() => setEditarUsuario(!editarUsuario)}
               >
@@ -246,18 +266,18 @@ const Perfil = () => {
               type="button"
               onClick={() => setEditarUsuario(!editarUsuario)}
             >
-              <MdOutlineModeEdit className="text-xl" />
-              <p className="font-semibold text-lg">Editar datos</p>
+              <MdOutlineModeEdit className="text-base md:text-xl" />
+              <p className="font-semibold text-base md:text-lg">Editar datos</p>
             </button>
           )}
         </div>
 
-        <div className="w-2/3 bg-stone-50 shadow-sm shadow-black/20 p-8 flex flex-col justify-between mt-10 border border-black/10">
+        <div className="w-full md:w-150 bg-stone-50 shadow-sm shadow-black/20 md:p-8 p-6 flex flex-col justify-between mt-6 md:mt-10 border border-black/10">
           <div>
             <h3 className="text-xl font-bold text-black">
               Perfil para alquilar habitación
             </h3>
-            <p className="text-lg mt-2 text-black/80">
+            <p className="text-base md:text-lg mt-2 text-black/80">
               Podrás compartir estos datos cuando contactes con anunciantes de
               habitación.
             </p>
@@ -272,14 +292,16 @@ const Perfil = () => {
             </ul>
           </div>
 
-          <div className="flex items-center justify-between w-full mt-4">
+          <div className="flex items-center justify-between w-full mt-6">
             <button className="flex items-center gap-2 text-blue-700 cursor-pointer select-none hover:text-blue-600">
-              <MdOutlineModeEdit className="text-xl" />
-              <p className="font-semibold text-lg">Editar datos</p>
+              <MdOutlineModeEdit className="text-base md:text-xl" />
+              <p className="font-semibold text-base md:text-lg">Editar datos</p>
             </button>
             <button className="flex items-center gap-2 text-blue-700 cursor-pointer select-none hover:text-blue-600">
-              <AiOutlineDelete className="text-xl" />
-              <p className="font-semibold text-lg">Borrar perfil</p>
+              <HiOutlineTrash className="text-base md:text-xl" />
+              <p className="font-semibold text-base md:text-lg">
+                Borrar perfil
+              </p>
             </button>
           </div>
         </div>

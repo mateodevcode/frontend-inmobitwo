@@ -4,7 +4,7 @@ import { rutasFrontend, rutasBackend } from "@/data/mapaRutas.js";
 
 const AdminRutasPage = () => {
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white font-monserrat">
+    <div className="max-w-6xl mx-auto p-6 bg-white font-montserrat">
       <h1 className="text-xl font-bold mb-1 text-black">Mapa de rutas</h1>
       <p className="text-sm text-black/50 mb-6">
         Frontend: clickeable, navega de verdad. Backend: informativo, no es
@@ -44,7 +44,7 @@ const AdminRutasPage = () => {
                         to={item.path}
                         className="flex justify-between items-center px-2 py-1.5 rounded-lg text-sm hover:bg-blue-50 transition"
                       >
-                        <span className="font-monrserrat text-xs text-blue-700">
+                        <span className="font-montserrat text-xs text-blue-700">
                           {item.path}
                         </span>
                         <span className="text-[11px] text-black/50">
@@ -78,7 +78,7 @@ const AdminRutasPage = () => {
                         item.advertencia ? "bg-red-50" : ""
                       }`}
                     >
-                      <span className="font-monrserrat text-xs">
+                      <span className="font-montserrat text-xs">
                         <span className="font-semibold text-black/70">
                           {item.metodo}
                         </span>{" "}

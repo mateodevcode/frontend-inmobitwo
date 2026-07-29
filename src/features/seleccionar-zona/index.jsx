@@ -8,6 +8,7 @@ import { fetchStatesGeoJSON, fetchInmueblesEnPoligono } from "./api";
 import { TfiMapAlt } from "react-icons/tfi";
 import { PiTrashSimple } from "react-icons/pi";
 import InputSearchZona from "./components/InputSearchZona";
+import { FiSearch, FiX } from "react-icons/fi";
 
 function parseOperationAndType(raw) {
   if (!raw) return { operation: "venta", tipoInmueble: "viviendas" };
@@ -40,6 +41,7 @@ export default function SeleccionarZonaPage() {
   const [polygonProps, setPolygonProps] = useState([]);
   const [polygonPropCount, setPolygonPropCount] = useState(0);
   const [polygonLoading, setPolygonLoading] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   useEffect(() => {
     fetchStatesGeoJSON().then((data) => {
@@ -55,39 +57,49 @@ export default function SeleccionarZonaPage() {
     selectZone(zone, op, tipo);
   };
 
-  const handlePolygonChange = useCallback(async (geojson) => {
-    if (!geojson) {
-      setCustomPolygon(null);
-      setPolygonProps([]);
-      setPolygonPropCount(0);
-      return;
-    }
-    setCustomPolygon(geojson);
-    setPolygonLoading(true);
-    try {
-      const result = await fetchInmueblesEnPoligono(geojson, operation, tipoInmueble);
-      setPolygonPropCount(result.total || 0);
-      setPolygonProps(result.propiedades || []);
-    } catch {
-      setPolygonPropCount(0);
-      setPolygonProps([]);
-    } finally {
-      setPolygonLoading(false);
-    }
-  }, [operation, tipoInmueble]);
+  const handlePolygonChange = useCallback(
+    async (geojson) => {
+      if (!geojson) {
+        setCustomPolygon(null);
+        setPolygonProps([]);
+        setPolygonPropCount(0);
+        return;
+      }
+      setCustomPolygon(geojson);
+      setPolygonLoading(true);
+      try {
+        const result = await fetchInmueblesEnPoligono(
+          geojson,
+          operation,
+          tipoInmueble,
+        );
+        setPolygonPropCount(result.total || 0);
+        setPolygonProps(result.propiedades || []);
+      } catch {
+        setPolygonPropCount(0);
+        setPolygonProps([]);
+      } finally {
+        setPolygonLoading(false);
+      }
+    },
+    [operation, tipoInmueble],
+  );
 
-  const handleToggleDrawMode = useCallback((active) => {
-    setDrawMode(active);
-    if (active) {
-      setSearchParams({ draw: "true" }, { replace: true });
-      clearZone();
-    } else {
-      setSearchParams({}, { replace: true });
-      setCustomPolygon(null);
-      setPolygonProps([]);
-      setPolygonPropCount(0);
-    }
-  }, [setSearchParams, clearZone]);
+  const handleToggleDrawMode = useCallback(
+    (active) => {
+      setDrawMode(active);
+      if (active) {
+        setSearchParams({ draw: "true" }, { replace: true });
+        clearZone();
+      } else {
+        setSearchParams({}, { replace: true });
+        setCustomPolygon(null);
+        setPolygonProps([]);
+        setPolygonPropCount(0);
+      }
+    },
+    [setSearchParams, clearZone],
+  );
 
   const handleVerInmuebles = () => {
     if (customPolygon) {
@@ -97,7 +109,9 @@ export default function SeleccionarZonaPage() {
         sessionStorage.setItem(`${polygonKey}_op`, operation);
         sessionStorage.setItem(`${polygonKey}_tipo`, tipoInmueble);
       } catch {}
-      navigate(`/${operation}-${tipoInmueble}/zona-personalizada?polyKey=${polygonKey}`);
+      navigate(
+        `/${operation}-${tipoInmueble}/zona-personalizada?polyKey=${polygonKey}`,
+      );
       return;
     }
 
@@ -110,23 +124,50 @@ export default function SeleccionarZonaPage() {
 
   return (
     <div className="flex flex-col w-screen h-screen relative bg-white font-poppins">
-      <header className="flex items-center gap-5 px-6 py-4 border-b border-gray-200 bg-white z-1000 shrink-0 w-full justify-between">
-        <h1 className="text-xl text-gray-800 m-0">
-          {drawMode ? "Dibujar tu zona" : "Seleccionar zonas"}
-        </h1>
+      <header className="flex items-center gap-5 px-4 md:px-6 py-4 border-b border-gray-200 bg-white z-1000 shrink-0 w-full justify-between">
+        <div
+          className={`items-center gap-6 ${mobileSearchOpen ? "hidden md:flex" : "flex"}`}
+        >
+          <h1 className="text-base md:text-xl text-gray-800 m-0">
+            {drawMode ? "Dibujar tu zona" : "Seleccionar zonas"}
+          </h1>
+          {!drawMode && (
+            <button
+              className="flex items-center gap-2 md:hidden"
+              onClick={() => setMobileSearchOpen(true)}
+            >
+              <FiSearch className="text-black/60 shrink-0" />
+              <span>Buscar</span>
+            </button>
+          )}
+        </div>
+
         {!drawMode && (
-          <InputSearchZona
-            onSelectZone={(zone) =>
-              handleSelectZone(zone, operation, tipoInmueble)
-            }
-            operation={operation}
-            tipoInmueble={tipoInmueble}
-            className="w-100 border-2"
-            showX={true}
-          />
+          <div
+            className={`items-center gap-2 ${mobileSearchOpen ? "flex w-full" : "hidden md:flex"}`}
+          >
+            <InputSearchZona
+              onSelectZone={(zone) =>
+                handleSelectZone(zone, operation, tipoInmueble)
+              }
+              operation={operation}
+              tipoInmueble={tipoInmueble}
+              className={`border-2 ${mobileSearchOpen ? "w-full" : "w-100"}`}
+              showX={true}
+            />
+            <button
+              className="md:hidden shrink-0 text-gray-500"
+              onClick={() => setMobileSearchOpen(false)}
+            >
+              <FiX size={20} />
+            </button>
+          </div>
         )}
+
         <button
-          className="py-2 px-4 border-none bg-transparent text-gray-500 cursor-pointer text-sm hover:text-[#e6007a]"
+          className={`py-2 md:px-4 border-none bg-transparent text-gray-500 cursor-pointer text-sm hover:text-[#e6007a] ${
+            mobileSearchOpen ? "hidden md:block" : ""
+          }`}
           onClick={() => navigate(-1)}
         >
           Cancelar
@@ -150,7 +191,7 @@ export default function SeleccionarZonaPage() {
       </div>
 
       {!drawMode && selectedZone && (
-        <div className="absolute top-24 left-5 bg-white rounded shadow-lg p-4 min-w-90 z-1000 font-poppins min-h-44 flex flex-col justify-between">
+        <div className="absolute top-22 md:top-24 left-5 bg-white rounded shadow-lg p-4 min-w-90 z-1000 font-poppins min-h-44 flex flex-col justify-between">
           <div>
             <div className="text-xl font-semibold text-gray-800 m-0 mb-3 flex items-center gap-3">
               <TfiMapAlt />

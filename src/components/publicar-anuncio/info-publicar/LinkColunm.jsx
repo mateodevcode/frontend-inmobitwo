@@ -9,7 +9,7 @@ export function LinkColumn({ title, links }) {
           <li key={i}>
             <a
               href="#"
-              className="text-base md:text-xl text-blue-600 hover:underline"
+              className="text-base md:text-lg text-blue-600 hover:underline"
             >
               {label}
             </a>

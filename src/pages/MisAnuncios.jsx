@@ -9,6 +9,7 @@ import SinAnuncios from "@/components/usuario/tus-anuncios/SinAnuncios";
 import { useEffect } from "react";
 import usePropiedades from "../hooks/usePropiedades";
 import { irArriba } from "@/utils/irArriba";
+import Loading from "./organizacion/temas/loading/Loading";
 
 const MisAnuncios = () => {
   const navigate = useNavigate();
@@ -26,10 +27,8 @@ const MisAnuncios = () => {
   return (
     <div className="flex flex-col font-montserrat relative">
       <HeaderInmobitwo />
-      <div className="flex items-center justify-between py-4 mx-auto w-11/12 md:w-10/12">
-        <h3 className="text-2xl md:text-2xl font-bold text-black">
-          Mis anuncios
-        </h3>
+      <div className="flex md:flex-row flex-col md:items-center justify-between py-4 mx-auto w-11/12 md:w-10/12">
+        <h3 className="text-2xl font-bold text-black">Mis anuncios</h3>
         <button
           type="button"
           onClick={() => {
@@ -39,7 +38,7 @@ const MisAnuncios = () => {
             });
             navigate("/info/publicar-anuncio");
           }}
-          className="rounded-md bg-rose-600 px-6 py-2 text-lg md:text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+          className="rounded-md bg-rose-600 px-6 py-3 md:py-2 text-base md:text-lg font-semibold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none md:mt-0 mt-4 font-poppins"
         >
           {mis_propiedades.length === 0
             ? "Pon un anuncio"
@@ -47,14 +46,18 @@ const MisAnuncios = () => {
         </button>
       </div>
 
-      {mis_propiedades.length === 0 && <SinAnuncios />}
-
-      {mis_propiedades.length > 0 && (
+      {cargandoGlobal ? (
+        <div className="flex justify-center items-center min-h-[30svh]">
+          <Loading type="opcion2" />
+        </div>
+      ) : mis_propiedades.length === 0 ? (
+        <SinAnuncios />
+      ) : (
         <ListaAnuncios propiedades={mis_propiedades} />
       )}
 
       {cargandoGlobal ? null : (
-        <div className="w-full flex items-center justify-center my-10">
+        <div className="w-full flex items-center justify-center my-10 md:px-0 px-4">
           <button
             type="button"
             onClick={() => {
@@ -65,7 +68,7 @@ const MisAnuncios = () => {
               navigate("/info/publicar-anuncio");
               irArriba();
             }}
-            className="rounded-md bg-rose-600 px-6 py-2 text-lg md:text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+            className="font-poppins rounded-md bg-rose-600 px-6 py-3 md:py-2 text-base md:text-lg font-semibold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none w-full md:w-64"
           >
             {mis_propiedades.length === 0
               ? "Pon un anuncio"

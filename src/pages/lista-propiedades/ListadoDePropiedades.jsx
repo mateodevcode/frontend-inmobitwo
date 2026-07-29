@@ -29,17 +29,29 @@ function getFiltroLabel(locationInfo, typeSlug, isCustomPolygon) {
   return `${typeLabel} de ${locName}`;
 }
 
-const ListadoDePropiedades = ({ locationInfo, operationSlug, typeSlug, polygonProps, isCustomPolygon }) => {
+const ListadoDePropiedades = ({
+  locationInfo,
+  operationSlug,
+  typeSlug,
+  polygonProps,
+  isCustomPolygon,
+}) => {
   const { citySlug, deptSlug } = useSlugParser();
-  const { properties: searchProperties, loading: searchLoading, error: searchError } = usePropertySearch({
+  const {
+    properties: searchProperties,
+    loading: searchLoading,
+    error: searchError,
+  } = usePropertySearch({
     operationSlug,
     typeSlug,
     citySlug: isCustomPolygon ? "" : citySlug,
     deptSlug: isCustomPolygon ? "" : deptSlug,
   });
 
-  const properties = isCustomPolygon ? (polygonProps?.propiedades || []) : searchProperties;
-  const loading = isCustomPolygon ? (!polygonProps) : searchLoading;
+  const properties = isCustomPolygon
+    ? polygonProps?.propiedades || []
+    : searchProperties;
+  const loading = isCustomPolygon ? !polygonProps : searchLoading;
   const error = isCustomPolygon ? null : searchError;
 
   const listaIds = properties.map((p) => p.id);
@@ -47,7 +59,7 @@ const ListadoDePropiedades = ({ locationInfo, operationSlug, typeSlug, polygonPr
   const filtroLabel = getFiltroLabel(locationInfo, typeSlug, isCustomPolygon);
 
   return (
-    <div className="w-[75%] h-full">
+    <div className="w-full md:w-[75%] h-full">
       <FiltroRelevante />
       <div className="flex flex-col gap-4 p-4">
         {loading && (

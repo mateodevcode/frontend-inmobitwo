@@ -1,5 +1,6 @@
 // src/api/apiBackendFormData.js
 import { URL_BACKEND } from "@/config/config.js";
+import { obtenerTokenFresco } from "@/api/refreshToken.js";
 
 export async function apiBackendFormData(endpoint, formData, method = "POST") {
   try {
@@ -18,7 +19,7 @@ export async function apiBackendFormData(endpoint, formData, method = "POST") {
 
     // Token expirado → renovar y reintentar
     if (res.status === 401 && token) {
-      const renovado = await renovarToken();
+      const renovado = await obtenerTokenFresco();
       if (renovado) {
         const nuevoToken = localStorage.getItem("access_token");
         const reintento = await fetch(url, {
@@ -50,25 +51,6 @@ export async function apiBackendFormData(endpoint, formData, method = "POST") {
       data: null,
       status: 500,
     };
-  }
-}
-
-// ─────────────────────────────────────────────
-async function renovarToken() {
-  try {
-    const res = await fetch(`${URL_BACKEND}/auth/refresh`, {
-      method: "POST",
-      credentials: "include",
-    });
-    if (!res.ok) return false;
-    const data = await res.json();
-    if (data.success && data.data?.accessToken) {
-      localStorage.setItem("access_token", data.data.accessToken);
-      return true;
-    }
-    return false;
-  } catch {
-    return false;
   }
 }
 

@@ -11,14 +11,36 @@ import { apiBackend } from "@/api/apiBackend";
 import { MAPPING_OPERACIONES, MAPPING_TIPOS } from "@/data/mappings_busqueda";
 
 const ListaPropiedades = () => {
-  const { operationSlug, typeSlug, citySlug, deptSlug, firstSegment, isSingleSegment, isCustomPolygon } = useSlugParser();
+  const {
+    operationSlug,
+    typeSlug,
+    citySlug,
+    deptSlug,
+    firstSegment,
+    isSingleSegment,
+    isCustomPolygon,
+  } = useSlugParser();
   const [searchParams] = useSearchParams();
   const [polygonProps, setPolygonProps] = useState(null);
 
   const { locationInfo } = useLocationInfo(
     isCustomPolygon
-      ? { operationSlug, typeSlug, citySlug: "", deptSlug: null, firstSegment, isSingleSegment: false }
-      : { operationSlug, typeSlug, citySlug, deptSlug, firstSegment, isSingleSegment },
+      ? {
+          operationSlug,
+          typeSlug,
+          citySlug: "",
+          deptSlug: null,
+          firstSegment,
+          isSingleSegment: false,
+        }
+      : {
+          operationSlug,
+          typeSlug,
+          citySlug,
+          deptSlug,
+          firstSegment,
+          isSingleSegment,
+        },
   );
 
   useEffect(() => {
@@ -68,7 +90,9 @@ const ListaPropiedades = () => {
 
     fetchPolygonProps();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [isCustomPolygon, searchParams, operationSlug, typeSlug]);
 
   const effectiveLocationInfo = isCustomPolygon
@@ -80,8 +104,12 @@ const ListaPropiedades = () => {
       <NavbarListaPropiedades />
       <HeadListaPropiedades locationInfo={effectiveLocationInfo} />
       <div className="w-full bg-gray-100">
-        <div className="flex items-start w-[90%] 2xl:w-10/12 mx-auto">
-          <FiltrosPrincipal locationInfo={effectiveLocationInfo} operationSlug={operationSlug} typeSlug={typeSlug} />
+        <div className="flex items-start w-full md:w-[90%] 2xl:w-10/12 mx-auto md:flex-row flex-col-reverse">
+          <FiltrosPrincipal
+            locationInfo={effectiveLocationInfo}
+            operationSlug={operationSlug}
+            typeSlug={typeSlug}
+          />
           <ListadoDePropiedades
             locationInfo={effectiveLocationInfo}
             operationSlug={operationSlug}

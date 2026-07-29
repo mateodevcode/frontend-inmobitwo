@@ -14,8 +14,14 @@ const TYPE_LABELS = {
   edificios: { singular: "edificio", plural: "edificios" },
   "casa-o-chalet": { singular: "casa o chalet", plural: "casas o chalets" },
   "casa-rustica": { singular: "casa rústica", plural: "casas rústicas" },
-  "obra-nueva": { singular: "promoción de obra nueva", plural: "promociones de obra nueva" },
-  vacacional: { singular: "alojamiento vacacional", plural: "alojamientos vacacionales" },
+  "obra-nueva": {
+    singular: "promoción de obra nueva",
+    plural: "promociones de obra nueva",
+  },
+  vacacional: {
+    singular: "alojamiento vacacional",
+    plural: "alojamientos vacacionales",
+  },
 };
 
 function getTypeLabel(typeSlug, count = 0) {
@@ -41,8 +47,8 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
   };
 
   return (
-    <div className="w-[75%] h-full flex flex-col justify-between">
-      <div className="mx-4">
+    <div className="w-full md:w-[75%] md:h-full h-60 flex flex-col justify-between mt-4 md:mt-0">
+      <div className="mx-0 md:mx-4">
         <p className="font-semibold text-lg sm:text-xl md:text-2xl text-segundo leading-snug">
           <span>{locationInfo?.total_matching?.toLocaleString() || 0}</span>{" "}
           <span>
@@ -53,7 +59,9 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
           ) : locationInfo?.tipo === "departamento" ? (
             <span className="mr-2">
               en {locationInfo?.state_name}
-              {locationInfo?.region_name ? `, ${locationInfo?.region_name}` : ""}
+              {locationInfo?.region_name
+                ? `, ${locationInfo?.region_name}`
+                : ""}
             </span>
           ) : (
             <span className="mr-2">
@@ -63,7 +71,9 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
           )}{" "}
           <span
             className="inline-flex items-center gap-1 align-middle text-blue-500 font-semibold text-sm sm:text-base cursor-pointer select-none hover:text-blue-600"
-            onClick={() => navigate(`/busqueda-multizona/${operationSlug}-${typeSlug}`)}
+            onClick={() =>
+              navigate(`/busqueda-multizona/${operationSlug}-${typeSlug}`)
+            }
           >
             <TfiMapAlt className="shrink-0 text-xl" />
             Modificar zona
@@ -71,7 +81,7 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
         </p>
       </div>
 
-      <div className="h-9 relative flex gap-2 mx-4">
+      <div className="h-9 relative flex gap-2 md:mx-4 mx-0">
         {tabs.map((tab) => {
           const isActive = tab.id === selectedId || tab.id === hovered;
 
@@ -84,7 +94,7 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
               className="px-4 cursor-pointer relative"
             >
               <p
-                className={`font-semibold select-none hover:text-tercero text-cuarto ${
+                className={`text-sm md:text-base font-semibold select-none hover:text-tercero text-cuarto ${
                   isActive ? "text-tercero" : "text-cuarto"
                 }`}
               >

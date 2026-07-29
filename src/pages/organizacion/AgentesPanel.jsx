@@ -11,6 +11,7 @@ const AgentesPanel = () => {
     crearMiembroOrganizacion,
     actualizarMiembroOrganizacion,
     eliminarMiembroOrganizacion,
+    cargarMisOrganizaciones,
   } = useOrganizaciones();
 
   const organizacion = organizaciones[0];
@@ -29,6 +30,10 @@ const AgentesPanel = () => {
     if (res.success) setMiembros(res.data);
     setLoading(false);
   };
+
+  useEffect(() => {
+    cargarMisOrganizaciones();
+  }, []);
 
   useEffect(() => {
     cargar();

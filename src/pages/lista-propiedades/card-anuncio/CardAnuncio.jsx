@@ -110,10 +110,13 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
 
   return (
     <div
-      className="flex items-center h-64 w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group cursor-pointer"
-      onClick={() => propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState })}
+      className="flex items-center md:flex-row flex-col md:h-64 h-130 w-full rounded-md shadow-lg hover:shadow-xl shadow-black/10 transition duration-300 group cursor-pointer"
+      onClick={() =>
+        propiedad?.id &&
+        navigate(`/inmueble/${propiedad.id}`, { state: navState })
+      }
     >
-      <div className="w-[35%] h-full bg-primero rounded-l-md relative overflow-hidden">
+      <div className="w-full md:w-[35%] h-full bg-primero rounded-l-md relative overflow-hidden">
         <img
           src={imagenes[currentIndex]}
           alt={titulo}
@@ -125,7 +128,10 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "fotos" } });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, {
+                  state: { ...navState, abrirFotoVisor: "fotos" },
+                });
             }}
             title="Ver fotos"
           >
@@ -136,7 +142,10 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
               className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
               onClick={(e) => {
                 e.stopPropagation();
-                propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "planos" } });
+                propiedad?.id &&
+                  navigate(`/inmueble/${propiedad.id}`, {
+                    state: { ...navState, abrirFotoVisor: "planos" },
+                  });
               }}
               title="Ver planos"
             >
@@ -147,7 +156,10 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "3d" } });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, {
+                  state: { ...navState, abrirFotoVisor: "3d" },
+                });
             }}
             title="Visita 3D"
           >
@@ -157,7 +169,10 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
             className="bg-primero/60 group-hover:bg-primero rounded-xs p-2.5 flex items-center justify-center transition-colors duration-300 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: { ...navState, abrirFotoVisor: "mapa" } });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, {
+                  state: { ...navState, abrirFotoVisor: "mapa" },
+                });
             }}
             title="Ver mapa"
           >
@@ -195,14 +210,15 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
         </div>
       </div>
 
-      <div className="w-[65%] bg-primero h-full rounded-r-md relative pb-3 flex flex-col justify-between">
+      <div className="w-full md:w-[65%] bg-primero h-full rounded-r-md relative pb-3 flex flex-col justify-between">
         <div className="flex flex-col">
           <div className="flex items-center justify-between w-full">
             <h2
               className="font-medium text-blue-600 hover:text-blue-700 hover:underline cursor-pointer select-none px-4 pt-2"
               onClick={(e) => {
                 e.stopPropagation();
-                propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState });
+                propiedad?.id &&
+                  navigate(`/inmueble/${propiedad.id}`, { state: navState });
               }}
             >
               {titulo}
@@ -220,8 +236,12 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
 
           <div className="px-4">
             <div className="flex items-center gap-2 text-black">
-              <p className="text-2xl font-bold">{formatPrecioCompleto(propiedad.precio)}</p>
-              {propiedad.operacion === "alquiler" && <p className="text-sm text-gray-500">/mes</p>}
+              <p className="text-2xl font-bold">
+                {formatPrecioCompleto(propiedad.precio)}
+              </p>
+              {propiedad.operacion === "alquiler" && (
+                <p className="text-sm text-gray-500">/mes</p>
+              )}
             </div>
 
             <div className="text-sm flex items-center gap-2">
@@ -245,7 +265,8 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
             className="flex items-center gap-2 text-blue-600 cursor-pointer select-none"
             onClick={(e) => {
               e.stopPropagation();
-              propiedad?.id && navigate(`/inmueble/${propiedad.id}`, { state: navState });
+              propiedad?.id &&
+                navigate(`/inmueble/${propiedad.id}`, { state: navState });
             }}
           >
             <PiChats className="text-lg" />

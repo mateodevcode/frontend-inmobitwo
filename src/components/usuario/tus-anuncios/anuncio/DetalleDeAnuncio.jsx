@@ -86,8 +86,7 @@ const DetalleDeAnuncio = () => {
               });
               navigate("/info/publicar-anuncio");
             }}
-            // className="rounded-md bg-rose-600 px-6 py-3.5 text-lg md:text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
-            className="rounded-md bg-rose-600 px-6 py-2 text-lg md:text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+            className="font-poppins rounded-md bg-rose-600 px-6 py-2 text-lg md:text-lg font-semibold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
           >
             Poner otro anuncio
           </button>

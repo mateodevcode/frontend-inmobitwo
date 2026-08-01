@@ -29,7 +29,7 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
   };
 
   const { name } = usuario || {};
-  const color = getColorForOrg(usuario.id, name);
+  const color = usuario ? getColorForOrg(usuario.id, name) : null;
   const sizeClass = TAMANOS[tamano] || TAMANOS.md;
 
   useEffect(() => {

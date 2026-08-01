@@ -15,11 +15,8 @@ import { irArriba } from "@/utils/irArriba";
 import { getColorForOrg } from "@/lib/getRandomTailwindColors";
 
 const ModalHamburguesa = ({ tamano = "lg" }) => {
-  const {
-    openModalHamburguesa,
-    setOpenModalHamburguesa,
-    usuario,
-  } = useAppContext();
+  const { openModalHamburguesa, setOpenModalHamburguesa, usuario } =
+    useAppContext();
   const { handleCerrarSesion } = useAuth();
   const { cargarCountMisAnuncios } = usePropiedades();
   const navigate = useNavigate();
@@ -31,7 +28,7 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
     lg: "w-10 h-10 text-base",
   };
 
-  const { name } = usuario;
+  const { name } = usuario || {};
   const color = getColorForOrg(usuario.id, name);
   const sizeClass = TAMANOS[tamano] || TAMANOS.md;
 
@@ -51,7 +48,7 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
     })();
   }, [openModalHamburguesa, usuario?.id, cargarCountMisAnuncios]);
 
-  const avatar = usuario.image_url ? (
+  const avatar = usuario?.image_url ? (
     <img
       src={usuario.image_url}
       alt={name}

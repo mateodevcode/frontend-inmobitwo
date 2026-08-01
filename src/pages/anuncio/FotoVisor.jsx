@@ -12,6 +12,8 @@ import { Md3dRotation, MdMyLocation } from "react-icons/md";
 import useFavoritos from "@/hooks/useFavoritos";
 import { useAppContext } from "@/context/AppContext";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import { agruparPorOrden } from "@/utils/galeriaUtils";
+import PropertyImage from "@/components/common/PropertyImage";
 import usePropiedades from "../../hooks/usePropiedades";
 import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
 import * as maplibregl from "maplibre-gl";
@@ -107,22 +109,14 @@ export default function FotoVisor() {
 
   if (!inmueble) return null;
 
-  const imagenes = [
-    inmueble.imagen_principal_url,
-    ...(inmueble.galeria || [])
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-  ].filter(Boolean);
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera. Agrupar evita "saltar" entre
+  // tamaños de la misma foto al navegar.
+  const fotosAgrupadas = agruparPorOrden(inmueble.galeria);
+  const planosAgrupados = agruparPorOrden(inmueble.planos);
 
-  const planosArray = (inmueble.planos || [])
-    .slice()
-    .sort((a, b) => a.orden - b.orden)
-    .map((p) => p.url)
-    .filter(Boolean);
-
-  const totalImagenes = imagenes.length;
-  const totalPlanos = planosArray.length;
+  const totalImagenes = fotosAgrupadas.length;
+  const totalPlanos = planosAgrupados.length;
   const indexActual = Math.min(
     Math.max(parseInt(fotoIndex, 10) - 1, 0),
     totalImagenes - 1,
@@ -301,8 +295,10 @@ export default function FotoVisor() {
             Plano no disponible
           </div>
         ) : modo === "planos" && totalPlanos > 0 ? (
-          <img
-            src={planosArray[indexActual]}
+          <PropertyImage
+            foto={planosAgrupados[indexActual]}
+            tamañoBase="xlarge"
+            sizes="100vw"
             alt={`Plano ${indexActual + 1}`}
             className={`${fullscreen ? "w-full h-full" : "max-w-full max-h-full"} object-contain select-none`}
           />
@@ -312,8 +308,10 @@ export default function FotoVisor() {
           </div>
         ) : (
           <>
-            <img
-              src={imagenes[indexActual]}
+            <PropertyImage
+              foto={fotosAgrupadas[indexActual]}
+              tamañoBase="xlarge"
+              sizes="100vw"
               alt={nombreEspacio || inmueble.titulo}
               className={`${fullscreen ? "w-full h-full" : "max-w-full max-h-full"} object-contain select-none`}
             />

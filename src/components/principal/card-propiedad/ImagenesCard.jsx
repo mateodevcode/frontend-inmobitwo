@@ -5,6 +5,8 @@ import {
   MdOutlinePhotoCamera,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { agruparPorOrden } from "../../../utils/galeriaUtils";
+import PropertyImage from "../../common/PropertyImage";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -12,7 +14,6 @@ const ImagenesCard = ({ propiedades }) => {
   const {
     id,
     titulo,
-    imagen_principal_url,
     estado,
     galeria = [],
   } = propiedades;
@@ -24,19 +25,14 @@ const ImagenesCard = ({ propiedades }) => {
   const autoTimerRef = useRef(null);
   const progressIntervalRef = useRef(null);
 
-  const imagenes = [
-    imagen_principal_url,
-    ...galeria
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-    ...(propiedades.planos || [])
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.url),
-  ].filter(Boolean);
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera. Así evitamos duplicar 5x.
+  const fotos = [
+    ...agruparPorOrden(galeria),
+    ...agruparPorOrden(propiedades.planos),
+  ].filter((f) => f.tamaños && Object.keys(f.tamaños).length > 0);
 
-  const totalImagenes = imagenes.length;
+  const totalImagenes = fotos.length;
 
   const goTo = useCallback(
     (index) => {
@@ -92,8 +88,10 @@ const ImagenesCard = ({ propiedades }) => {
   return (
     <div className="relative">
       {/* Imagen con fade */}
-      <img
-        src={imagenes[currentIndex]}
+      <PropertyImage
+        foto={fotos[currentIndex]}
+        tamañoBase="medium"
+        sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
         alt={titulo}
         onClick={() => navigate(`/inmueble/${id}`)}
         className="w-full h-72 object-cover cursor-pointer"
@@ -133,7 +131,7 @@ const ImagenesCard = ({ propiedades }) => {
       {/* Dots indicadores */}
       {totalImagenes > 1 && (
         <div className="absolute bottom-4 right-2 flex gap-1.5 items-center">
-          {imagenes.map((_, i) => (
+          {fotos.map((_, i) => (
             <button
               key={i}
               onClick={(e) => {

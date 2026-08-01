@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import useFavoritos from "@/hooks/useFavoritos";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import { agruparPorOrden } from "@/utils/galeriaUtils";
+import PropertyImage from "@/components/common/PropertyImage";
 import { fetchPropiedadResumen } from "./api";
 
 const AUTOPLAY_SECONDS = 10;
@@ -44,8 +46,6 @@ export function PropertyCard({ inmueble, onClose }) {
   const [extra, setExtra] = useState(null);
   const autoTimerRef = useRef(null);
 
-  const imagenPrincipal =
-    inmueble?.imagen_principal_url || "/propiedades/chalet.jpg";
   const titulo = inmueble?.titulo || "Sin título";
   const ubicacion = inmueble?.city_name
     ? `${inmueble.city_name}, ${inmueble.state_name}`
@@ -57,18 +57,13 @@ export function PropertyCard({ inmueble, onClose }) {
   const galeria = inmueble?.galeria || [];
   const planos = inmueble?.planos || [];
 
-  const imagenes = [
-    imagenPrincipal,
-    ...galeria
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-    ...planos
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.url),
-  ];
-  const totalImagenes = imagenes.length;
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera.
+  const fotos = [
+    ...agruparPorOrden(galeria),
+    ...agruparPorOrden(planos),
+  ].filter((f) => f.tamaños && Object.keys(f.tamaños).length > 0);
+  const totalImagenes = fotos.length;
   const isFavorited = estaEnFavoritos(favoritos, inmueble?.id);
   const hasPlanos = (extra?.planos_count || 0) > 0;
 
@@ -116,8 +111,10 @@ export function PropertyCard({ inmueble, onClose }) {
     >
       {/* ──── Imagen ──── */}
       <div className="relative w-full h-48 bg-gray-100 group">
-        <img
-          src={imagenes[currentIndex]}
+        <PropertyImage
+          foto={fotos[currentIndex]}
+          tamañoBase="small"
+          sizes="320px"
           alt={titulo}
           className="w-full h-full object-cover"
         />

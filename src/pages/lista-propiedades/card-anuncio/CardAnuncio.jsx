@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import useFavoritos from "@/hooks/useFavoritos";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import { agruparPorOrden } from "@/utils/galeriaUtils";
+import PropertyImage from "@/components/common/PropertyImage";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -58,8 +60,6 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
 
   const navState = { listaIds, posicion, total, filtroLabel, searchUrl };
 
-  const imagenPrincipal =
-    propiedad?.imagen_principal_url || "/propiedades/chalet.jpg";
   const titulo =
     propiedad?.titulo || "Piso en calle general Elorza, Milan-pumarin, Oviedo";
   const ubicacion = propiedad?.city_name
@@ -73,19 +73,14 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
   const galeria = propiedad?.galeria || [];
   const planos = propiedad?.planos || [];
 
-  const imagenes = [
-    imagenPrincipal,
-    ...galeria
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-    ...planos
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.url),
-  ];
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera.
+  const fotos = [
+    ...agruparPorOrden(galeria),
+    ...agruparPorOrden(planos),
+  ].filter((f) => f.tamaños && Object.keys(f.tamaños).length > 0);
 
-  const totalImagenes = imagenes.length;
+  const totalImagenes = fotos.length;
   const isFavorited = estaEnFavoritos(favoritos, propiedad?.id);
 
   const goTo = useCallback(
@@ -117,8 +112,10 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
       }
     >
       <div className="w-full md:w-[35%] h-full bg-primero rounded-l-md relative overflow-hidden">
-        <img
-          src={imagenes[currentIndex]}
+        <PropertyImage
+          foto={fotos[currentIndex]}
+          tamañoBase="medium"
+          sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 35vw"
           alt={titulo}
           className="w-full h-full object-cover rounded-l-md"
         />

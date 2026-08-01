@@ -23,6 +23,8 @@ import HeaderPropiedadId from "./HeaderPropiedadId";
 import { HiCheckBadge } from "react-icons/hi2";
 import { BiWorld } from "react-icons/bi";
 import { getInitials } from "@/lib/getInitials";
+import { agruparPorOrden } from "@/utils/galeriaUtils";
+import PropertyImage from "@/components/common/PropertyImage";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -73,19 +75,14 @@ const PropiedadId = () => {
   // ─────────────────────────────────────────────
   // Carrusel de imágenes (reciclado de CardPropiedad)
   // ─────────────────────────────────────────────
-  const imagenes = [
-    propiedad.imagen_principal_url,
-    ...(propiedad.galeria || [])
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-    ...(propiedad.planos || [])
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.url),
-  ].filter(Boolean);
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera.
+  const fotos = [
+    ...agruparPorOrden(propiedad.galeria),
+    ...agruparPorOrden(propiedad.planos),
+  ].filter((f) => f.tamaños && Object.keys(f.tamaños).length > 0);
 
-  const totalImagenes = imagenes.length;
+  const totalImagenes = fotos.length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const autoTimerRef = useRef(null);
@@ -161,8 +158,10 @@ const PropiedadId = () => {
           {/* Panel negro — imagen grande estilo Facebook */}
           <div className="w-[75%] h-svh flex items-center justify-center relative bg-black">
             {totalImagenes > 0 && (
-              <img
-                src={imagenes[currentIndex]}
+              <PropertyImage
+                foto={fotos[currentIndex]}
+                tamañoBase="xlarge"
+                sizes="(max-width: 768px) 100vw, 75vw"
                 alt={propiedad.titulo}
                 className="max-w-full max-h-full object-contain select-none"
                 style={{
@@ -188,7 +187,7 @@ const PropiedadId = () => {
             {/* Dots indicadores */}
             {totalImagenes > 1 && (
               <div className="absolute bottom-6 flex gap-1.5 items-center">
-                {imagenes.map((_, i) => (
+                {fotos.map((_, i) => (
                   <button
                     key={i}
                     onClick={(e) => {

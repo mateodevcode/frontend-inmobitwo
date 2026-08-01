@@ -15,6 +15,8 @@ import { useAppContext } from "@/context/AppContext";
 import { useTiempoRelativo } from "@/hooks/useTiempoRelativo";
 import { useNavigate, useLocation } from "react-router-dom";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import { agruparPorOrden } from "@/utils/galeriaUtils";
+import PropertyImage from "@/components/common/PropertyImage";
 import UbicacionMapa from "./UbicacionMapa";
 import { TbAlertOctagonFilled } from "react-icons/tb";
 import { ImImage } from "react-icons/im";
@@ -86,20 +88,15 @@ export default function DetallePropiedad({
   }, []);
 
   // ──────────────────────── Carrusel ────────────────────────
-  const imagenes = [
-    inmueble?.imagen_principal_url,
-    ...(inmueble?.galeria || [])
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-    ...(inmueble?.planos || [])
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.url),
-  ].filter(Boolean);
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera. Agrupar evita duplicar 5x.
+  const fotos = [
+    ...agruparPorOrden(inmueble?.galeria),
+    ...agruparPorOrden(inmueble?.planos),
+  ].filter((f) => f.tamaños && Object.keys(f.tamaños).length > 0);
 
-  const totalImagenes = imagenes.length;
-  const totalPlanos = (inmueble?.planos || []).length;
+  const totalImagenes = fotos.length;
+  const totalPlanos = agruparPorOrden(inmueble?.planos).length;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const autoTimerRef = useRef(null);
@@ -271,8 +268,10 @@ export default function DetallePropiedad({
           {/* Carousel de imágenes */}
           <div className="relative w-full h-105 bg-gray-100 overflow-hidden">
             {totalImagenes > 0 && (
-              <img
-                src={imagenes[currentIndex]}
+              <PropertyImage
+                foto={fotos[currentIndex]}
+                tamañoBase="large"
+                sizes="(max-width: 768px) 100vw, 800px"
                 alt={inmueble.titulo}
                 className="w-full h-full object-cover select-none cursor-pointer"
                 onClick={() =>
@@ -288,7 +287,7 @@ export default function DetallePropiedad({
             {/* Dots indicadores */}
             {totalImagenes > 1 && (
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 items-center">
-                {imagenes.map((_, i) => (
+                {fotos.map((_, i) => (
                   <button
                     key={i}
                     onClick={(e) => {
@@ -570,10 +569,12 @@ export default function DetallePropiedad({
                 Fotos
               </h2>
               <div className="grid grid-cols-1 gap-3">
-                {imagenes.map((url, i) => (
-                  <img
+                {fotos.map((foto, i) => (
+                  <PropertyImage
                     key={i}
-                    src={url}
+                    foto={foto}
+                    tamañoBase="large"
+                    sizes="(max-width: 768px) 100vw, 800px"
                     alt=""
                     className="w-full rounded-sm object-cover cursor-pointer"
                     onClick={() =>

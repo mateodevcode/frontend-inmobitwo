@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import useFavoritos from "@/hooks/useFavoritos";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import { agruparPorOrden } from "@/utils/galeriaUtils";
+import PropertyImage from "@/components/common/PropertyImage";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -64,8 +66,6 @@ const CardAnuncioCompra = ({
 
   const navState = { listaIds, posicion, total, filtroLabel, searchUrl };
 
-  const imagenPrincipal =
-    propiedad?.imagen_principal_url || "/propiedades/chalet.jpg";
   const titulo =
     propiedad?.titulo || "Piso en calle general Elorza, Milan-pumarin, Oviedo";
   const ubicacion = propiedad?.city_name
@@ -79,22 +79,17 @@ const CardAnuncioCompra = ({
   const galeria = propiedad?.galeria || [];
   const planos = propiedad?.planos || [];
 
-  const imagenes = [
-    imagenPrincipal,
-    ...galeria
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((g) => g.url),
-    ...planos
-      .slice()
-      .sort((a, b) => a.orden - b.orden)
-      .map((p) => p.url),
-  ];
+  // Una "foto" = filas con el mismo orden (5 tamaños). La portada (orden -1)
+  // ya viene dentro de galeria y queda primera.
+  const fotos = [
+    ...agruparPorOrden(galeria),
+    ...agruparPorOrden(planos),
+  ].filter((f) => f.tamaños && Object.keys(f.tamaños).length > 0);
 
-  const totalImagenes = imagenes.length;
+  const totalImagenes = fotos.length;
   const isFavorited = estaEnFavoritos(favoritos, propiedad?.id);
 
-  const thumbnails = imagenes.slice(1, 4);
+  const thumbnails = fotos.slice(1, 4);
   // Solo mostramos el grid si hay suficientes fotos para llenar las 3 miniaturas
   // (si no, queda un hueco vacío feo en el grid, como pasaba con solo 3 imágenes)
   const hasThumbnails = totalImagenes >= 4;
@@ -129,15 +124,17 @@ const CardAnuncioCompra = ({
       }
     >
       <div className="w-full md:w-[50%] h-96 bg-primero rounded-l-md relative overflow-hidden">
-        <img
-          src={imagenes[currentIndex]}
+        <PropertyImage
+          foto={fotos[currentIndex]}
+          tamañoBase="medium"
+          sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 50vw"
           alt={titulo}
           className={`w-full object-cover ${hasThumbnails ? "h-65" : "h-full"}`}
         />
 
         {hasThumbnails && (
           <div className="grid grid-cols-3 gap-1 absolute bottom-0 left-0 w-full h-30">
-            {thumbnails.map((src, i) => {
+            {thumbnails.map((foto, i) => {
               const actualIndex = i + 1;
               const isLast = i === thumbnails.length - 1;
               const showOverlay = isLast && extraCount > 0;
@@ -154,8 +151,10 @@ const CardAnuncioCompra = ({
                     );
                   }}
                 >
-                  <img
-                    src={src}
+                  <PropertyImage
+                    foto={foto}
+                    tamañoBase="thumbnail"
+                    sizes="(max-width: 600px) 33vw, 16vw"
                     alt={`${titulo} - foto ${actualIndex + 1}`}
                     className="w-full h-full object-cover"
                   />

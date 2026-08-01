@@ -262,7 +262,7 @@ const CardAnuncioCompra = ({
         </div>
       </div>
 
-      <div className="w-full md:w-[50%] bg-primero min-h-72 rounded-r-md relative pb-3 flex flex-col justify-between">
+      <div className="w-full md:w-[50%] bg-primero min-h-72 md:h-full rounded-r-md relative pb-3 flex flex-col justify-between">
         <div className="flex flex-col">
           <div className="flex items-center justify-between w-full">
             <h2

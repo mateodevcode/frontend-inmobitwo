@@ -32,13 +32,17 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
 
   const esOrganizacion = publicador?.tipo === "organizacion";
   // usuario -> "name" | organizacion -> "nombre"
-  const nombrePublicador = esOrganizacion ? publicador.nombre : publicador.name;
+  const nombrePublicador = esOrganizacion
+    ? publicador?.nombre
+    : publicador?.name;
   // usuario -> "image_url" | organizacion -> "logo_url"
   const imagenPublicador = esOrganizacion
-    ? publicador.logo_url
-    : publicador.image_url;
+    ? publicador?.logo_url
+    : publicador?.image_url;
 
-  const color = getColorForOrg(publicador.id, publicador.tipo || "user");
+  const color = publicador
+    ? getColorForOrg(publicador.id, publicador.tipo || "user")
+    : null;
   const isFavorited = estaEnFavoritos(favoritos, id);
 
   const handleContactar = (e) => {

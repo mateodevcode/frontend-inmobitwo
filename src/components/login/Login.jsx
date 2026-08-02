@@ -94,7 +94,7 @@ const Login = () => {
 
       {/* Login */}
       <div className="bg-white w-auto h-svh" id="form-login relative">
-        <div className="min-h-screen flex items-center justify-center px-10">
+        <div className="min-h-screen flex items-center justify-center px-4">
           <div className="w-full max-w-md bg-white rounded-2xl p-2 md:p-8">
             <div className="pb-10">
               <div

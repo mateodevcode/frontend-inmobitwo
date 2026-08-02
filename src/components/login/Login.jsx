@@ -6,14 +6,15 @@ import { motion } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
 import { useAppContext } from "@/context/AppContext";
 import { SlSocialGoogle } from "react-icons/sl";
-import { FiFacebook } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
+import { irArriba } from "../../utils/irArriba";
 
 const Login = () => {
   const { handleLogin, handleChange, formDataUsuario } = useAuth();
   const { loadingAuth } = useAppContext();
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const navigate = useNavigate();
   // Generar nuevas posiciones aleatorias cada cierto tiempo
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,7 +29,7 @@ const Login = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2">
       {/* Portada */}
-      <div className="bg-linear-to-b from-black via-blue-950 to-black w-auto h-svh px-4 py-8 md:py-12 md:px-20 flex flex-col justify-between relative overflow-hidden">
+      <div className="bg-linear-to-b from-black via-blue-950 to-black w-auto h-svh px-4 py-8 md:py-12 md:px-20 flex-col justify-between relative overflow-hidden md:flex hidden">
         <motion.div
           className="absolute w-150 h-150 rounded-full"
           style={{
@@ -92,14 +93,31 @@ const Login = () => {
       </div>
 
       {/* Login */}
-      <div className="bg-white w-auto h-svh" id="form-login">
-        <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="bg-white w-auto h-svh" id="form-login relative">
+        <div className="min-h-screen flex items-center justify-center px-10">
           <div className="w-full max-w-md bg-white rounded-2xl p-2 md:p-8">
             <div className="pb-10">
-              <p className="text-3xl font-bold text-black font-poppins">
-                Bienvenido de nuevo
+              <div
+                className="flex items-center gap-2 select-none justify-center"
+                onClick={() => {
+                  navigate("/");
+                  irArriba();
+                }}
+              >
+                <div className="w-9 h-9">
+                  <img
+                    src={logo.src}
+                    alt={logo.alt}
+                    className="object-center w-full h-full"
+                  />
+                </div>
+                <span className="text-3xl md:text-3xl tracking-tight text-black font-bold">
+                  inmobitwo
+                </span>
+              </div>
+              <p className="text-center mt-2">
+                Accede a tu cuenta de Inmobitwo
               </p>
-              <p>Accede a tu cuenta de Inmobitwo</p>
             </div>
 
             <form onSubmit={handleLogin} className="flex flex-col gap-2">
@@ -158,13 +176,6 @@ const Login = () => {
                   className="hover:bg-black/5 text-black font-medium py-2 rounded-lg transition disabled:opacity-50 border border-black/30 cursor-pointer select-none flex items-center justify-center gap-2"
                 >
                   <SlSocialGoogle /> <span>Google</span>
-                </button>
-                <button
-                  type="button"
-                  disabled={loadingAuth}
-                  className="hover:bg-black/5 text-black font-medium py-2 rounded-lg transition disabled:opacity-50 border border-black/30 cursor-pointer select-none flex items-center justify-center gap-2"
-                >
-                  <FiFacebook /> <span>Facebook</span>
                 </button>
               </div>
             </form>

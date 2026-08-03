@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCircleCheck } from "react-icons/fa6";
 import { useAppContext } from "@/context/AppContext";
-import { irArriba } from "../../utils/irArriba";
-import { logo } from "@/data/logo";
+import Logo from "../logo/Logo";
 
 const steps = [
   { id: 0, label: "1. Datos básicos" },
@@ -38,23 +37,8 @@ const HeaderPublicarAnuncio = () => {
         onClick={() => navigate("/")}
       >
         <div className="w-full flex items-center justify-center">
-          <div
-            className="flex items-center gap-2 select-none py-5 w-11/12"
-            onClick={() => {
-              navigate("/");
-              irArriba();
-            }}
-          >
-            <div className="w-9 h-9">
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className="object-center w-full h-full"
-              />
-            </div>
-            <span className="text-2xl md:text-3xl tracking-tight text-black font-bold font-poppins">
-              inmobitwo
-            </span>
+          <div className="py-5 w-11/12">
+            <Logo />
           </div>
         </div>
       </div>

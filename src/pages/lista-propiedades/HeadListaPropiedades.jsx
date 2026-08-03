@@ -4,7 +4,7 @@ import BotonGuardarBusqueda from "./BotonGuardarBusqueda";
 
 const HeadListaPropiedades = ({ locationInfo }) => {
   return (
-    <div className="w-[90%] 2xl:w-10/12 md:h-48 h-52 flex flex-col justify-between">
+    <div className="w-[90%] 2xl:w-10/12 md:h-48 h-44 flex flex-col justify-between">
       <BreadcrumbUbicacion locationInfo={locationInfo} />
 
       <div className="w-full md:h-28 h-32 flex flex-col md:flex-row">

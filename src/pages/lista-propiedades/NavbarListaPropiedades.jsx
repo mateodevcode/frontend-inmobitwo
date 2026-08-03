@@ -6,8 +6,7 @@ import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 import EnlaceNav from "@/pages/inicio/modales/EnlaceNav";
-import { irArriba } from "../../utils/irArriba";
-import { logo } from "@/data/logo";
+import Logo from "../../components/logo/Logo";
 
 const NavbarListaPropiedades = () => {
   const {
@@ -24,24 +23,7 @@ const NavbarListaPropiedades = () => {
       <div className="mx-auto w-[90%] 2xl:w-10/12 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           {/* Logo */}
-          <div
-            className="flex items-center gap-2 select-none"
-            onClick={() => {
-              navigate("/");
-              irArriba();
-            }}
-          >
-            <div className="w-9 h-9">
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className="object-center w-full h-full"
-              />
-            </div>
-            <span className="text-2xl md:text-3xl tracking-tight text-black font-bold">
-              inmobitwo
-            </span>
-          </div>
+          <Logo />
           {/* Links */}
           <nav className="hidden md:flex items-center gap-8">
             <EnlaceNav title="Propietarios">

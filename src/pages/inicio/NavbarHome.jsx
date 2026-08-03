@@ -6,9 +6,8 @@ import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
 import EnlaceNav from "./modales/EnlaceNav";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
-import { irArriba } from "../../utils/irArriba";
 import { MENUS } from "../../data/menus";
-import { logo } from "@/data/logo";
+import Logo from "../../components/logo/Logo";
 
 const NavbarHome = () => {
   const {
@@ -23,7 +22,7 @@ const NavbarHome = () => {
   function Columna({ heading, links }) {
     return (
       <div>
-        <h4 className="text-[13px] font-bold text-black mb-4 tracking-wide font-poppins">
+        <h4 className="text-base font-semibold text-black mb-4 tracking-wide font-poppins">
           {heading}
         </h4>
         <ul className="flex flex-col gap-3">
@@ -47,24 +46,7 @@ const NavbarHome = () => {
       <div className="mx-auto w-11/12 md:w-9/12 h-20 flex items-center justify-between">
         <div className="flex items-center gap-8">
           {/* Logo */}
-          <div
-            className="flex items-center gap-2 select-none"
-            onClick={() => {
-              navigate("/");
-              irArriba();
-            }}
-          >
-            <div className="w-9 h-9">
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className="object-center w-full h-full"
-              />
-            </div>
-            <span className="text-2xl md:text-3xl tracking-tight text-black font-bold">
-              inmobitwo
-            </span>
-          </div>
+          <Logo />
           {/* Links */}
           <nav className="md:flex items-center gap-8 h-full hidden">
             {Object.keys(MENUS).map((title) => (

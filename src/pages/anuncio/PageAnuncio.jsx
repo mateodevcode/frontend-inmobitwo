@@ -10,11 +10,7 @@ const PageAnuncio = () => {
   const { id } = useParams();
   const location = useLocation();
   const { cargarPropiedad } = usePropiedades();
-  const {
-    propiedad,
-    setPropiedadAEliminar,
-    setOpenModalConfirmarEliminarPropiedad,
-  } = useAppContext();
+  const { propiedad } = useAppContext();
   const navigate = useNavigate();
   const { dispararEventoYRevisar } = useTracking();
 
@@ -72,12 +68,6 @@ const PageAnuncio = () => {
       <NavbarHome />
       <DetallePropiedad
         inmueble={propiedad}
-        onVer={() => navigate(`/inmueble/${id}`)}
-        onEditar={() => navigate(`/inmueble/${id}/editar`)}
-        onEliminar={() => {
-          setPropiedadAEliminar(id);
-          setOpenModalConfirmarEliminarPropiedad(true);
-        }}
         onClose={() => {
           if (searchUrl) {
             navigate(searchUrl);

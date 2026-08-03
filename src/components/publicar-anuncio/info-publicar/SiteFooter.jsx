@@ -2,34 +2,15 @@ import { Apple, Smartphone } from "lucide-react";
 import { AYUDA_LINKS, PAISES_LINKS, SOBRE_LINKS } from "@/data/info-publicar";
 import { LinkColumn } from "@/components/publicar-anuncio/info-publicar/LinkColunm";
 import { LanguageSelect } from "@/components/publicar-anuncio/info-publicar/LanguageSelect";
-import { logo } from "@/data/logo";
-import { useNavigate } from "react-router-dom";
-import { irArriba } from "../../../utils/irArriba";
+import Logo from "../../logo/Logo";
 
 export function SiteFooter() {
-  const navigate = useNavigate();
-
   return (
     <footer className="bg-rose-50 md:py-12 py-8">
       <div className="mx-auto w-10/12">
         <div className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-          <div
-            className="flex items-center gap-2 select-none w-11/12"
-            onClick={() => {
-              navigate("/");
-              irArriba();
-            }}
-          >
-            <div className="w-9 h-9">
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className="object-center w-full h-full"
-              />
-            </div>
-            <span className="text-2xl md:text-3xl tracking-tight text-black font-bold font-poppins">
-              inmobitwo
-            </span>
+          <div className="w-11/12">
+            <Logo />
           </div>
           <LanguageSelect />
         </div>

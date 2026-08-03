@@ -1,21 +1,10 @@
 import { MdOutlineConstruction } from "react-icons/md";
-import { logo } from "@/data/logo";
+import Logo from "../logo/Logo";
 
 const EnConstruccion = ({ title = "Esta sección" }) => {
   return (
     <div className="min-h-screen w-full bg-white flex flex-col items-center justify-center gap-8 font-poppins px-4">
-      <div className="flex items-center gap-2 select-none">
-        <div className="w-9 h-9">
-          <img
-            src={logo.src}
-            alt={logo.alt}
-            className="object-center w-full h-full"
-          />
-        </div>
-        <span className="text-2xl md:text-3xl font-black tracking-tight text-black font-bold">
-          inmobitwo
-        </span>
-      </div>
+      <Logo />
       <div className="w-full max-w-md text-center">
         <div className="mx-auto mb-5 w-14 h-14 rounded-full bg-tercero/10 flex items-center justify-center">
           <MdOutlineConstruction className="text-tercero text-2xl" />

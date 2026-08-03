@@ -4,9 +4,8 @@ import BotonUsuario from "@/components/usuario/BotonUsuario";
 import ModalUser from "@/components/modales/ModalUser";
 import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
 import { items_menu } from "@/data/items_menu";
-import { irArriba } from "@/utils/irArriba";
 import { TbMenu4 } from "react-icons/tb";
-import { logo } from "@/data/logo";
+import Logo from "../../logo/Logo";
 
 const HeaderInmobitwo = () => {
   const { openModalHamburguesa, setOpenModalHamburguesa, setOpenModalUser } =
@@ -19,23 +18,8 @@ const HeaderInmobitwo = () => {
     <>
       <header className="bg-white flex items-center w-full justify-between">
         <div className="flex items-center w-11/12 justify-between mx-auto">
-          <div
-            className="flex items-center gap-2 select-none py-5"
-            onClick={() => {
-              navigate("/");
-              irArriba();
-            }}
-          >
-            <div className="w-9 h-9">
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className="object-center w-full h-full"
-              />
-            </div>
-            <span className="text-2xl md:text-3xl tracking-tight text-black font-bold font-poppins">
-              inmobitwo
-            </span>
+          <div className="flex items-center gap-2 select-none py-5">
+            <Logo />
           </div>
           <div className="items-center gap-2 md:gap-8 font-semibold flex">
             <nav className="hidden md:flex items-center gap-6">

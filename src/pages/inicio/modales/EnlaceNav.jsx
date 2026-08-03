@@ -62,7 +62,7 @@ export default function EnlaceNav({
     <div className="relative inline-block">
       {/* Enlace */}
       <div
-        className="relative group cursor-pointer text-sm font-semibold text-cuarto hover:text-black transition-colors"
+        className="relative group cursor-pointer text-base font-semibold text-cuarto hover:text-black transition-colors"
         onMouseEnter={open}
         onMouseLeave={scheduleClose}
       >
@@ -83,7 +83,7 @@ export default function EnlaceNav({
         >
           {panelWidth === "full" ? (
             <div className="w-full mx-auto flex items-center justify-center">
-              <div className="w-9/12 flex gap-16 ">{children}</div>
+              <div className="w-9/12 flex gap-16">{children}</div>
             </div>
           ) : (
             <div className="w-full mx-auto flex items-center justify-center">

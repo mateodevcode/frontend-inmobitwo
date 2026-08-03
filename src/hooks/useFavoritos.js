@@ -24,11 +24,6 @@ const useFavoritos = () => {
       });
 
       if (res.success) {
-        const accion =
-          res.data?.action === "agregado" ? "agregado" : "eliminado";
-        toast.success(`Propiedad ${accion} de favoritos`, {
-          position: "bottom-right",
-        });
         cargarMisFavoritos();
       } else {
         toast.error(
@@ -76,7 +71,7 @@ const useFavoritos = () => {
   // ─────────────────────────────────────────────
   const estaEnFavoritos = (favoritos, propiedadId) => {
     if (!favoritos || !Array.isArray(favoritos)) return false;
-    return favoritos.some((fav) => fav.id === propiedadId);
+    return favoritos.some((fav) => String(fav.id) === String(propiedadId));
   };
 
   // ─────────────────────────────────────────────

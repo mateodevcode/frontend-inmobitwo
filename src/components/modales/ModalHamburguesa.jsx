@@ -6,13 +6,13 @@ import { formatFirstTwoNames } from "@/lib/formatFirstTwoNames";
 import { MdLogout } from "react-icons/md";
 import useAuth from "@/hooks/useAuth";
 import usePropiedades from "@/hooks/usePropiedades";
-import { logo } from "@/data/logo";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { items_menu } from "@/data/items_menu";
 import { irArriba } from "@/utils/irArriba";
 import { getColorForOrg } from "@/lib/getRandomTailwindColors";
+import Logo from "../logo/Logo";
 
 const ModalHamburguesa = ({ tamano = "lg" }) => {
   const { openModalHamburguesa, setOpenModalHamburguesa, usuario } =
@@ -90,23 +90,8 @@ const ModalHamburguesa = ({ tamano = "lg" }) => {
               <div className="flex flex-col h-full p-1">
                 {/* Header */}
                 <div className="flex items-center w-11/12 justify-between mx-auto">
-                  <div
-                    className="flex items-center gap-2 select-none py-5"
-                    onClick={() => {
-                      navigate("/");
-                      irArriba();
-                    }}
-                  >
-                    <div className="w-9 h-9">
-                      <img
-                        src={logo.src}
-                        alt={logo.alt}
-                        className="object-center w-full h-full"
-                      />
-                    </div>
-                    <span className="text-2xl md:text-3xl tracking-tight text-black font-bold font-poppins">
-                      inmobitwo
-                    </span>
+                  <div className="py-5">
+                    <Logo />
                   </div>
 
                   <button

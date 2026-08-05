@@ -4,7 +4,7 @@ import ListaAnuncios from "@/components/usuario/tus-anuncios/ListaAnuncios";
 import { useAppContext } from "@/context/AppContext";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
-import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
+import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 import SinAnuncios from "@/components/usuario/tus-anuncios/SinAnuncios";
 import { useEffect } from "react";
 import usePropiedades from "../hooks/usePropiedades";

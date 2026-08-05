@@ -75,7 +75,12 @@ const AppRouter = () => {
 
         <Route path="/inmueble/:id" element={<PageAnuncio />} />
         <Route path="/inmueble/:id/foto/:fotoIndex" element={<FotoVisor />} />
+        <Route
+          path="/info/publicar-anuncio"
+          element={<InfoPublicarAnuncio />}
+        />
 
+        {/* 
         <Route
           path="/info/publicar-anuncio"
           element={
@@ -83,7 +88,7 @@ const AppRouter = () => {
               <InfoPublicarAnuncio />
             </RutaPrivada>
           }
-        />
+        /> */}
         <Route
           path="/info/publicar-anuncio/publicar"
           element={

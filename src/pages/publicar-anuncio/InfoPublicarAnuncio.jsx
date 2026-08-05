@@ -6,7 +6,7 @@ import { LinksGridSection } from "@/components/publicar-anuncio/info-publicar/Li
 import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderInmobitwo";
-import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
+import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 
 const InfoPublicarAnuncio = () => {
   AdvantagesSection;

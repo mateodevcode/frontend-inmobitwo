@@ -1,10 +1,10 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import NavbarHome from "../inicio/NavbarHome";
 import DetallePropiedad from "./DetallePropiedad";
 import { useEffect, useRef, useCallback } from "react";
 import usePropiedades from "../../hooks/usePropiedades";
 import { useAppContext } from "@/context/AppContext.js";
 import useTracking from "@/hooks/useTracking";
+import NavbarHome from "../inicio/navbar/NavbarHome";
 
 const PageAnuncio = () => {
   const { id } = useParams();

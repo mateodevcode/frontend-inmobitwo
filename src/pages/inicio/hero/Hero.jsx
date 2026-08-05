@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AnimatedTitle from "./AnimatedTitle";
-import InputSearchPrincipal from "./modales/InputSearchPrincipal";
-import SelectorTipo from "./modales/SelectorTipo";
+import InputSearchPrincipal from "../modales/InputSearchPrincipal";
+import SelectorTipo from "../modales/SelectorTipo";
 import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 
 const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };

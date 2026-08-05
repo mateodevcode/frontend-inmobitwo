@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import * as maplibregl from "maplibre-gl";
 import { apiBackend } from "@/api/apiBackend.js";
 import { BsFillGeoAltFill } from "react-icons/bs";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 
 export default function MiniMapaUbicacion({
   locationInfo,
@@ -14,6 +14,8 @@ export default function MiniMapaUbicacion({
   const instanceRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const polyKey = searchParams.get("polyKey");
 
   useEffect(() => {
     if (!locationInfo) return;
@@ -36,6 +38,22 @@ export default function MiniMapaUbicacion({
 
       map.on("load", async () => {
         const { tipo } = locationInfo;
+
+        if (tipo === "custom_polygon") {
+          const geojsonStr = polyKey
+            ? sessionStorage.getItem(polyKey)
+            : null;
+          if (geojsonStr) {
+            try {
+              const geojson = JSON.parse(geojsonStr);
+              drawGeometry(map, geojson.geometry || geojson);
+            } catch (e) {
+              console.error("Error cargando poligono de zona:", e);
+            }
+          }
+          return;
+        }
+
         let endpoint = "";
 
         if (tipo === "ciudad") {
@@ -62,45 +80,7 @@ export default function MiniMapaUbicacion({
           if (!res.success || !res.data) return;
 
           if (res.data.geometry) {
-            map.addSource("zonaboundary", {
-              type: "geojson",
-              data: { type: "Feature", geometry: res.data.geometry, properties: {} },
-            });
-            map.addLayer({
-              id: "zona-fill",
-              type: "fill",
-              source: "zonaboundary",
-              paint: {
-                "fill-color": "#e6007a",
-                "fill-opacity": 0.35,
-              },
-            });
-            map.addLayer({
-              id: "zona-line",
-              type: "line",
-              source: "zonaboundary",
-              paint: {
-                "line-color": "#e6007a",
-                "line-width": 2,
-              },
-            });
-
-            const coords = extractCoords(res.data.geometry);
-            if (coords.length > 0) {
-              const bounds = coords.reduce(
-                (b, [lng, lat]) => {
-                  return [
-                    [Math.min(b[0][0], lng), Math.min(b[0][1], lat)],
-                    [Math.max(b[1][0], lng), Math.max(b[1][1], lat)],
-                  ];
-                },
-                [
-                  [Infinity, Infinity],
-                  [-Infinity, -Infinity],
-                ],
-              );
-              map.fitBounds(bounds, { padding: 10 });
-            }
+            drawGeometry(map, res.data.geometry);
           } else if (res.data.bounds) {
             map.fitBounds(res.data.bounds, { padding: 10 });
           }
@@ -118,9 +98,13 @@ export default function MiniMapaUbicacion({
         instanceRef.current = null;
       }
     };
-  }, [locationInfo]);
+  }, [locationInfo, polyKey]);
 
   const handleVerEnMapa = () => {
+    if (locationInfo?.tipo === "custom_polygon") {
+      navigate(`/busqueda-multizona/${operationSlug}-${typeSlug}`);
+      return;
+    }
     navigate(`${location.pathname}/mapa`);
   };
 
@@ -153,4 +137,46 @@ function extractCoords(geometry) {
   if (type === "GeometryCollection")
     return geometry.geometries.flatMap(extractCoords);
   return [];
+}
+
+function drawGeometry(map, geometry) {
+  map.addSource("zonaboundary", {
+    type: "geojson",
+    data: { type: "Feature", geometry, properties: {} },
+  });
+  map.addLayer({
+    id: "zona-fill",
+    type: "fill",
+    source: "zonaboundary",
+    paint: {
+      "fill-color": "#e6007a",
+      "fill-opacity": 0.35,
+    },
+  });
+  map.addLayer({
+    id: "zona-line",
+    type: "line",
+    source: "zonaboundary",
+    paint: {
+      "line-color": "#e6007a",
+      "line-width": 2,
+    },
+  });
+
+  const coords = extractCoords(geometry);
+  if (coords.length > 0) {
+    const bounds = coords.reduce(
+      (b, [lng, lat]) => {
+        return [
+          [Math.min(b[0][0], lng), Math.min(b[0][1], lat)],
+          [Math.max(b[1][0], lng), Math.max(b[1][1], lat)],
+        ];
+      },
+      [
+        [Infinity, Infinity],
+        [-Infinity, -Infinity],
+      ],
+    );
+    map.fitBounds(bounds, { padding: 10 });
+  }
 }

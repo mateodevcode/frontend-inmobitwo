@@ -16,7 +16,7 @@ export default defineConfig({
     },
     allowedHosts: [
       "https://extensions-activation-bathroom-shop.trycloudflare.com",
-      "192.168.41.72",
+      "10.125.115.72",
     ],
   },
 

@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
 import ModalUser from "@/components/modales/ModalUser";
-import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
+import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 import { items_menu } from "@/data/items_menu";
 import { TbMenu4 } from "react-icons/tb";
 import Logo from "../../logo/Logo";

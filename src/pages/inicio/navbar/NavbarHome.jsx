@@ -4,10 +4,11 @@ import { TbMenu4 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import BotonUsuario from "@/components/usuario/BotonUsuario";
-import EnlaceNav from "./modales/EnlaceNav";
-import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
-import { MENUS } from "../../data/menus";
-import Logo from "../../components/logo/Logo";
+import EnlaceNav from "../modales/EnlaceNav";
+import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
+import { MENUS } from "../../../data/menus";
+import Logo from "../../../components/logo/Logo";
+import Columna from "../components/Columna";
 
 const NavbarHome = () => {
   const {
@@ -19,35 +20,11 @@ const NavbarHome = () => {
   } = useAppContext();
   const navigate = useNavigate();
 
-  function Columna({ heading, links }) {
-    return (
-      <div>
-        <h4 className="text-base font-semibold text-black mb-4 tracking-wide font-poppins">
-          {heading}
-        </h4>
-        <ul className="flex flex-col gap-3">
-          {links.map((link) => (
-            <li key={link}>
-              <a
-                href="#"
-                className="text-[15px] text-[#0057D9] hover:underline whitespace-nowrap"
-              >
-                {link}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-white w-full border-b border-black/5 font-poppins">
+    <div className="bg-white w-full border-b border-black/5 font-poppins relative">
       <div className="mx-auto w-11/12 md:w-9/12 h-20 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          {/* Logo */}
+        <div className="flex items-end gap-8">
           <Logo />
-          {/* Links */}
           <nav className="md:flex items-center gap-8 h-full hidden">
             {Object.keys(MENUS).map((title) => (
               <EnlaceNav key={title} title={title}>
@@ -63,7 +40,6 @@ const NavbarHome = () => {
           </nav>
         </div>
 
-        {/* Acciones */}
         <div className="hidden md:flex items-center gap-5">
           <button
             className="relative flex items-center gap-2 px-4 bg-transparent text-black h-9 rounded-md cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-black before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 border border-black/30"
@@ -92,7 +68,6 @@ const NavbarHome = () => {
           )}
         </div>
 
-        {/* Menu hamburguesa */}
         <button
           className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden"
           onClick={() => setOpenModalHamburguesa(!openModalHamburguesa)}

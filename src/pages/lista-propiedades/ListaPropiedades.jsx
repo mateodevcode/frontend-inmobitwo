@@ -22,6 +22,7 @@ const ListaPropiedades = () => {
   } = useSlugParser();
   const [searchParams] = useSearchParams();
   const [polygonProps, setPolygonProps] = useState(null);
+  const [polygonMissing, setPolygonMissing] = useState(false);
 
   const { locationInfo } = useLocationInfo(
     isCustomPolygon
@@ -48,43 +49,50 @@ const ListaPropiedades = () => {
 
     async function fetchPolygonProps() {
       if (!isCustomPolygon) {
-        if (!cancelled) setPolygonProps(null);
+        if (!cancelled) {
+          setPolygonProps(null);
+          setPolygonMissing(false);
+        }
         return;
       }
       const polyKey = searchParams.get("polyKey");
       if (!polyKey) {
-        if (!cancelled) setPolygonProps(null);
+        if (!cancelled) {
+          setPolygonProps(null);
+          setPolygonMissing(true);
+        }
         return;
       }
 
-      try {
-        const geojsonStr = sessionStorage.getItem(polyKey);
-        const op = sessionStorage.getItem(`${polyKey}_op`) || "venta";
-        const tipo = sessionStorage.getItem(`${polyKey}_tipo`) || "viviendas";
-        if (!geojsonStr) {
-          if (!cancelled) setPolygonProps({ total: 0, propiedades: [] });
-          return;
+      const geojsonStr = sessionStorage.getItem(polyKey);
+      const op = sessionStorage.getItem(`${polyKey}_op`) || "venta";
+      const tipo = sessionStorage.getItem(`${polyKey}_tipo`) || "viviendas";
+      if (!geojsonStr) {
+        if (!cancelled) {
+          setPolygonProps(null);
+          setPolygonMissing(true);
         }
+        return;
+      }
 
-        const geojson = JSON.parse(geojsonStr);
-        const operationDb = MAPPING_OPERACIONES[operationSlug] || op;
-        const typeDb = MAPPING_TIPOS[typeSlug] || tipo;
+      const geojson = JSON.parse(geojsonStr);
+      const operationDb = MAPPING_OPERACIONES[operationSlug] || op;
+      const typeDb = MAPPING_TIPOS[typeSlug] || tipo;
 
-        const res = await apiBackend("/api/inmuebles-en-poligono", "POST", {
-          polygon: geojson,
-          operation: operationDb,
-          tipoInmueble: typeDb,
-        });
+      const res = await apiBackend("/api/inmuebles-en-poligono", "POST", {
+        polygon: geojson,
+        operation: operationDb,
+        tipoInmueble: typeDb,
+      });
 
-        if (cancelled) return;
+      if (cancelled) return;
 
-        if (res.success) {
-          setPolygonProps(res.data);
-        } else {
-          setPolygonProps({ total: 0, propiedades: [] });
-        }
-      } catch {
-        if (!cancelled) setPolygonProps({ total: 0, propiedades: [] });
+      if (res.success) {
+        setPolygonMissing(false);
+        setPolygonProps(res.data);
+      } else {
+        setPolygonProps(null);
+        setPolygonMissing(true);
       }
     }
 
@@ -115,6 +123,7 @@ const ListaPropiedades = () => {
             operationSlug={operationSlug}
             typeSlug={typeSlug}
             polygonProps={polygonProps}
+            polygonMissing={polygonMissing}
             isCustomPolygon={isCustomPolygon}
           />
         </div>

@@ -11,25 +11,24 @@ export default function EnlaceNav({
   closeDelay = 150,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    // Solo bloqueamos el scroll del body cuando es el mega menú de pantalla
-    // completa; un popup chico no necesita frenar el scroll de la página.
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
     if (isOpen && panelWidth === "full") {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
   }, [isOpen, panelWidth]);
-
-  useEffect(() => {
-    if (panelWidth !== "full") return; // el scroll-shrink solo aplica al mega menú
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [panelWidth]);
 
   const open = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -48,21 +47,19 @@ export default function EnlaceNav({
 
   const leaveCard = () => close();
 
-  // Presets de tamaño/posición según panelWidth. panelClassName siempre
-  // se agrega al final, así que puede overridear cualquiera de estas clases
-  // si hace falta un caso puntual distinto.
   const basePanelClasses =
     panelWidth === "sm"
       ? "absolute top-full left-0 mt-2 w-64 rounded-md shadow-lg border border-black/10 bg-white overflow-hidden"
-      : `fixed left-0 right-0 ${
-          scrolled ? "top-14" : "top-20"
-        } h-[50svh] bg-white shadow-lg border-b overflow-hidden`;
+      : "fixed left-0 right-0 h-[50svh] bg-white shadow-lg border-b overflow-hidden";
+
+  const panelStyle =
+    panelWidth === "full" ? { top: `calc(80px - ${scrollY}px)` } : {};
 
   return (
     <div className="relative inline-block">
       {/* Enlace */}
       <div
-        className="relative group cursor-pointer text-base font-semibold text-cuarto hover:text-black transition-colors"
+        className="relative group cursor-pointer text-sm font-semibold text-cuarto hover:text-black transition-colors"
         onMouseEnter={open}
         onMouseLeave={scheduleClose}
       >
@@ -80,13 +77,14 @@ export default function EnlaceNav({
           onMouseEnter={enterCard}
           onMouseLeave={leaveCard}
           className={`${basePanelClasses} z-50 ${panelClassName}`}
+          style={panelStyle}
         >
           {panelWidth === "full" ? (
-            <div className="w-full mx-auto flex items-center justify-center">
+            <div className="w-full mx-auto flex items-center justify-center py-5">
               <div className="w-9/12 flex gap-16">{children}</div>
             </div>
           ) : (
-            <div className="w-full mx-auto flex items-center justify-center">
+            <div className="w-full mx-auto flex items-center justify-center py-5">
               <div className="w-9/12 flex gap-16 ">{children}</div>
             </div>
           )}

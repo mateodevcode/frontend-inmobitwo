@@ -54,7 +54,9 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
           <span>
             {getTypeLabel(typeSlug, locationInfo?.total_matching || 0)}
           </span>{" "}
-          {locationInfo?.tipo === "region" ? (
+          {locationInfo?.tipo === "custom_polygon" ? (
+            <span className="mr-2">en Zona personalizada</span>
+          ) : locationInfo?.tipo === "region" ? (
             <span>en {locationInfo?.region_name}</span>
           ) : locationInfo?.tipo === "departamento" ? (
             <span className="mr-2">

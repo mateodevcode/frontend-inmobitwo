@@ -1,10 +1,10 @@
 import { useState } from "react";
-import NavbarHome from "./NavbarHome";
-import Hero from "./Hero";
-import InfoCards from "./InfoCards";
+import Hero from "@/pages/inicio/hero/Hero";
+import InfoCards from "@/pages/inicio/info-cards/InfoCards";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import ModalUser from "@/components/modales/ModalUser";
 import { useAppContext } from "@/context/AppContext";
+import NavbarHome from "@/pages/inicio/navbar/NavbarHome";
 
 const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
 

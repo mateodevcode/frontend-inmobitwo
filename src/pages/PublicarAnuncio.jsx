@@ -11,7 +11,7 @@ import { ModalContinuarAnuncio } from "@/components/publicar-anuncio/ModalContin
 import useResetForm, {
   mapearApiAFormDataPropiedad,
 } from "@/hooks/useResetForm";
-import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
+import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 
 const PublicarAnuncio = () => {
   const {

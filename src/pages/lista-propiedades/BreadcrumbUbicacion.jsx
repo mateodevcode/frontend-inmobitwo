@@ -20,6 +20,26 @@ const BreadcrumbUbicacion = ({ locationInfo }) => {
     );
   }
 
+  if (locationInfo.tipo === "custom_polygon") {
+    return (
+      <div className="flex items-center gap-2 mt-2 md:text-sm text-xs">
+        <Link to="/" className="text-blue-600 hover:underline">
+          inmobitwo
+        </Link>
+        <MdOutlineKeyboardArrowRight />
+        <div className="relative">
+          <div className="text-black">Zona personalizada</div>
+          <div className="absolute top-6 text-black">
+            {locationInfo.total_matching?.toLocaleString() || ""}
+          </div>
+        </div>
+        <div>
+          <MdArrowDropDown />
+        </div>
+      </div>
+    );
+  }
+
   const esRegion = locationInfo.tipo === "region";
   const esDepto = locationInfo.tipo === "departamento";
   const esCiudad = locationInfo.tipo === "ciudad";

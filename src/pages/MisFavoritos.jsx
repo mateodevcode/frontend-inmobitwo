@@ -4,7 +4,7 @@ import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderI
 import { useAppContext } from "@/context/AppContext";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
-import ModalHamburguesa from "@/components/modales/ModalHamburguesa";
+import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 import useFavoritos from "@/hooks/useFavoritos";
 import ListaFavoritos from "@/components/usuario/favoritos/ListaFavoritos";
 import SinFavoritos from "@/components/usuario/favoritos/SinFavoritos";

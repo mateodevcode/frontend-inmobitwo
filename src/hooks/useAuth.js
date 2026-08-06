@@ -34,7 +34,46 @@ const useAuth = () => {
   };
 
   // ─────────────────────────────────────────────
-  // Login con email + contraseña
+  // PASO 1: Validar email (sin password)
+  // ─────────────────────────────────────────────
+  const handleValidateEmail = async (e) => {
+    e.preventDefault();
+    setLoadingAuth(true);
+
+    try {
+      // Validar que el email no esté vacío
+      if (!formDataUsuario.email.trim()) {
+        toast.error("Por favor ingresa tu email", { position: "bottom-right" });
+        setLoadingAuth(false);
+        return;
+      }
+
+      const res = await apiBackend("/auth/check-email", "POST", {
+        email: formDataUsuario.email,
+      });
+
+      if (!res.success) {
+        toast.error(res.error || "Error al validar el email", {
+          position: "bottom-right",
+        });
+        setLoadingAuth(false);
+        return;
+      }
+
+      // Email válido - agregar a URL y avanzar al paso 2
+      navigate(`/login?email=${encodeURIComponent(formDataUsuario.email)}`);
+    } catch (error) {
+      toast.error("Error de conexión. Intenta nuevamente.", {
+        position: "bottom-right",
+      });
+      console.error("❌ Error validando email:", error);
+    } finally {
+      setLoadingAuth(false);
+    }
+  };
+
+  // ─────────────────────────────────────────────
+  // PASO 2: Login con email + contraseña
   // ─────────────────────────────────────────────
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,6 +81,16 @@ const useAuth = () => {
 
     try {
       iniciarCarga();
+
+      // Validar que la contraseña no esté vacía
+      if (!formDataUsuario.password.trim()) {
+        toast.error("Por favor ingresa tu contraseña", {
+          position: "bottom-right",
+        });
+        setLoadingAuth(false);
+        return;
+      }
+
       const res = await apiBackend("/auth/login", "POST", {
         email: formDataUsuario.email,
         password: formDataUsuario.password,
@@ -51,6 +100,7 @@ const useAuth = () => {
         toast.error(res.error || "Credenciales incorrectas", {
           position: "bottom-right",
         });
+        setLoadingAuth(false);
         return;
       }
 
@@ -73,6 +123,14 @@ const useAuth = () => {
       terminarCarga();
       setLoadingAuth(false);
     }
+  };
+
+  // ─────────────────────────────────────────────
+  // Cambiar de email (volver al paso 1)
+  // ─────────────────────────────────────────────
+  const handleChangeEmail = () => {
+    resetFormDataUsuario();
+    navigate("/login");
   };
 
   // ─────────────────────────────────────────────
@@ -136,10 +194,13 @@ const useAuth = () => {
 
   return {
     handleChange,
+    handleValidateEmail,
     handleLogin,
+    handleChangeEmail,
     handleRegistro,
     handleCerrarSesion,
     formDataUsuario,
+    setFormDataUsuario,
   };
 };
 

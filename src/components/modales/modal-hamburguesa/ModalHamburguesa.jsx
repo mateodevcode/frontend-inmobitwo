@@ -40,7 +40,7 @@ const ModalHamburguesa = () => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header - Fijo */}
-            <div className="flex items-center w-11/12 justify-between mx-auto py-5 flex-shrink-0 border-b border-gray-200">
+            <div className="flex items-center w-11/12 justify-between mx-auto py-5 shrink-0 border-b border-gray-200">
               <div>
                 <Logo />
               </div>

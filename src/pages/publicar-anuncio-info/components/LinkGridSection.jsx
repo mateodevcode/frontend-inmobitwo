@@ -3,7 +3,7 @@ import {
   PROFESIONAL_LINKS,
   TIENES_INMUEBLE_LINKS,
 } from "@/data/info-publicar";
-import { LinkColumn } from "@/components/publicar-anuncio/info-publicar/LinkColunm";
+import { LinkColumn } from "@/pages/publicar-anuncio-info/components/LinkColunm";
 
 export function LinksGridSection() {
   return (

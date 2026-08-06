@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderInmobitwo";
+import HeaderInmobitwo from "@/pages/publicar-anuncio-info/components/HeaderInmobitwo";
 import { useAppContext } from "@/context/AppContext";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
-import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
+import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 import useFavoritos from "@/hooks/useFavoritos";
 import ListaFavoritos from "@/components/usuario/favoritos/ListaFavoritos";

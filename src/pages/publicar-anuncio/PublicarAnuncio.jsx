@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import DatosBasicos from "@/components/publicar-anuncio/DatosBasicos";
-import Detalles from "@/components/publicar-anuncio/Detalles";
-import Fotos from "@/components/publicar-anuncio/Fotos";
-import HeaderPublicarAnuncio from "@/components/publicar-anuncio/HeaderPublicarAnuncio";
+import DatosBasicos from "@/pages/publicar-anuncio/paso-1/DatosBasicos";
+import Detalles from "@/pages/publicar-anuncio/paso-2/Detalles";
+import Fotos from "@/pages/publicar-anuncio/paso-3/Fotos";
+import HeaderPublicarAnuncio from "@/pages/publicar-anuncio/header/HeaderPublicarAnuncio";
 import { useAppContext } from "@/context/AppContext";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { apiBackend } from "@/api/apiBackend";
 import { useNavigate } from "react-router-dom";
-import { ModalContinuarAnuncio } from "@/components/publicar-anuncio/ModalContinuarAnuncio";
+import { ModalContinuarAnuncio } from "@/components/modales/ModalContinuarAnuncio";
 import useResetForm, {
   mapearApiAFormDataPropiedad,
 } from "@/hooks/useResetForm";

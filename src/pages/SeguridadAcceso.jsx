@@ -1,6 +1,6 @@
 import Acceso from "@/components/usuario/tus-datos/Acceso";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
-import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
+import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 import ModalCambiarPassword from "@/components/modales/ModalCambiarPassword";
 
 const SeguridadAcceso = () => {

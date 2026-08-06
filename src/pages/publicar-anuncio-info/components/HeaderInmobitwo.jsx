@@ -5,7 +5,7 @@ import ModalUser from "@/components/modales/ModalUser";
 import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 import { items_menu } from "@/data/items_menu";
 import { TbMenu4 } from "react-icons/tb";
-import Logo from "../../logo/Logo";
+import Logo from "@/components/logo/Logo";
 
 const HeaderInmobitwo = () => {
   const { openModalHamburguesa, setOpenModalHamburguesa, setOpenModalUser } =
@@ -17,7 +17,7 @@ const HeaderInmobitwo = () => {
   return (
     <>
       <header className="bg-white flex items-center w-full justify-between">
-        <div className="flex items-center w-11/12 justify-between mx-auto">
+        <div className="flex items-center mx-auto w-11/12 md:w-9/12 h-20 justify-between mx-auto">
           <div className="flex items-center gap-2 select-none py-5">
             <Logo />
           </div>

@@ -1,4 +1,4 @@
-import AddPhotosStep from "./components/AddPhotosStep";
+import AddPhotosStep from "@/pages/publicar-anuncio/paso-3/AddPhotosStep";
 
 const Fotos = () => {
   return <AddPhotosStep />;

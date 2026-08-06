@@ -1,6 +1,6 @@
 import Perfil from "@/components/usuario/tus-datos/Perfil";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
-import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
+import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 
 const MiPerfil = () => {
   return (

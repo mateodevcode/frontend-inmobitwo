@@ -20,7 +20,7 @@ function Logo() {
           className="object-center w-full h-full"
         />
       </div>
-      <span className="text-2xl tracking-tight text-black font-semibold">
+      <span className="text-2xl tracking-tight text-black font-semibold font-poppins">
         inmobitwo
       </span>
     </div>

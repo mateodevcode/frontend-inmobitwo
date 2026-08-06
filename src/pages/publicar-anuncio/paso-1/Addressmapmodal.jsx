@@ -213,14 +213,14 @@ export default function AddressMapModal({
             <button
               type="button"
               onClick={onClose}
-              className="text-base font-semibold text-slate-600 hover:underline"
+              className="text-sm font-semibold text-slate-600 hover:underline"
             >
               Cancelar
             </button>
             <button
               type="button"
               onClick={handleConfirm}
-              className="rounded-md bg-fuchsia-800 px-6 py-3 text-base font-semibold text-white hover:bg-fuchsia-900"
+              className="rounded-md bg-tercero px-6 py-3 text-sm font-semibold text-primero hover:bg-tercero/80"
             >
               Confirmar ubicacion
             </button>

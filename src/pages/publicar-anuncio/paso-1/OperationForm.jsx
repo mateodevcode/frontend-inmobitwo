@@ -13,13 +13,13 @@ function RadioOption({ option, disabled = false }) {
       disabled={disabled}
       className="group flex cursor-pointer items-start gap-3 py-2 data-disabled:cursor-not-allowed data-disabled:opacity-40"
     >
-      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-rose-600">
+      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-tercero">
         <span className="h-2.5 w-2.5 rounded-full bg-rose-500 opacity-0 group-data-checked:opacity-100" />
       </span>
       <span>
         <Label
           as="p"
-          className="md:text-lg group-data-checked:text-rose-600 text-slate-900"
+          className="text-base group-data-checked:text-tercero text-slate-900"
         >
           {option.label}
         </Label>
@@ -42,9 +42,7 @@ function OperationField({
 }) {
   return (
     <div className="mt-6">
-      <h2 className="mb-2 text-xl md:text-2xl font-semibold text-slate-900">
-        Operación
-      </h2>
+      <h2 className="mb-2 text-xl font-semibold text-slate-900">Operación</h2>
       <RadioGroup value={value} onChange={onChange} className="flex flex-col">
         {options.map((opt) => (
           <RadioOption
@@ -102,7 +100,7 @@ export default function OperationForm() {
   }, [formDataPropiedad.tipo]);
 
   return (
-    <div className="flex max-w-xl flex-col gap-8 font-poppins md:mt-6">
+    <div className="flex max-w-xl flex-col gap-8 font-poppins md:mt-2">
       <OperationField
         value={
           OPERATION_OPTIONS.find(

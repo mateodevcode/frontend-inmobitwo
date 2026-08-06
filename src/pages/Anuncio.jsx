@@ -1,6 +1,6 @@
 import DetalleDeAnuncio from "@/components/usuario/tus-anuncios/anuncio/DetalleDeAnuncio";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
-import { SiteFooter } from "@/components/publicar-anuncio/info-publicar/SiteFooter";
+import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 
 const Anuncio = () => {
   return (

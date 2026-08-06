@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCircleCheck } from "react-icons/fa6";
 import { useAppContext } from "@/context/AppContext";
-import Logo from "../logo/Logo";
+import Logo from "../../../components/logo/Logo";
 
 const steps = [
   { id: 0, label: "1. Datos básicos" },
@@ -56,7 +56,7 @@ const HeaderPublicarAnuncio = () => {
           return (
             <div
               key={step.id}
-              className={`relative flex flex-1 items-center gap-2 md:justify-center px-4 py-5 text-base font-semibold md:py-6 md:text-lg ${
+              className={`relative flex flex-1 items-center gap-2 md:justify-center px-4 text-base font-semibold py-4 md:text-lg ${
                 isActive
                   ? "bg-black text-white"
                   : isCompleted

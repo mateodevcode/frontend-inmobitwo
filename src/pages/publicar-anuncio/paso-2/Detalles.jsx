@@ -1,5 +1,5 @@
-import Informacion from "./components/Informacion";
-import PropertyCharacteristicsForm from "@/components/publicar-anuncio/components/PropertyCharacteristicsForm";
+import Informacion from "@/pages/publicar-anuncio/informacion/Informacion";
+import PropertyCharacteristicsForm from "@/pages/publicar-anuncio/paso-2/PropertyCharacteristicsForm";
 
 const Detalles = () => {
   return (

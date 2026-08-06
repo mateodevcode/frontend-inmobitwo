@@ -7,8 +7,8 @@
 
 import { useState } from "react";
 import { Field, Label, Input } from "@headlessui/react";
-import LocationCascadeSelect from "./Locationcascadeselect.jsx";
-import AddressMapModal from "./Addressmapmodal.jsx";
+import LocationCascadeSelect from "@/pages/publicar-anuncio/paso-1/Locationcascadeselect.jsx";
+import AddressMapModal from "@/pages/publicar-anuncio/paso-1/Addressmapmodal.jsx";
 import { apiBackend } from "@/api/apiBackend.js";
 import { useAppContext } from "@/context/AppContext.js";
 
@@ -90,7 +90,7 @@ export default function LocationForm({ onLocationConfirmed }) {
 
   return (
     <div className="flex max-w-xl flex-col gap-6 mt-6 md:mt-10 font-montserrat">
-      <h2 className="text-xl md:text-2xl font-bold text-slate-900">
+      <h2 className="text-xl font-bold text-slate-900">
         Ubicación del inmueble
       </h2>
 
@@ -146,7 +146,7 @@ export default function LocationForm({ onLocationConfirmed }) {
         type="button"
         onClick={handleCheckAddress}
         disabled={checking}
-        className="w-fit rounded-md border border-slate-300 bg-slate-200 px-6 py-3 text-lg font-bold text-slate-900 hover:bg-slate-300 disabled:opacity-50"
+        className="w-fit rounded-md border border-slate-300 bg-slate-200 px-6 py-3 text-base font-semibold text-slate-900 hover:bg-slate-300 disabled:opacity-50"
       >
         {checking ? "Comprobando..." : "Comprobar dirección"}
       </button>

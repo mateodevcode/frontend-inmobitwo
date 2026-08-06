@@ -5,29 +5,29 @@ const Informacion = () => {
   return (
     <div className="border border-black/10 w-full md:w-150 mx-auto mt-20 font-montserrat text-black">
       <div className="md:p-8 p-6">
-        <h2 className="text-2xl font-bold">Información útil</h2>
-        <p className="text-base md:text-lg mt-2">
+        <h2 className="text-xl font-bold">Información útil</h2>
+        <p className="text-base mt-2">
           Ten las fotos a mano. Si no las tienes, podrás añadirlas más tarde.
           Sin fotos no tendrás resultados.
         </p>
         <br />
-        <p className="text-base md:text-lg">
+        <p className="text-base">
           Te regalamos tus primeros dos anuncios para que pruebes nuestro
           servicio. Puedes publicar gratis pisos, chalets, garajes, parcelas,
           locales, etc hasta que lo vendas o lo alquiles.
         </p>
         <br />
-        <p className="text-base md:text-lg">
+        <p className="text-base">
           Además, puedes publicar hasta 5 habitaciones gratis en piso
           compartido, no suman en el número de anuncios que te regalamos.
         </p>
         <br />
-        <p className="text-base md:text-lg">
+        <p className="text-base">
           Para poder mantener nuestra calidad de servicio necesitamos cobrar en
           estos casos:
         </p>
         <br />
-        <ul className="list-disc mx-4 text-base md:text-lg">
+        <ul className="list-disc mx-4 text-base">
           <li>anunciantes con más de dos inmuebles</li>
           <li>anuncios de inmuebles duplicados</li>
           <li>inmuebles en venta de más de 1.000.000 €</li>
@@ -37,24 +37,24 @@ const Informacion = () => {
       </div>
 
       <div className="flex items-center gap-4 border-t border-black/20 md:p-8 p-6">
-        <MdOutlineWorkOutline className="text-5xl" />
+        <MdOutlineWorkOutline className="text-4xl" />
         <div>
-          <p className="font-semibold text-lg">
+          <p className="font-semibold text-base">
             ¿Eres profesional inmobiliario?
           </p>
-          <p className="text-blue-600 hover:underline cursor-pointer select-none">
+          <p className="text-blue-600 hover:underline cursor-pointer select-none text-base">
             Conoce nuestras ventajas para profesionales
           </p>
         </div>
       </div>
 
       <div className="flex items-center gap-4 border-t border-black/20 md:p-8 p-6">
-        <FiFileText className="text-5xl" />
+        <FiFileText className="text-4xl" />
         <div>
-          <p className="font-semibold text-lg">
+          <p className="font-semibold text-bases">
             ¿Necesitas un contrato de alquiler?
           </p>
-          <p className="text-blue-600 hover:underline cursor-pointer select-none">
+          <p className="text-blue-600 hover:underline cursor-pointer select-none text-base">
             crea tu contrato de alquiler 100% legak y gratis
           </p>
         </div>

@@ -51,11 +51,11 @@ function PrincipalDropzone({ preview, onFileSelected }) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`relative h-72 flex flex-col items-center justify-center gap-3 rounded-md border-2 border-dashed px-6 py-8 text-center transition-colors ${
-          isDragging ? "border-rose-500 bg-rose-50" : "border-slate-300"
+          isDragging ? "border-tercero bg-tercero" : "border-slate-300"
         }`}
       >
         <div className="rounded-md border border-slate-200 p-3">
-          <HardDriveUpload className="h-7 w-7 text-rose-600" />
+          <HardDriveUpload className="h-7 w-7 text-tercero" />
         </div>
         <p className="text-base text-slate-900">
           Arrastra y suelta tu foto principal aquí
@@ -70,7 +70,7 @@ function PrincipalDropzone({ preview, onFileSelected }) {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 rounded-md bg-rose-600 px-5 py-3 text-base font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+          className="flex items-center gap-2 rounded-md bg-tercero px-5 py-3 text-base font-semibold text-white hover:bg-tercero active:scale-[0.99] cursor-pointer select-none"
         >
           <Plus className="h-5 w-5" />
           Elegir foto principal
@@ -147,10 +147,10 @@ function GaleriaDropzone({
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`relative flex flex-col items-center gap-3 rounded-md border-2 border-dashed px-8 py-8 text-center transition-colors ${
-          isDragging ? "border-rose-500 bg-rose-50" : "border-slate-300"
+          isDragging ? "border-tercero bg-tercero" : "border-slate-300"
         }`}
       >
-        <div className="flex items-center gap-3 text-rose-600">
+        <div className="flex items-center gap-3 text-tercero">
           <ImageIcon className="h-10 w-10" strokeWidth={1.5} />
           <FileText className="h-10 w-10" strokeWidth={1.5} />
           <Camera className="h-10 w-10" strokeWidth={1.5} />
@@ -172,7 +172,7 @@ function GaleriaDropzone({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 rounded-md bg-rose-600 px-6 py-3 text-base font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+          className="flex items-center gap-2 rounded-md bg-tercero px-6 py-3 text-base font-semibold text-white hover:bg-tercero active:scale-[0.99] cursor-pointer select-none"
         >
           <Plus className="h-5 w-5" />
           Añadir a la galería
@@ -194,7 +194,7 @@ function GaleriaPreviewGrid({ previews, onDelete, onMakePrincipal }) {
       {previews.map((preview, index) => (
         <div
           key={index}
-          className="relative group rounded-md overflow-hidden border border-slate-200 hover:border-rose-500 transition-colors"
+          className="relative group rounded-md overflow-hidden border border-slate-200 hover:border-tercero transition-colors"
         >
           <img
             src={preview.url}
@@ -274,7 +274,7 @@ function WizardFooter({ onBack, onContinue, loading, continueLabel }) {
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-base md:text-lg text-slate-400 hover:text-slate-600"
+          className="flex items-center gap-1 text-base text-slate-400 hover:text-slate-600"
         >
           <ChevronLeft className="h-5 w-5" />
           Volver
@@ -284,7 +284,7 @@ function WizardFooter({ onBack, onContinue, loading, continueLabel }) {
           type="button"
           onClick={onContinue}
           disabled={loading}
-          className="rounded-md border-2 border-rose-500 px-6 py-3 text-base md:text-lg font-bold text-rose-600 hover:bg-rose-50 active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
+          className="rounded-md border-2 border-tercero px-6 py-3 text-base font-semibold text-tercero hover:text-white hover:bg-tercero active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
         >
           {loading ? "Guardando..." : continueLabel}
         </button>
@@ -304,7 +304,11 @@ function NoPhotosWarningModal({
   loading,
 }) {
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-50">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      className="relative z-50 font-poppins"
+    >
       <DialogBackdrop className="fixed inset-0 bg-black/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150" />
 
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
@@ -313,7 +317,7 @@ function NoPhotosWarningModal({
           className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
         >
           <div className="mb-4 flex items-start justify-between gap-4">
-            <DialogTitle className="text-2xl font-bold text-slate-900">
+            <DialogTitle className="text-2xl font-semibold text-slate-900">
               Nadie contacta a un anuncio sin fotos
             </DialogTitle>
             <button
@@ -342,15 +346,15 @@ function NoPhotosWarningModal({
             <button
               type="button"
               onClick={onAddPhotosNow}
-              className="rounded-md bg-rose-600 px-5 py-3 text-base font-bold text-white hover:bg-rose-500 cursor-pointer select-none"
+              className="rounded-md bg-tercero px-5 py-3 text-sm md:text-base font-semibold text-white hover:bg-tercero cursor-pointer select-none"
             >
-              Añadir fotos ahora
+              Añadir fotos
             </button>
             <button
               type="button"
               onClick={onContinueAnyway}
               disabled={loading}
-              className="text-base font-semibold text-blue-600 hover:underline cursor-pointer select-none disabled:opacity-50"
+              className="text-sm md:text-base font-semibold text-blue-600 hover:underline cursor-pointer select-none disabled:opacity-50"
             >
               {loading ? "Procesando..." : "Continuar sin fotos"}
             </button>
@@ -553,7 +557,7 @@ export default function AddPhotosStep() {
   return (
     <div className="flex max-w-2xl flex-col gap-6 font-montserrat relative mb-40">
       <div className="rounded-lg md:p-8 p-6">
-        <h2 className="mb-2 text-2xl md:text-3xl font-bold text-slate-900">
+        <h2 className="mb-2 text-2xl font-bold text-slate-900">
           Añadir fotos a tu anuncio
         </h2>
         <p className="mb-6 text-base text-slate-500">

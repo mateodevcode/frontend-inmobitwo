@@ -1,4 +1,4 @@
-import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderInmobitwo";
+import HeaderInmobitwo from "@/pages/publicar-anuncio-info/components/HeaderInmobitwo";
 import HeadPerfilAcceso from "./HeadPerfilAcceso";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAppContext } from "@/context/AppContext";

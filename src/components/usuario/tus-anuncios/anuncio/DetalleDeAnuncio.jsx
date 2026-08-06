@@ -1,4 +1,4 @@
-import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderInmobitwo";
+import HeaderInmobitwo from "@/pages/publicar-anuncio-info/components/HeaderInmobitwo";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   MdOutlineKeyboardDoubleArrowLeft,

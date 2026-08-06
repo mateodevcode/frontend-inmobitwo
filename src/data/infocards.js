@@ -1,7 +1,7 @@
 export const cards = [
   {
     id: "zonas",
-    image: "/home/multizone-large.webp",
+    image: "/home/baq.png",
     title: "Seleccionar zonas en el mapa",
     description:
       "Puedes buscar al mismo tiempo en varias zonas seleccionándolas directamente en el mapa.",

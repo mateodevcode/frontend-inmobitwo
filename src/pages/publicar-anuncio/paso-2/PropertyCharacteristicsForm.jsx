@@ -323,8 +323,8 @@ export default function PropertyCharacteristicsForm() {
   return (
     <div className="flex max-w-2xl flex-col gap-10 font-montserrat">
       {/* ---- Características del piso ---- */}
-      <div className="flex flex-col gap-7 mt-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+      <div className="flex flex-col gap-7 mt-6">
+        <h2 className="text-2xl font-bold text-slate-900">
           Características del piso
         </h2>
 
@@ -399,7 +399,7 @@ export default function PropertyCharacteristicsForm() {
       {/* ---- Certificado energético ---- */}
       <div className="flex flex-col gap-5">
         <div>
-          <h2 className="mb-1 text-2xl font-bold text-slate-900">
+          <h2 className="mb-2 text-xl font-bold text-slate-900">
             Certificado energético
           </h2>
           <a href="#" className="text-base text-blue-600 hover:underline">
@@ -479,7 +479,7 @@ export default function PropertyCharacteristicsForm() {
       {/* ---- ¿Qué inquilinos buscas? ---- */}
       <div className="flex flex-col gap-6">
         <div>
-          <h2 className="mb-1 text-2xl md:text-3xl font-bold text-slate-900">
+          <h2 className="mb-2 text-2xl font-bold text-slate-900">
             ¿Qué inquilinos buscas?
           </h2>
           <p className="text-base text-slate-700 mt-4">
@@ -585,7 +585,7 @@ export default function PropertyCharacteristicsForm() {
 
       {/* ---- Precio del inmueble ---- */}
       <div className="flex flex-col gap-3">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+        <h2 className="text-2xl font-semibold text-slate-900">
           Precio del inmueble
         </h2>
 
@@ -619,7 +619,7 @@ export default function PropertyCharacteristicsForm() {
       {/* ---- Descripción del anuncio ---- */}
       <div className="flex flex-col gap-4">
         <div>
-          <h2 className="mb-1 text-2xl md:text-3xl font-bold text-slate-900">
+          <h2 className="mb-2 text-2xl font-semibold text-slate-900">
             Descripción del anuncio
           </h2>
           <p className="text-base text-slate-700 mt-4">
@@ -664,7 +664,7 @@ export default function PropertyCharacteristicsForm() {
               block: "start",
             });
           }}
-          className="w-full rounded-md bg-rose-600 px-6 py-4 text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+          className="w-full rounded-md bg-tercero px-6 py-3 text-base font-bold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none"
         >
           Continuar a fotos del anuncio
         </button>

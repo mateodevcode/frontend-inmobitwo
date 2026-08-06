@@ -92,7 +92,7 @@ function ContactDataSection({
 }) {
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-10">
+      <h2 className="text-2xl font-bold text-slate-900 mt-10">
         Tus datos de contacto
       </h2>
 
@@ -131,7 +131,7 @@ function ContactDataSection({
             value={phone}
             onChange={(e) => onPhoneChange(e.target.value)}
             type="tel"
-            className="block w-full rounded-r-md border border-slate-300 px-3 py-3 text-base text-slate-900 focus:border-rose-600 focus:outline-none"
+            className="block w-full rounded-r-md border border-slate-300 px-3 py-3 text-base text-slate-900 focus:border-tercero focus:outline-none"
           />
         </div>
         <button
@@ -151,7 +151,7 @@ function ContactDataSection({
         <Input
           value={name}
           onChange={(e) => onNameChange(e.target.value)}
-          className="block w-full rounded-md border border-slate-300 px-3 py-3 text-base text-slate-900 focus:border-rose-600 focus:outline-none"
+          className="block w-full rounded-md border border-slate-300 px-3 py-3 text-base text-slate-900 focus:border-tercero focus:outline-none"
         />
         <p className="mt-2 text-sm text-slate-500">
           Aparecerá en tu anuncio y cuando escribas a otros usuarios
@@ -170,7 +170,7 @@ function ContactPreferenceSection({
 }) {
   return (
     <div className="flex max-w-xl flex-col gap-5">
-      <h3 className="text-2xl font-bold text-slate-900">
+      <h3 className="text-xl font-semibold text-slate-900">
         ¿Cómo prefieres que te contacten?
       </h3>
 
@@ -185,11 +185,11 @@ function ContactPreferenceSection({
             value={opt}
             className="group flex cursor-pointer items-start gap-3"
           >
-            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-rose-600">
-              <span className="h-2.5 w-2.5 rounded-full bg-rose-600 opacity-0 group-data-checked:opacity-100" />
+            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-tercero">
+              <span className="h-2.5 w-2.5 rounded-full bg-tercero opacity-0 group-data-checked:opacity-100" />
             </span>
             <span>
-              <span className="block text-lg text-slate-900 group-data-checked:text-rose-600">
+              <span className="block text-base text-slate-900 group-data-checked:text-tercero">
                 {opt.label}
               </span>
               {opt.description && (
@@ -205,7 +205,7 @@ function ContactPreferenceSection({
       <button
         type="button"
         onClick={onSubmit}
-        className="w-full rounded-md bg-rose-600 px-6 py-4 text-lg font-bold text-white hover:bg-rose-500 active:scale-[0.99] cursor-pointer select-none"
+        className="w-full rounded-md bg-tercero px-6 py-3 text-base font-semibold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none"
       >
         Continuar a detalles del anuncio
       </button>

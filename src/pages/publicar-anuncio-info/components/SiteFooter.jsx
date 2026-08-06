@@ -1,8 +1,8 @@
 import { Apple, Smartphone } from "lucide-react";
 import { AYUDA_LINKS, PAISES_LINKS, SOBRE_LINKS } from "@/data/info-publicar";
-import { LinkColumn } from "@/components/publicar-anuncio/info-publicar/LinkColunm";
-import { LanguageSelect } from "@/components/publicar-anuncio/info-publicar/LanguageSelect";
-import Logo from "../../logo/Logo";
+import { LinkColumn } from "@/pages/publicar-anuncio-info/components/LinkColunm";
+import { LanguageSelect } from "@/pages/publicar-anuncio-info/components/LanguageSelect";
+import Logo from "@/components/logo/Logo";
 
 export function SiteFooter() {
   return (

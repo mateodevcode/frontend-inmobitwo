@@ -51,8 +51,8 @@ function SimpleSelect({
           <ListboxButton
             className={`flex w-full items-center justify-between rounded-md border bg-white px-4 py-3 text-left text-base text-slate-900 focus:outline-none ${
               open
-                ? "border-rose-600"
-                : "border-slate-300 hover:border-rose-400"
+                ? "border-tercero"
+                : "border-slate-300 hover:border-tercero/80"
             }`}
           >
             <span>{value ? value.label : placeholder}</span>

@@ -1,4 +1,4 @@
-import HeaderInmobitwo from "@/components/publicar-anuncio/info-publicar/HeaderInmobitwo";
+import HeaderInmobitwo from "@/pages/publicar-anuncio-info/components/HeaderInmobitwo";
 import { SlidersHorizontal } from "lucide-react";
 import { getInitials } from "@/lib/getInitials";
 import { useAppContext } from "@/context/AppContext";

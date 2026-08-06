@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import TipoSelect from "./components/TipoSelect";
+import TipoSelect from "@/pages/publicar-anuncio/paso-1/TipoSelect";
 import { PROPERTY_TYPES } from "@/data/property_types";
-import OperationForm from "@/components/publicar-anuncio/components/OperationForm";
-import LocationForm from "@/components/publicar-anuncio/components/LoactionForm";
-import Informacion from "@/components/publicar-anuncio/components/Informacion";
-import FloorDoorBlockForm from "@/components/publicar-anuncio/components/FloorDoorBlockForm";
-import ContactForm from "@/components/publicar-anuncio/components/ContactForm";
+import OperationForm from "@/pages/publicar-anuncio/paso-1/OperationForm";
+import LocationForm from "@/pages/publicar-anuncio/paso-1/LoactionForm";
+import Informacion from "@/pages/publicar-anuncio/informacion/Informacion";
+import FloorDoorBlockForm from "@/pages/publicar-anuncio/paso-1/FloorDoorBlockForm";
+import ContactForm from "@/pages/publicar-anuncio/paso-1/ContactForm";
 import { useAppContext } from "@/context/AppContext";
 import useOrganizaciones from "@/hooks/useOrganizaciones";
 
@@ -39,7 +39,7 @@ const DatosBasicos = () => {
       {/* FormData */}
       <div className="w-11/12 md:w-1/2 h-full text-black font-montserrat">
         <div className="flex flex-col w-full md:w-120 mx-auto">
-          <h3 className="font-bold text-2xl md:text-3xl mt-8">
+          <h3 className="font-bold text-2xl md:text-2xl mt-6 md:mt-8">
             Pon tu anuncio aquí
           </h3>
           <div className="flex flex-col mt-6">

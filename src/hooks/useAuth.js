@@ -20,7 +20,7 @@ const useAuth = () => {
     iniciarCarga,
     terminarCarga,
   } = useContext(AppContext);
-  const { cargarPropiedades, limpiarPropiedades } = usePropiedades();
+  const { limpiarPropiedades } = usePropiedades();
   const { resetFormDataPropiedad } = useResetForm();
 
   const navigate = useNavigate();
@@ -105,7 +105,7 @@ const useAuth = () => {
       }
 
       guardarSesion(res.data.usuario, res.data.accessToken);
-      await cargarPropiedades();
+      // await cargarPropiedades();
       resetFormDataUsuario();
 
       toast.success("¡Inicio de sesión exitoso!", { position: "bottom-right" });

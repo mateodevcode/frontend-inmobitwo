@@ -6,7 +6,7 @@ import { useAppContext } from "@/context/AppContext";
 import { SlSocialGoogle } from "react-icons/sl";
 import { Link, useSearchParams } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
-import Logo from "../logo/Logo";
+import Logo from "../../components/logo/Logo";
 import { GoArrowLeft } from "react-icons/go";
 
 const Login = () => {
@@ -38,11 +38,11 @@ const Login = () => {
   return (
     <div className="grid grid-cols-1 bg-gray-100">
       <div
-        className="bg-gray-100 h-svh flex flex-col items-center justify-center"
+        className="bg-gray-100 h-dvh flex flex-col items-center justify-center"
         id="form-login"
       >
         <div className="flex items-center justify-center px-4">
-          <div className="max-w-md min-w-sm bg-white p-2 md:p-8">
+          <div className="max-w-md min-w-sm bg-white p-8">
             <div className="pb-5 flex items-center flex-col">
               <Logo />
               <p className="text-center mt-2">
@@ -79,11 +79,14 @@ const Login = () => {
                   {loadingAuth ? "Validando..." : "Continuar"}
                 </button>
 
-                <div className="flex items-center justify-end py-2 text-sm hover:underline text-black/80 hover:text-blue-600 cursor-pointer select-none">
+                <Link
+                  className="flex items-center justify-end py-2 text-sm hover:underline text-black/80 hover:text-blue-600 cursor-pointer select-none"
+                  to={"/olvidaste-tu-password"}
+                >
                   <p>¿Olvidaste tu contraseña?</p>
-                </div>
+                </Link>
 
-                <div className="flex items-center justify-center text-xs md:text-base py-4 md:py-2">
+                <div className="flex items-center justify-center text-xs md:text-base py-2">
                   <p className="text-sm font-semibold">
                     También puedes continuar
                   </p>
@@ -156,9 +159,12 @@ const Login = () => {
 
         <div className="flex flex-col items-center mt-6 font-poppins gap-3">
           <p className="text-sm text-black/80">Eres profesional inmobiliario</p>
-          <p className="text-sm text-blue-600 font-semibold hover:underline cursor-pointer select-none">
+          <Link
+            className="text-sm text-blue-600 font-semibold hover:underline cursor-pointer select-none"
+            to={"/nuevo-profesional"}
+          >
             Consulta los servicios para profesionales
-          </p>
+          </Link>
         </div>
       </div>
 

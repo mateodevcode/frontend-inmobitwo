@@ -3,7 +3,7 @@ import { useAppContext } from "@/context/AppContext.js";
 import useAuth from "@/hooks/useAuth.js";
 import { Link } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
-import Logo from "../logo/Logo";
+import Logo from "@/components/logo/Logo";
 
 const Registro = () => {
   const { handleRegistro, handleChange, formDataUsuario } = useAuth();

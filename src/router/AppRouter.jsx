@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext.js";
 import { useTenant } from "@/context/TenantContext.js";
 import { useEffect, useRef } from "react";
-import useTracking from "../hooks/useTracking";
+import useTracking from "@/hooks/useTracking";
 
 import { RutaPrivada, RutaAdmin, RutaPublica } from "@/router/guards.jsx";
 import {
@@ -15,26 +15,28 @@ import {
 import Home from "@/pages/Home.jsx";
 import Admin from "@/pages/Admin.jsx";
 import NotFound from "@/pages/NotFound.jsx";
-import Login from "@/components/login/Login.jsx";
-import Registro from "@/components/registro/Registro.jsx";
+import Login from "@/pages/login/Login.jsx";
+import Registro from "@/pages/registro/Registro.jsx";
 import PublicarAnuncio from "@/pages/PublicarAnuncio.jsx";
 import InfoPublicarAnuncio from "@/pages/publicar-anuncio/InfoPublicarAnuncio.jsx";
 import MisAnuncios from "@/pages/MisAnuncios.jsx";
 import Anuncio from "@/pages/Anuncio.jsx";
 import MiPerfil from "@/pages/MiPerfil.jsx";
 import SeguridadAcceso from "@/pages/SeguridadAcceso";
-import Leads from "../pages/Leads";
-import Logs from "../pages/Logs";
-import ListaPruebaPropiedades from "../pages/ListaPruebaPropiedades";
-import PagePropiedadId from "../pages/PagePropiedadId";
-import MisFavoritos from "../pages/MisFavoritos";
-import AdminRutasPage from "../pages/admin/AdminRutasPages";
-import PageInicio from "../pages/inicio/PagePrincipal";
-import ListaPropiedades from "../pages/lista-propiedades/ListaPropiedades";
-import SeleccionarZonaPage from "../features/seleccionar-zona/index.jsx";
-import MapaInmueblesPage from "../pages/MapaInmueblesPage.jsx";
-import PageAnuncio from "../pages/anuncio/PageAnuncio.jsx";
-import FotoVisor from "../pages/anuncio/FotoVisor.jsx";
+import Leads from "@/pages/Leads";
+import Logs from "@/pages/Logs";
+import ListaPruebaPropiedades from "@/pages/ListaPruebaPropiedades";
+import PagePropiedadId from "@/pages/PagePropiedadId";
+import MisFavoritos from "@/pages/MisFavoritos";
+import AdminRutasPage from "@/pages/admin/AdminRutasPages";
+import PageInicio from "@/pages/inicio/PagePrincipal";
+import ListaPropiedades from "@/pages/lista-propiedades/ListaPropiedades";
+import SeleccionarZonaPage from "@/features/seleccionar-zona/index.jsx";
+import MapaInmueblesPage from "@/pages/MapaInmueblesPage.jsx";
+import PageAnuncio from "@/pages/anuncio/PageAnuncio.jsx";
+import FotoVisor from "@/pages/anuncio/FotoVisor.jsx";
+import OlvidastePassword from "../pages/olvidaste-tu-password/OlvidastePassword";
+import NuevoProfesional from "../pages/nuevo-profesional/NuevoProfesional";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -69,6 +71,7 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Rutas abiertas */}
         <Route path="/lista-propiedades" element={<ListaPruebaPropiedades />} />
         <Route path="/" element={<PageInicio />} />
         <Route path="/" element={<PageInicio />} />
@@ -80,15 +83,11 @@ const AppRouter = () => {
           element={<InfoPublicarAnuncio />}
         />
 
-        {/* 
-        <Route
-          path="/info/publicar-anuncio"
-          element={
-            <RutaPrivada>
-              <InfoPublicarAnuncio />
-            </RutaPrivada>
-          }
-        /> */}
+        {/* Pendiente de crear */}
+        <Route path="/olvidaste-tu-password" element={<OlvidastePassword />} />
+        <Route path="/nuevo-profesional" element={<NuevoProfesional />} />
+        {/* Rutas abiertas */}
+
         <Route
           path="/info/publicar-anuncio/publicar"
           element={

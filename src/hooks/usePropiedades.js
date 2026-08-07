@@ -7,6 +7,61 @@ import { useNavigate } from "react-router-dom";
 import useResetForm from "@/hooks/useResetForm";
 import { apiBackendFormData } from "@/api/apiBackendFormData.js";
 
+// Agrega a un FormData todos los campos del schema v5.0 (Colombia).
+// Omite valores vacíos para no enviar "0" o "" innecesarios al backend.
+function appendCamposPropiedad(formData, datos) {
+  const campos = [
+    "operation_type_id",
+    "property_type_id",
+    "condition_type_id",
+    "country_id",
+    "state_id",
+    "city_id",
+    "barrio_id",
+    "direccion",
+    "numero_direccion",
+    "latitude",
+    "longitude",
+    "estrato",
+    "cedula_catastral",
+    "matricula_inmobiliaria",
+    "description",
+    "precio",
+    "administracion",
+    "constructed_area",
+    "private_area",
+    "plot_area",
+    "room_count",
+    "bedroom_count",
+    "bathroom_count",
+    "social_bathroom_count",
+    "construction_year",
+    "antiguedad_anios",
+    "is_new_construction",
+    "parqueadero_tipo",
+    "parqueadero_modo",
+    "parking_space_count",
+    "parking_space_included",
+    "parking_space_price",
+    "tiene_agua",
+    "tiene_luz",
+    "tiene_gas",
+    "tiene_alcantarillado",
+    "has_elevator",
+    "has_swimming_pool",
+    "has_gym",
+    "has_security_24h",
+    "has_air_conditioning",
+    "is_furnished",
+    "zona",
+  ];
+  for (const campo of campos) {
+    const valor = datos?.[campo];
+    if (valor === undefined || valor === null || valor === "") continue;
+    formData.append(campo, valor);
+  }
+}
+
 const usePropiedades = () => {
   const {
     setPropiedades,
@@ -95,8 +150,9 @@ const usePropiedades = () => {
       // DATOS
       // ========================================
       formData.append("titulo", formDataPropiedad.titulo);
-      formData.append("estado", formDataPropiedad.estado || "disponible");
+      formData.append("estado", formDataPropiedad.estado || "publicado");
       formData.append("publicado_por_id", usuario?.id);
+      appendCamposPropiedad(formData, formDataPropiedad);
 
       if (
         formDataPropiedad.organizacion_id &&
@@ -148,7 +204,7 @@ const usePropiedades = () => {
   // ok loader
   // pendiente de revision
   // ─────────────────────────────────────────────
-  const publicarDataAnuncio = async (e, setLoading) => {
+  const publicarDataAnuncio = async (e, setLoading, caracteristicasSeleccionadas = []) => {
     e.preventDefault();
 
     try {
@@ -157,23 +213,27 @@ const usePropiedades = () => {
       const formData = new FormData();
 
       // ========================================
-      // DATOS
+      // DATOS (schema v5.0: IDs de catálogos + campos Colombia)
       // ========================================
-      formData.append("tipo", formDataPropiedad.tipo);
-      formData.append("operacion", formDataPropiedad.operacion || "venta");
+      formData.append(
+        "operation_type_id",
+        formDataPropiedad.operation_type_id || "1",
+      );
+      formData.append(
+        "property_type_id",
+        formDataPropiedad.property_type_id || "1",
+      );
       formData.append("country_id", formDataPropiedad.country_id);
       formData.append("state_id", formDataPropiedad.state_id);
       formData.append("city_id", formDataPropiedad.city_id);
+      formData.append("barrio_id", formDataPropiedad.barrio_id);
       formData.append("direccion", formDataPropiedad.direccion);
       formData.append("numero_direccion", formDataPropiedad.numero_direccion);
       formData.append("latitude", formDataPropiedad.latitude);
       formData.append("longitude", formDataPropiedad.longitude);
-      formData.append("estado", formDataPropiedad.estado || "disponible");
+      formData.append("estado", formDataPropiedad.estado || "publicado");
       formData.append("publicado_por_id", usuario?.id);
-
-      if (formDataPropiedad.precio) {
-        formData.append("precio", formDataPropiedad.precio);
-      }
+      appendCamposPropiedad(formData, formDataPropiedad);
 
       if (
         formDataPropiedad.organizacion_id &&
@@ -194,7 +254,24 @@ const usePropiedades = () => {
       const { success, message, error, data: nuevaPropiedad } = data;
 
       if (success) {
-        // await refreshPropiedades();
+        // Características N:M (feature_catalog) — segunda llamada
+        if (nuevaPropiedad?.id && caracteristicasSeleccionadas.length > 0) {
+          try {
+            await apiBackend(
+              `/propiedades/${nuevaPropiedad.id}/caracteristicas`,
+              "POST",
+              {
+                features: caracteristicasSeleccionadas.map((id) => ({
+                  feature_id: id,
+                  bool_value: true,
+                })),
+              },
+            );
+          } catch (featError) {
+            console.warn("⚠️ No se guardaron las características:", featError);
+          }
+        }
+
         toast.success(message);
         resetFormDataPropiedad();
         setOpenModalAgregarPropiedad(false);
@@ -595,6 +672,28 @@ const usePropiedades = () => {
     }
   }, []);
 
+  // --------------------------------
+  // Características N:M (feature_catalog)
+  // --------------------------------
+  const cargarCaracteristicasPropiedad = async (propiedadId) => {
+    try {
+      const res = await apiBackend(`/propiedades/${propiedadId}/caracteristicas`);
+      return res.data || {};
+    } catch (error) {
+      console.error("Error cargando características:", error);
+      return {};
+    }
+  };
+
+  const guardarCaracteristicasPropiedad = async (propiedadId, features) => {
+    const res = await apiBackend(
+      `/propiedades/${propiedadId}/caracteristicas`,
+      "POST",
+      { features },
+    );
+    return res;
+  };
+
   return {
     actualizarPropiedad,
     eliminarPropiedad,
@@ -604,6 +703,10 @@ const usePropiedades = () => {
     handleChangeFile,
     handleChange,
     publicarDataAnuncio,
+
+    // Características N:M
+    cargarCaracteristicasPropiedad,
+    guardarCaracteristicasPropiedad,
 
     // Paso 3: fotos del anuncio
     subirFotosAnuncio,

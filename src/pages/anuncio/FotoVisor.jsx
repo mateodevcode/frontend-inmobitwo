@@ -133,11 +133,16 @@ export default function FotoVisor() {
   const isFavorited = estaEnFavoritos(favoritos, inmueble.id);
 
   const specsLinea = [
-    inmueble.area_m2 ? `${inmueble.area_m2} m²` : null,
-    inmueble.habitaciones ? `${inmueble.habitaciones} hab.` : null,
-    inmueble.planta
-      ? `${inmueble.planta} planta ${inmueble.exterior ? "exterior" : "interior"}${inmueble.ascensor ? " con ascensor" : ""}`
+    inmueble.constructed_area
+      ? `${inmueble.constructed_area} m²`
+      : inmueble.private_area
+        ? `${inmueble.private_area} m²`
+        : null,
+    inmueble.bedroom_count != null ? `${inmueble.bedroom_count} alc.` : null,
+    inmueble.floor
+      ? `${inmueble.floor} ${inmueble.has_elevator ? "con ascensor" : ""}`
       : null,
+    inmueble.estrato != null ? `Estrato ${inmueble.estrato}` : null,
   ].filter(Boolean);
 
   const handleNavegar = (direccion) => {

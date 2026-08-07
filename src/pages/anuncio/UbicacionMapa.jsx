@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react";
 import * as maplibregl from "maplibre-gl";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 
 export default function UbicacionMapa({ lat, lng }) {
   const mapContainerRef = useRef(null);
   const instanceRef = useRef(null);
   const coordsRef = useRef({ lat, lng });
 
-  useEffect(() => { coordsRef.current = { lat, lng }; }, [lat, lng]);
+  useEffect(() => {
+    coordsRef.current = { lat, lng };
+  }, [lat, lng]);
 
   useEffect(() => {
     if (!lat || !lng || instanceRef.current) return;
@@ -15,7 +18,13 @@ export default function UbicacionMapa({ lat, lng }) {
       container: mapContainerRef.current,
       style: {
         version: 8,
-        sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256 } },
+        sources: {
+          osm: {
+            type: "raster",
+            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256,
+          },
+        },
         layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
       },
       center: [lng, lat],
@@ -23,7 +32,10 @@ export default function UbicacionMapa({ lat, lng }) {
       attributionControl: false,
     });
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+    map.addControl(
+      new maplibregl.NavigationControl({ showCompass: false }),
+      "bottom-right",
+    );
 
     const el = document.createElement("div");
     el.innerHTML = `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#e6007a"/><circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>`;
@@ -71,9 +83,9 @@ export default function UbicacionMapa({ lat, lng }) {
       </div>
       <button
         onClick={handleAmpliar}
-        className="text-sm font-semibold text-blue-600 hover:underline mt-2"
+        className="text-sm text-blue-600 hover:underline mt-2 flex items-center gap-2 font-semibold font-montserrat"
       >
-        🔍 Ampliar mapa
+        <BsArrowsAngleExpand /> Ampliar mapa
       </button>
     </div>
   );

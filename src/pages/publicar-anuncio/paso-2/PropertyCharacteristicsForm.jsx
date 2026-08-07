@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Field,
   Label,
@@ -6,19 +6,15 @@ import {
   Input,
   Textarea,
   Checkbox,
-  RadioGroup,
-  Radio,
   Listbox,
   ListboxButton,
   ListboxOptions,
   ListboxOption,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
 } from "@headlessui/react";
 import { ChevronDown, Minus, Plus, Info } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import usePropiedades from "@/hooks/usePropiedades";
+import { apiBackend } from "@/api/apiBackend";
 
 /* ============================================================
    PIEZAS REUTILIZABLES
@@ -58,7 +54,7 @@ function CheckboxItem({ checked, onChange, label, description }) {
   );
 }
 
-// ---- Grupo de checkboxes (selección múltiple, no es RadioGroup) ----
+// ---- Grupo de checkboxes (selección múltiple) ----
 function CheckboxGroup({ title, options, values, onToggle }) {
   return (
     <div>
@@ -69,38 +65,11 @@ function CheckboxGroup({ title, options, values, onToggle }) {
             key={opt.id}
             checked={values.includes(opt.id)}
             onChange={(checked) => onToggle(opt.id, checked)}
-            label={opt.label}
+            label={opt.label_es || opt.label}
             description={opt.description}
           />
         ))}
       </div>
-    </div>
-  );
-}
-
-// ---- Radio simple (un solo título, sin descripción) ----
-function SimpleRadioGroup({ title, options, value, onChange }) {
-  return (
-    <div>
-      <h3 className="mb-3 text-base font-semibold text-slate-900">{title}</h3>
-      <RadioGroup
-        value={value}
-        onChange={onChange}
-        className="flex flex-col gap-3"
-      >
-        {options.map((opt) => (
-          <Radio
-            key={opt.id}
-            value={opt.id}
-            className="group flex cursor-pointer items-center gap-3"
-          >
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-slate-900">
-              <span className="h-2.5 w-2.5 rounded-full bg-slate-900 opacity-0 group-data-checked:opacity-100" />
-            </span>
-            <span className="text-base text-slate-900">{opt.label}</span>
-          </Radio>
-        ))}
-      </RadioGroup>
     </div>
   );
 }
@@ -144,51 +113,59 @@ function NumberStepper({ value, onChange, min = 0, max = 99 }) {
   );
 }
 
-// ---- Input con sufijo de unidad (m², kWh/m² año, euros/mes...) ----
+// ---- Input con sufijo de unidad (m², COP...) ----
 function UnitInput({ value, onChange, unit, placeholder }) {
   return (
     <div className="relative">
       <Input
         type="text"
         inputMode="decimal"
-        value={value}
+        value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="block w-full rounded-md border border-slate-300 px-3 py-3 pr-20 text-base text-slate-900 focus:border-slate-900 focus:outline-none"
       />
-      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-base text-slate-500">
-        {unit}
-      </span>
+      {unit && (
+        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-base text-slate-500">
+          {unit}
+        </span>
+      )}
     </div>
   );
 }
 
-// ---- Select simple ----
-function SimpleSelect({ options, value, onChange }) {
+// ---- Select simple (opciones {id, label}) ----
+function SimpleSelect({
+  options,
+  value,
+  onChange,
+  placeholder = "Selecciona",
+}) {
+  const selected = options.find((o) => String(o.id) === String(value));
   return (
     <Listbox value={value} onChange={onChange}>
       {({ open }) => (
         <div className="relative">
           <ListboxButton
-            className={`flex w-full items-center justify-between rounded-md border bg-white px-4 py-3 text-left text-base text-slate-900 focus:outline-none ${
+            className={`flex w-96 items-center justify-between rounded-md border bg-white px-4 py-3 text-left text-base text-slate-900 focus:outline-none ${
               open ? "border-slate-900" : "border-slate-300"
             }`}
           >
-            <span>{value}</span>
+            <span>{selected ? selected.label : placeholder}</span>
             <ChevronDown className="h-4 w-4 shrink-0 text-slate-700" />
           </ListboxButton>
           <ListboxOptions
             anchor="bottom"
             transition
-            className="z-50 mt-1 max-h-64 overflow-y-auto rounded-md border border-slate-200 bg-white shadow-lg w-(--button-width)] transition duration-100 ease-out data-leave:opacity-0 data-closed:opacity-0"
+            className="z-50 mt-1 max-h-64 overflow-y-auto rounded-md border border-slate-200 bg-white shadow-lg w-(--button-width)] transition duration-100 ease-out data-leave:opacity-0 data-closed:opacity-0 w-96"
           >
             {options.map((opt) => (
               <ListboxOption
-                key={opt}
-                value={opt}
+                key={opt.id}
+                value={opt.id}
                 className="cursor-pointer px-4 py-2.5 text-base text-slate-900 data-focus:bg-slate-50 data-selected:font-semibold"
               >
-                {opt}
+                {opt.label}
               </ListboxOption>
             ))}
           </ListboxOptions>
@@ -208,467 +185,431 @@ function InfoBanner({ children }) {
   );
 }
 
-/* ============================================================
-   DATOS DE EJEMPLO
-   ============================================================ */
+// ---- Sección del formulario ----
+function Seccion({ titulo, children }) {
+  return (
+    <div className="flex flex-col gap-6">
+      <h2 className="text-2xl font-bold text-slate-900">{titulo}</h2>
+      {children}
+    </div>
+  );
+}
 
-const TIPO_PISO = [
-  { id: "piso", label: "Piso" },
-  { id: "atico", label: "Ático" },
-  { id: "duplex", label: "Dúplex" },
-  { id: "estudio", label: "Estudio / loft" },
+// ---- Campo con label ----
+function Campo({ label, descripcion, children }) {
+  return (
+    <Field>
+      <Label className="mb-2 block text-base font-semibold text-slate-900">
+        {label}
+      </Label>
+      {children}
+      {descripcion && (
+        <Description className="mt-2 block text-sm text-slate-500">
+          {descripcion}
+        </Description>
+      )}
+    </Field>
+  );
+}
+
+const ESTRATOS = [1, 2, 3, 4, 5, 6];
+const PARQUEADERO_TIPOS = [
+  { id: "cubierto", label: "Cubierto" },
+  { id: "descubierto", label: "Descubierto" },
 ];
-
-const ESTADO = [
-  { id: "reformar", label: "A reformar" },
-  { id: "buen_estado", label: "Buen estado" },
+const PARQUEADERO_MODOS = [
+  { id: "privado", label: "Privado" },
+  { id: "comunal", label: "Comunal" },
 ];
-
-const FACHADA = [
-  { id: "exterior", label: "Exterior" },
-  { id: "interior", label: "Interior" },
+const ZONAS = [
+  { id: "residencial", label: "Residencial" },
+  { id: "comercial", label: "Comercial" },
+  { id: "industrial", label: "Industrial" },
+  { id: "mixta", label: "Mixta" },
+  { id: "campestre", label: "Campestre" },
+  { id: "rural", label: "Rural" },
 ];
-
-const EQUIPAMIENTO = [
-  { id: "sin_nada", label: "Cocina no equipada y casa sin muebles" },
-  { id: "cocina_eq", label: "Cocina equipada y casa sin muebles" },
-  { id: "cocina_muebles", label: "Cocina equipada y casa amueblada" },
-];
-
-const ASCENSOR = [
-  { id: "si", label: "Sí tiene" },
-  { id: "no", label: "No tiene" },
-];
-
-const ORIENTACION = [
-  { id: "norte", label: "Norte" },
-  { id: "sur", label: "Sur" },
-  { id: "este", label: "Este" },
-  { id: "oeste", label: "Oeste" },
-];
-
-const VIVIENDA_FEATURES = [
-  { id: "armarios", label: "Armarios empotrados" },
-  { id: "aire", label: "Aire acondicionado" },
-  { id: "terraza", label: "Terraza" },
-  { id: "balcon", label: "Balcón" },
-  { id: "trastero", label: "Trastero" },
-  { id: "garaje", label: "Garaje" },
-];
-
-const EDIFICIO_FEATURES = [
-  { id: "piscina", label: "Piscina" },
-  { id: "zona_verde", label: "Zona verde" },
-];
-
-const MOVILIDAD_FEATURES = [
-  {
-    id: "acceso_exterior",
-    label:
-      "El acceso exterior a la vivienda está adaptado para silla de ruedas",
-    description:
-      "Tiene rampas y ascensor de 6 plazas o la vivienda está a pie de calle sin bordillos.",
-  },
-  {
-    id: "interior",
-    label: "El interior de la vivienda está adaptado para silla de ruedas",
-    description:
-      "Puertas y pasillos amplios, barras abatibles, suelos antideslizantes…",
-  },
-];
-
-const RATING_LETTERS = ["A", "B", "C", "D", "E", "F", "G"];
 
 /* ============================================================
-   COMPONENTE PRINCIPAL
+   COMPONENTE PRINCIPAL — FORMULARIO COLOMBIA v5.0
    ============================================================ */
 
 export default function PropertyCharacteristicsForm() {
-  const { setContentNumber, formDataPropiedad, setFormDataPropiedad } =
-    useAppContext();
+  const { formDataPropiedad, setFormDataPropiedad } = useAppContext();
   const { publicarDataAnuncio } = usePropiedades();
   const [loading, setLoading] = useState(false);
-  const [tipoPiso, setTipoPiso] = useState([]);
-  const [estado, setEstado] = useState(null);
-  const [m2Construidos, setM2Construidos] = useState("");
-  const [m2Utiles, setM2Utiles] = useState("");
 
-  const [habitaciones, setHabitaciones] = useState(null);
-  const [banos, setBanos] = useState(null);
-  const [fachada, setFachada] = useState(null);
-  const [equipamiento, setEquipamiento] = useState(null);
+  // Catálogos cargados dinámicamente desde el backend
+  const [operaciones, setOperaciones] = useState([]);
+  const [tiposInmueble, setTiposInmueble] = useState([]);
+  const [estadosConservacion, setEstadosConservacion] = useState([]);
+  const [caracteristicas, setCaracteristicas] = useState({});
+  const [cargandoCatalogos, setCargandoCatalogos] = useState(true);
 
-  const [ascensor, setAscensor] = useState(null);
-  const [califEnergia, setCalifEnergia] = useState("B");
-  const [consumoEnergia, setConsumoEnergia] = useState("");
-  const [califEmisiones, setCalifEmisiones] = useState("C");
-  const [consumoEmisiones, setConsumoEmisiones] = useState("");
+  // Características N:M seleccionadas (ids de feature_catalog)
+  const [features, setFeatures] = useState([]);
 
-  const [orientacion, setOrientacion] = useState([]);
-  const [viviendaFeatures, setViviendaFeatures] = useState([]);
-  const [edificioFeatures, setEdificioFeatures] = useState([]);
+  useEffect(() => {
+    let activo = true;
+    Promise.all([
+      apiBackend("/catalogos/operaciones"),
+      apiBackend("/catalogos/tipos-inmueble"),
+      apiBackend("/catalogos/estados"),
+      apiBackend("/catalogos/caracteristicas"),
+    ])
+      .then(([ops, tipos, estados, feats]) => {
+        if (!activo) return;
+        setOperaciones(ops.success ? ops.data : []);
+        setTiposInmueble(tipos.success ? tipos.data : []);
+        setEstadosConservacion(estados.success ? estados.data : []);
+        setCaracteristicas(feats.success ? feats.data : {});
+      })
+      .catch((err) => console.warn("⚠️ No se pudieron cargar catálogos:", err))
+      .finally(() => {
+        if (activo) setCargandoCatalogos(false);
+      });
+    return () => {
+      activo = false;
+    };
+  }, []);
 
-  const [maxInquilinos, setMaxInquilinos] = useState(null);
-  const [apropiadoNinos, setApropiadoNinos] = useState(false);
-  const [admiteMascotas, setAdmiteMascotas] = useState(false);
+  // Escribe un campo en formDataPropiedad
+  const setCampo = (campo) => (valor) =>
+    setFormDataPropiedad((prev) => ({ ...prev, [campo]: valor }));
 
-  const [movilidad, setMovilidad] = useState([]);
-
-  const [descripcion, setDescripcion] = useState("");
-
-  const toggleIn = (arr, setArr) => (id, checked) => {
-    setArr(checked ? [...arr, id] : arr.filter((x) => x !== id));
+  const toggleFeature = (id, checked) => {
+    setFeatures((prev) =>
+      checked ? [...prev, id] : prev.filter((x) => x !== id),
+    );
   };
+
+  const onSubmit = (e) => {
+    publicarDataAnuncio(e, setLoading, features);
+    document.getElementById("top-detalles")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const categorias = Object.keys(caracteristicas);
 
   return (
     <div className="flex max-w-2xl flex-col gap-10 font-montserrat">
-      {/* ---- Características del piso ---- */}
-      <div className="flex flex-col gap-7 mt-6">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Características del piso
-        </h2>
+      {/* ---- Datos generales ---- */}
+      <div className="mt-6 flex flex-col gap-7">
+        <Seccion titulo="Datos generales">
+          <Campo label="Tipo de operación">
+            <SimpleSelect
+              options={operaciones.map((o) => ({
+                id: o.id,
+                label: o.label_es,
+              }))}
+              value={formDataPropiedad.operation_type_id || ""}
+              onChange={setCampo("operation_type_id")}
+            />
+          </Campo>
 
-        <CheckboxGroup
-          title="Tipo de piso (opcional)"
-          options={TIPO_PISO}
-          values={tipoPiso}
-          onToggle={toggleIn(tipoPiso, setTipoPiso)}
-        />
+          <Campo label="Tipo de inmueble">
+            <SimpleSelect
+              options={tiposInmueble.map((t) => ({
+                id: t.id,
+                label: t.label_es,
+              }))}
+              value={formDataPropiedad.property_type_id || ""}
+              onChange={setCampo("property_type_id")}
+            />
+          </Campo>
 
-        <SimpleRadioGroup
-          title="Estado"
-          options={ESTADO}
-          value={estado}
-          onChange={setEstado}
-        />
+          <Campo label="Estado de conservación">
+            <SimpleSelect
+              options={estadosConservacion.map((e) => ({
+                id: e.id,
+                label: e.label_es,
+              }))}
+              value={formDataPropiedad.condition_type_id || ""}
+              onChange={setCampo("condition_type_id")}
+            />
+          </Campo>
 
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            m² construidos
-          </Label>
+          <Campo label="Estrato" descripcion="Estrato socioeconómico (1 al 6)">
+            <SimpleSelect
+              options={ESTRATOS.map((e) => ({ id: e, label: `Estrato ${e}` }))}
+              value={formDataPropiedad.estrato || ""}
+              onChange={setCampo("estrato")}
+            />
+          </Campo>
+
+          <Campo label="Zona" descripcion="Uso del suelo predominante">
+            <SimpleSelect
+              options={ZONAS}
+              value={formDataPropiedad.zona || ""}
+              onChange={setCampo("zona")}
+            />
+          </Campo>
+        </Seccion>
+      </div>
+
+      {/* ---- Áreas y distribución ---- */}
+      <Seccion titulo="Áreas y distribución">
+        <Campo label="Área construida (m²)">
           <UnitInput
-            value={m2Construidos}
-            onChange={setM2Construidos}
+            value={formDataPropiedad.constructed_area}
+            onChange={setCampo("constructed_area")}
             unit="m²"
           />
-        </Field>
+        </Campo>
 
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            m² útiles (opcional)
-          </Label>
-          <UnitInput value={m2Utiles} onChange={setM2Utiles} unit="m²" />
-        </Field>
-
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Número de habitaciones en la vivienda
-          </Label>
-          <NumberStepper value={habitaciones} onChange={setHabitaciones} />
-        </Field>
-
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Número de baños y aseos
-          </Label>
-          <NumberStepper value={banos} onChange={setBanos} />
-        </Field>
-
-        <SimpleRadioGroup
-          title="Fachada del inmueble"
-          options={FACHADA}
-          value={fachada}
-          onChange={setFachada}
-        />
-
-        <SimpleRadioGroup
-          title="Equipamiento"
-          options={EQUIPAMIENTO}
-          value={equipamiento}
-          onChange={setEquipamiento}
-        />
-
-        <SimpleRadioGroup
-          title="¿Tiene ascensor?"
-          options={ASCENSOR}
-          value={ascensor}
-          onChange={setAscensor}
-        />
-      </div>
-
-      {/* ---- Certificado energético ---- */}
-      <div className="flex flex-col gap-5">
-        <div>
-          <h2 className="mb-2 text-xl font-bold text-slate-900">
-            Certificado energético
-          </h2>
-          <a href="#" className="text-base text-blue-600 hover:underline">
-            ¿Qué información debes rellenar?
-          </a>
-        </div>
-
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Calificación de consumo de energía
-          </Label>
-          <SimpleSelect
-            options={RATING_LETTERS}
-            value={califEnergia}
-            onChange={setCalifEnergia}
-          />
-        </Field>
-
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Consumo de energía (opcional)
-          </Label>
+        <Campo label="Área privada (m²)" descripcion="Opcional">
           <UnitInput
-            value={consumoEnergia}
-            onChange={setConsumoEnergia}
-            unit="kWh/m² año"
+            value={formDataPropiedad.private_area}
+            onChange={setCampo("private_area")}
+            unit="m²"
           />
-        </Field>
+        </Campo>
 
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Calificación de emisiones
-          </Label>
-          <SimpleSelect
-            options={RATING_LETTERS}
-            value={califEmisiones}
-            onChange={setCalifEmisiones}
+        <Campo label="Ambientes (habitaciones totales)">
+          <NumberStepper
+            value={formDataPropiedad.room_count}
+            onChange={setCampo("room_count")}
           />
-        </Field>
+        </Campo>
 
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Consumo de emisiones (opcional)
-          </Label>
+        <Campo label="Alcobas">
+          <NumberStepper
+            value={formDataPropiedad.bedroom_count}
+            onChange={setCampo("bedroom_count")}
+          />
+        </Campo>
+
+        <Campo label="Baños completos">
+          <NumberStepper
+            value={formDataPropiedad.bathroom_count}
+            onChange={setCampo("bathroom_count")}
+          />
+        </Campo>
+
+        <Campo label="Baño social">
+          <NumberStepper
+            value={formDataPropiedad.social_bathroom_count}
+            onChange={setCampo("social_bathroom_count")}
+          />
+        </Campo>
+      </Seccion>
+
+      {/* ---- Construcción ---- */}
+      <Seccion titulo="Construcción">
+        <Campo label="Año de construcción" descripcion="Opcional">
           <UnitInput
-            value={consumoEmisiones}
-            onChange={setConsumoEmisiones}
-            unit="kg CO2/m² año"
+            value={formDataPropiedad.construction_year}
+            onChange={setCampo("construction_year")}
+            unit={null}
+            placeholder="Ej: 2015"
           />
-        </Field>
-      </div>
+        </Campo>
 
-      {/* ---- Orientación y extras ---- */}
-      <div className="flex flex-col gap-7">
-        <CheckboxGroup
-          title="Orientación (opcional)"
-          options={ORIENTACION}
-          values={orientacion}
-          onToggle={toggleIn(orientacion, setOrientacion)}
+        <Campo label="Piso" descripcion="Ej: 3, PH, Bajo">
+          <UnitInput
+            value={formDataPropiedad.floor}
+            onChange={setCampo("floor")}
+            unit={null}
+            placeholder="Ej: 3"
+          />
+        </Campo>
+
+        <Campo label="Número interior / apartamento" descripcion="Opcional">
+          <UnitInput
+            value={formDataPropiedad.interior_apartment_number}
+            onChange={setCampo("interior_apartment_number")}
+            unit={null}
+            placeholder="Ej: 301, A"
+          />
+        </Campo>
+
+        <CheckboxItem
+          checked={!!formDataPropiedad.is_new_construction}
+          onChange={setCampo("is_new_construction")}
+          label="Es obra nueva / proyecto en preventa"
         />
+      </Seccion>
 
-        <CheckboxGroup
-          title="Otras características de tu vivienda"
-          options={VIVIENDA_FEATURES}
-          values={viviendaFeatures}
-          onToggle={toggleIn(viviendaFeatures, setViviendaFeatures)}
+      {/* ---- Parqueadero ---- */}
+      <Seccion titulo="Parqueadero">
+        <Campo label="Tipo de parqueadero">
+          <SimpleSelect
+            options={PARQUEADERO_TIPOS}
+            value={formDataPropiedad.parqueadero_tipo || ""}
+            onChange={setCampo("parqueadero_tipo")}
+          />
+        </Campo>
+
+        <Campo label="Modo de parqueadero">
+          <SimpleSelect
+            options={PARQUEADERO_MODOS}
+            value={formDataPropiedad.parqueadero_modo || ""}
+            onChange={setCampo("parqueadero_modo")}
+          />
+        </Campo>
+
+        <Campo label="Número de parqueaderos">
+          <NumberStepper
+            value={formDataPropiedad.parking_space_count}
+            onChange={setCampo("parking_space_count")}
+          />
+        </Campo>
+
+        <CheckboxItem
+          checked={!!formDataPropiedad.parking_space_included}
+          onChange={setCampo("parking_space_included")}
+          label="Parqueadero incluido en el precio"
         />
+      </Seccion>
 
-        <CheckboxGroup
-          title="Otras características de tu edificio"
-          options={EDIFICIO_FEATURES}
-          values={edificioFeatures}
-          onToggle={toggleIn(edificioFeatures, setEdificioFeatures)}
+      {/* ---- Servicios públicos ---- */}
+      <Seccion titulo="Servicios públicos">
+        <CheckboxItem
+          checked={!!formDataPropiedad.tiene_agua}
+          onChange={setCampo("tiene_agua")}
+          label="Agua"
         />
-      </div>
+        <CheckboxItem
+          checked={!!formDataPropiedad.tiene_luz}
+          onChange={setCampo("tiene_luz")}
+          label="Energía eléctrica"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.tiene_gas}
+          onChange={setCampo("tiene_gas")}
+          label="Gas natural"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.tiene_alcantarillado}
+          onChange={setCampo("tiene_alcantarillado")}
+          label="Alcantarillado"
+        />
+      </Seccion>
 
-      {/* ---- ¿Qué inquilinos buscas? ---- */}
-      <div className="flex flex-col gap-6">
-        <div>
-          <h2 className="mb-2 text-2xl font-bold text-slate-900">
-            ¿Qué inquilinos buscas?
-          </h2>
-          <p className="text-base text-slate-700 mt-4">
-            Esta sección ayuda a que te contacten los inquilinos que más cuadran
-            con tu vivienda.
+      {/* ---- Comodidades ---- */}
+      <Seccion titulo="Comodidades">
+        <CheckboxItem
+          checked={!!formDataPropiedad.has_elevator}
+          onChange={setCampo("has_elevator")}
+          label="Ascensor"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.has_swimming_pool}
+          onChange={setCampo("has_swimming_pool")}
+          label="Piscina"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.has_gym}
+          onChange={setCampo("has_gym")}
+          label="Gimnasio"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.has_security_24h}
+          onChange={setCampo("has_security_24h")}
+          label="Seguridad 24 horas"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.has_air_conditioning}
+          onChange={setCampo("has_air_conditioning")}
+          label="Aire acondicionado"
+        />
+        <CheckboxItem
+          checked={!!formDataPropiedad.is_furnished}
+          onChange={setCampo("is_furnished")}
+          label="Amoblado / Equipado"
+        />
+      </Seccion>
+
+      {/* ---- Características N:M (feature_catalog) ---- */}
+      <Seccion titulo="Características del inmueble">
+        {cargandoCatalogos ? (
+          <p className="text-sm text-slate-500">Cargando características…</p>
+        ) : categorias.length === 0 ? (
+          <p className="text-sm text-slate-500">
+            No hay características disponibles.
           </p>
-        </div>
+        ) : (
+          categorias.map((categoria) => (
+            <CheckboxGroup
+              key={categoria}
+              title={categoria}
+              options={caracteristicas[categoria]}
+              values={features}
+              onToggle={toggleFeature}
+            />
+          ))
+        )}
+      </Seccion>
 
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Número máximo de inquilinos (opcional)
-          </Label>
-          <NumberStepper value={maxInquilinos} onChange={setMaxInquilinos} />
-          <Description className="mt-2 block text-sm text-slate-500">
-            Si no quieres poner máximo, déjalo vacío
-          </Description>
-        </Field>
-
-        <CheckboxGroup
-          title="¿Apropiado para niños (0-12 años)?"
-          options={[
-            { id: "ninos", label: "La vivienda es apropiada para niños" },
-          ]}
-          values={apropiadoNinos ? ["ninos"] : []}
-          onToggle={(_, checked) => setApropiadoNinos(checked)}
-        />
-
-        <div>
-          <div className="mb-3 flex items-center gap-2">
-            <h3 className="text-base font-semibold text-slate-900">
-              ¿Admites mascotas?
-            </h3>
-            <button
-              type="button"
-              title="Indica si en tu anuncio se permiten mascotas."
-              aria-label="Más información sobre mascotas"
-              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-            >
-              i
-            </button>
-          </div>
-          <CheckboxItem
-            checked={admiteMascotas}
-            onChange={setAdmiteMascotas}
-            label="Sí, admito mascotas"
+      {/* ---- Identificación catastral ---- */}
+      <Seccion titulo="Identificación (opcional)">
+        <Campo label="Cédula catastral">
+          <UnitInput
+            value={formDataPropiedad.cedula_catastral}
+            onChange={setCampo("cedula_catastral")}
+            unit={null}
           />
-        </div>
+        </Campo>
 
-        <div>
-          <div className="mb-3 flex items-center gap-2">
-            <h3 className="text-base font-semibold text-slate-900">
-              ¿La vivienda está adaptada para personas con movilidad reducida?
-            </h3>
-            <button
-              type="button"
-              title="Marca las opciones que apliquen a tu vivienda."
-              aria-label="Más información sobre accesibilidad"
-              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white"
-            >
-              i
-            </button>
-          </div>
-          <div className="flex flex-col">
-            {MOVILIDAD_FEATURES.map((opt) => (
-              <CheckboxItem
-                key={opt.id}
-                checked={movilidad.includes(opt.id)}
-                onChange={(checked) =>
-                  setMovilidad(
-                    checked
-                      ? [...movilidad, opt.id]
-                      : movilidad.filter((x) => x !== opt.id),
-                  )
-                }
-                label={opt.label}
-                description={opt.description}
-              />
-            ))}
-          </div>
-        </div>
+        <Campo label="Matrícula inmobiliaria">
+          <UnitInput
+            value={formDataPropiedad.matricula_inmobiliaria}
+            onChange={setCampo("matricula_inmobiliaria")}
+            unit={null}
+          />
+        </Campo>
+      </Seccion>
 
-        {/* ---- Disclosure: Añadir más detalles ---- */}
-        <Disclosure>
-          {({ open }) => (
-            <div>
-              <DisclosureButton className="flex items-center gap-1.5 text-base font-semibold text-blue-600 hover:underline">
-                <span>Añadir más detalles (opcional)</span>
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
-                />
-              </DisclosureButton>
-              <DisclosurePanel className="mt-4 flex flex-col gap-4 border-l-2 border-slate-200 pl-4">
-                <p className="text-sm text-slate-500">
-                  Aquí puedes añadir campos opcionales adicionales (referencia
-                  catastral, gastos de comunidad, año de construcción, etc.)
-                  según los necesite tu formulario real.
-                </p>
-              </DisclosurePanel>
-            </div>
-          )}
-        </Disclosure>
-      </div>
-
-      {/* ---- Precio del inmueble ---- */}
-      <div className="flex flex-col gap-3">
-        <h2 className="text-2xl font-semibold text-slate-900">
-          Precio del inmueble
-        </h2>
-
-        <Field>
-          <Label className="mb-2 block text-base font-semibold text-slate-900">
-            Precio
-          </Label>
+      {/* ---- Precio ---- */}
+      <Seccion titulo="Precio del inmueble">
+        <Campo label="Precio" descripcion="Precio en pesos colombianos (COP)">
           <UnitInput
             value={formDataPropiedad.precio || ""}
-            onChange={(v) =>
-              setFormDataPropiedad((prev) => ({ ...prev, precio: v }))
-            }
+            onChange={setCampo("precio")}
             unit="COP"
           />
-          <Description className="mt-2 block text-sm text-slate-500">
-            Precio en pesos colombianos
-          </Description>
-        </Field>
+        </Campo>
 
-        <div>
-          <h3 className="text-base font-semibold text-slate-900">
-            Fianza: 1 mes
-          </h3>
-          <p className="mt-1 text-base text-slate-700">
-            Para los alquileres residenciales (de vivienda habitual), la Ley de
-            Arrendamientos Urbanos (LAU), requiere un mes de fianza.
-          </p>
-        </div>
-      </div>
+        <Campo
+          label="Administración"
+          descripcion="Cuota mensual de administración (opcional)"
+        >
+          <UnitInput
+            value={formDataPropiedad.administracion}
+            onChange={setCampo("administracion")}
+            unit="COP"
+          />
+        </Campo>
+      </Seccion>
 
       {/* ---- Descripción del anuncio ---- */}
-      <div className="flex flex-col gap-4">
-        <div>
-          <h2 className="mb-2 text-2xl font-semibold text-slate-900">
-            Descripción del anuncio
-          </h2>
-          <p className="text-base text-slate-700 mt-4">
-            Aprovecha para comentar cosas que no te hayamos preguntado y no
-            estén en las fotos: el suelo de parqué, el tipo de calefacción,
-            ¿tiene tendedero?
-          </p>
-        </div>
-
+      <Seccion titulo="Descripción del anuncio">
         <InfoBanner>
           Los anuncios con comentarios racistas, homófobos y/o discriminatorios
           serán eliminados.
         </InfoBanner>
 
-        <Field>
-          <Label className="mb-2 flex items-center gap-2 text-base font-semibold text-slate-900">
-            <span aria-hidden="true">🇪🇸</span> En español
-          </Label>
+        <Campo label="Descripción">
           <Textarea
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
+            value={formDataPropiedad.description || ""}
+            onChange={(e) => setCampo("description")(e.target.value)}
             rows={5}
-            placeholder="Escribe aquí la descripción en español, más tarde podrás añadir otros idiomas."
+            placeholder="Describe el inmueble: zona, acabados, estado, cercanía a servicios…"
             className="block w-full resize-y rounded-md border border-slate-300 px-3 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
           />
-        </Field>
-
-        <p className="text-base text-slate-700">
-          Más tarde podrás añadir otros idiomas
-        </p>
-        <p className="text-base text-slate-700">
-          Las mayúsculas son más difíciles de leer, por lo que no permitimos
-          toda la descripción en mayúsculas.
-        </p>
+        </Campo>
 
         <button
           type="button"
-          onClick={(e) => {
-            publicarDataAnuncio(e, setLoading);
-            document.getElementById("top-detalles")?.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }}
-          className="w-full rounded-md bg-tercero px-6 py-3 text-base font-bold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none"
+          disabled={loading}
+          onClick={onSubmit}
+          className="w-full rounded-md bg-tercero px-6 py-3 text-base font-bold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
         >
-          Continuar a fotos del anuncio
+          {loading ? "Publicando…" : "Continuar a fotos del anuncio"}
         </button>
-      </div>
+      </Seccion>
     </div>
   );
 }

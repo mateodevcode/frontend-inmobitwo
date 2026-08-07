@@ -1,7 +1,6 @@
 import { AiOutlineEdit } from "react-icons/ai";
 import { FaArchway, FaMapMarkerAlt } from "react-icons/fa";
 import { GiHistogram } from "react-icons/gi";
-import { GoArrowDown } from "react-icons/go";
 import { ImImage } from "react-icons/im";
 import { IoArrowRedoOutline } from "react-icons/io5";
 import { Md3dRotation } from "react-icons/md";
@@ -75,16 +74,20 @@ const CardPrincipal = ({
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 font-montserrat">
-              Piso en venta en calle 17
+              {inmueble.titulo ||
+                `${inmueble.operacion || ""} · ${inmueble.tipo_inmueble || "Inmueble"} en ${inmueble.ciudad || ""}`}
             </h1>
             <div className="flex md:items-center items-start gap-2 md:flex-row flex-col">
               <p className="text-black/60 md:text-base text-sm">
-                Auditorio-Seminario-Parque de Invierno, Oviedo
+                {inmueble.barrio || inmueble.direccion || inmueble.ciudad}
+                {inmueble.departamento && `, ${inmueble.departamento}`}
               </p>
-              <div className="flex items-center gap-1 text-blue-600 hover:underline cursor-pointer select-none md:text-base text-sm">
-                <FaMapMarkerAlt className="" />
-                <span className="text-sm">Ver mapa</span>
-              </div>
+              {inmueble.latitude && inmueble.longitude && (
+                <div className="flex items-center gap-1 text-blue-600 hover:underline cursor-pointer select-none md:text-base text-sm">
+                  <FaMapMarkerAlt className="" />
+                  <span className="text-sm">Ver mapa</span>
+                </div>
+              )}
             </div>
             <p className="text-xs text-rose-600 mt-2">{tiempo}</p>
           </div>
@@ -95,20 +98,9 @@ const CardPrincipal = ({
             <p className="text-2xl font-bold text-gray-900 font-montserrat">
               {formatPrecioCompleto(inmueble.precio)}
             </p>
-            {inmueble.operacion === "alquiler" && (
+            {inmueble.operacion_slug === "arriendo" && (
               <p className="text-base text-gray-500">/mes</p>
             )}
-          </div>
-          <div className="flex items-center gap-1">
-            <p className="text-lg font-bold font-montserrat ml-2 text-red-600 line-through">
-              {formatPrecioCompleto(28000000)}
-            </p>
-            <div className="flex items-center text-red-600">
-              <GoArrowDown />
-              <p className="text-lg font-semibold font-montserrat ml-1">
-                {((inmueble.precio / 280000000) * 100).toFixed()} %
-              </p>
-            </div>
           </div>
         </div>
 
@@ -125,11 +117,32 @@ const CardPrincipal = ({
         </div>
 
         <div className="flex items-center gap-2 mt-4 md:text-base text-sm">
-          <span>90 m2</span>
-          <div className="w-px h-5 bg-black/40" />
-          <span>3 hab.</span>
-          <div className="w-px h-5 bg-black/40" />
-          <span>3° planta exterior con asensor</span>
+          {inmueble.constructed_area != null && (
+            <>
+              <span>{inmueble.constructed_area} m²</span>
+              <div className="w-px h-5 bg-black/40" />
+            </>
+          )}
+          {inmueble.bedroom_count != null && (
+            <>
+              <span>{inmueble.bedroom_count} alc.</span>
+              <div className="w-px h-5 bg-black/40" />
+            </>
+          )}
+          {inmueble.bathroom_count != null && (
+            <>
+              <span>{inmueble.bathroom_count} baños</span>
+              <div className="w-px h-5 bg-black/40" />
+            </>
+          )}
+          {inmueble.zona && (
+            <>
+              <span>{inmueble.zona}</span>
+              <div className="w-px h-5 bg-black/40" />
+            </>
+          )}
+          {inmueble.has_elevator && <span>con ascensor</span>}
+          {inmueble.estrato != null && <span>Estrato {inmueble.estrato}</span>}
         </div>
 
         {specsLinea.length > 0 && (

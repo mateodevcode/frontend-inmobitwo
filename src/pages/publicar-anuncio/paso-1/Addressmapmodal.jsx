@@ -28,6 +28,7 @@ export default function AddressMapModal({
   onConfirm,
   geocodeResult,
   fallbackPosition,
+  initialPosition,
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -35,9 +36,15 @@ export default function AddressMapModal({
   const positionRef = useRef(null);
 
   const initialLat =
-    geocodeResult?.latitude ?? fallbackPosition?.latitude ?? 40.4168;
+    initialPosition?.lat ??
+    geocodeResult?.latitude ??
+    fallbackPosition?.latitude ??
+    40.4168;
   const initialLng =
-    geocodeResult?.longitude ?? fallbackPosition?.longitude ?? -3.7038;
+    initialPosition?.lng ??
+    geocodeResult?.longitude ??
+    fallbackPosition?.longitude ??
+    -3.7038;
 
   const [position, setPosition] = useState({
     lat: initialLat,
@@ -46,9 +53,38 @@ export default function AddressMapModal({
 
   useEffect(() => {
     if (open) {
-      setPosition({ lat: initialLat, lng: initialLng });
+      const t = setTimeout(() => setPosition({ lat: initialLat, lng: initialLng }), 0);
+      return () => clearTimeout(t);
     }
   }, [open, initialLat, initialLng]);
+
+  function createMarker(map) {
+    const el = document.createElement("div");
+    el.innerHTML = pinSvg;
+    el.style.cursor = "grab";
+
+    const marker = new maplibregl.Marker({
+      element: el,
+      anchor: "bottom",
+      draggable: true,
+    })
+      .setLngLat([positionRef.current.lng, positionRef.current.lat])
+      .addTo(map);
+
+    marker.on("dragstart", () => {
+      el.style.cursor = "grabbing";
+    });
+
+    marker.on("dragend", () => {
+      el.style.cursor = "grab";
+      const lngLat = marker.getLngLat();
+      const newPos = { lat: lngLat.lat, lng: lngLat.lng };
+      positionRef.current = newPos;
+      setPosition(newPos);
+    });
+
+    markerRef.current = marker;
+  }
 
   const notFoundExact = !geocodeResult;
   const lowConfidence =
@@ -119,34 +155,6 @@ export default function AddressMapModal({
     map.flyTo({ center: [initialLng, initialLat] });
     positionRef.current = { lat: initialLat, lng: initialLng };
   }, [initialLat, initialLng]);
-
-  function createMarker(map) {
-    const el = document.createElement("div");
-    el.innerHTML = pinSvg;
-    el.style.cursor = "grab";
-
-    const marker = new maplibregl.Marker({
-      element: el,
-      anchor: "bottom",
-      draggable: true,
-    })
-      .setLngLat([positionRef.current.lng, positionRef.current.lat])
-      .addTo(map);
-
-    marker.on("dragstart", () => {
-      el.style.cursor = "grabbing";
-    });
-
-    marker.on("dragend", () => {
-      el.style.cursor = "grab";
-      const lngLat = marker.getLngLat();
-      const newPos = { lat: lngLat.lat, lng: lngLat.lng };
-      positionRef.current = newPos;
-      setPosition(newPos);
-    });
-
-    markerRef.current = marker;
-  }
 
   function handleConfirm() {
     onConfirm({ lat: position.lat, lng: position.lng });

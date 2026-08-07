@@ -92,7 +92,12 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
             <div className="flex text-xs gap-1 items-center justify-center">
               <span>{tiempo}</span>
               <TbPointFilled />
-              <span>Madrid</span>,<span>Asturias</span>
+              <span>{propiedades.ciudad || "Colombia"}</span>
+              {propiedades.departamento && (
+                <>
+                  ,<span>{propiedades.departamento}</span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -111,7 +116,9 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
       {/* detalles */}
       <div className="flex flex-col p-4">
         <div className="">
-          <p className="font-semibold text-black">Madrid</p>
+          <p className="font-semibold text-black">
+            {propiedades.tipo_inmueble || "Inmueble"} · {propiedades.operacion || ""}
+          </p>
           <div className="flex items-center gap-2 text-xs text-black/80">
             <BsGeoAlt />
             <span>{propiedades.titulo}</span>
@@ -119,22 +126,30 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
         </div>
         <div className="w-full bg-black/10 h-px mt-2 mb-2"></div>
         <div className="flex items-center text-black text-xs gap-4">
-          <div className="flex gap-2">
-            <LiaBedSolid />
-            <span>4 Hab.</span>
-          </div>
-          <div className="flex gap-2">
-            <PiBathtub />
-            <span>3 Baños</span>
-          </div>
-          <div className="flex gap-2">
-            <RxRulerSquare />
-            <span>140 m°2</span>
-          </div>
-          <div className="flex gap-2">
-            <FaRegBuilding />
-            <span>3° Planta</span>
-          </div>
+          {propiedades.bedroom_count != null && (
+            <div className="flex gap-2">
+              <LiaBedSolid />
+              <span>{propiedades.bedroom_count} Alc.</span>
+            </div>
+          )}
+          {propiedades.bathroom_count != null && (
+            <div className="flex gap-2">
+              <PiBathtub />
+              <span>{propiedades.bathroom_count} Baños</span>
+            </div>
+          )}
+          {propiedades.constructed_area != null && (
+            <div className="flex gap-2">
+              <RxRulerSquare />
+              <span>{propiedades.constructed_area} m²</span>
+            </div>
+          )}
+          {propiedades.estrato != null && (
+            <div className="flex gap-2">
+              <FaRegBuilding />
+              <span>Estrato {propiedades.estrato}</span>
+            </div>
+          )}
         </div>
         <div className="w-full bg-black/10 h-px mt-2"></div>
       </div>

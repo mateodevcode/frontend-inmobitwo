@@ -27,12 +27,22 @@ const Principal = () => {
     .filter((pro) => {
       if (filtroSeleccionado === "todo" || filtroSeleccionado === "mas_filtros")
         return true;
-      if (filtroSeleccionado === "venta") return pro.operacion === "venta";
-      if (filtroSeleccionado === "alquiler") return pro.operacion === "alquiler";
+      if (filtroSeleccionado === "venta") return pro.operacion_slug === "venta";
+      if (filtroSeleccionado === "alquiler")
+        return pro.operacion_slug === "arriendo";
       if (filtroSeleccionado === "pisos")
-        return pro.tipo === "piso" || pro.tipo === "apartamento";
-      if (filtroSeleccionado === "casas") return pro.tipo === "casa";
-      if (filtroSeleccionado === "comercial") return pro.tipo === "comercial";
+        return (
+          pro.tipo_slug === "apartamento" ||
+          pro.tipo_slug === "apartaestudio" ||
+          pro.tipo_slug === "penthouse"
+        );
+      if (filtroSeleccionado === "casas") return pro.tipo_slug === "casa";
+      if (filtroSeleccionado === "comercial")
+        return (
+          pro.tipo_slug === "local" ||
+          pro.tipo_slug === "oficina" ||
+          pro.tipo_slug === "bodega"
+        );
       return true;
     })
     .filter((pro) => {
@@ -42,8 +52,10 @@ const Principal = () => {
 
       return (
         pro.titulo?.toLowerCase().includes(term) ||
-        pro.tipo?.toLowerCase().includes(term) ||
-        pro.direccion?.toLowerCase().includes(term)
+        pro.tipo_inmueble?.toLowerCase().includes(term) ||
+        pro.direccion?.toLowerCase().includes(term) ||
+        pro.ciudad?.toLowerCase().includes(term) ||
+        pro.barrio?.toLowerCase().includes(term)
       );
     });
 

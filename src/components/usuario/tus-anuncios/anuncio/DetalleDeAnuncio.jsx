@@ -16,6 +16,7 @@ import usePropiedades from "@/hooks/usePropiedades";
 import SkeletonDetalleAnuncio from "./SkeletonDetalleAnuncio";
 import useTracking from "../../../../hooks/useTracking";
 import { irArriba } from "@/utils/irArriba";
+import { formatPrecioCompleto } from "@/utils/formatPrecio";
 
 const DetalleDeAnuncio = () => {
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ const DetalleDeAnuncio = () => {
       <div className="w-full py-5">
         <div className="w-10/12 mx-auto">
           <p className="text-xl md:text-3xl font-bold text-black">
-            {`${propiedad?.operacion} de ${propiedad?.titulo}, 34 (Cod. ${propiedad?.id})`}
+            {`${propiedad?.operacion || "Anuncio"} de ${propiedad?.titulo || ""} (Cod. ${propiedad?.id})`}
           </p>
           <div className="bg-stone-100 w-72 mt-4 p-2 px-4 border border-black/20">
             <p className="font-semibold">
@@ -141,16 +142,34 @@ const DetalleDeAnuncio = () => {
               Precio y características
             </h3>
             <div className="flex items-center gap-4 mt-4 flex-wrap">
-              <p className="text-black font-bold">400€/mes</p>
-              <div className="w-0.5 h-6 bg-black/40" />
-              <p className="text-black">72 m² </p>
-              <div className="w-0.5 h-6 bg-black/40" />
-              <p className="text-black">2 hab. </p>
-              <div className="w-0.5 h-6 bg-black/40" />
-              <p className="text-black">2ª planta </p>
-              <p className="text-black">1 baño </p>
-              <div className="w-0.5 h-6 bg-black/40" />
-              <p className="text-black">interior</p>
+              <p className="text-black font-bold">
+                {formatPrecioCompleto(propiedad.precio)}
+                {propiedad.operacion_slug === "arriendo" ? "/mes" : ""}
+              </p>
+              {propiedad.constructed_area != null && (
+                <>
+                  <div className="w-0.5 h-6 bg-black/40" />
+                  <p className="text-black">{propiedad.constructed_area} m² </p>
+                </>
+              )}
+              {propiedad.bedroom_count != null && (
+                <>
+                  <div className="w-0.5 h-6 bg-black/40" />
+                  <p className="text-black">{propiedad.bedroom_count} alc. </p>
+                </>
+              )}
+              {propiedad.bathroom_count != null && (
+                <>
+                  <div className="w-0.5 h-6 bg-black/40" />
+                  <p className="text-black">{propiedad.bathroom_count} baño(s) </p>
+                </>
+              )}
+              {propiedad.zona && (
+                <>
+                  <div className="w-0.5 h-6 bg-black/40" />
+                  <p className="text-black">{propiedad.zona}</p>
+                </>
+              )}
             </div>
           </div>
 

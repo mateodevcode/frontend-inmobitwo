@@ -25,6 +25,7 @@ import { BiWorld } from "react-icons/bi";
 import { getInitials } from "@/lib/getInitials";
 import { agruparPorOrden } from "@/utils/galeriaUtils";
 import PropertyImage from "@/components/common/PropertyImage";
+import { formatPrecioCompleto } from "@/utils/formatPrecio";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -265,41 +266,39 @@ const PropiedadId = () => {
                   </span>
                 </div>
                 <div className="mt-2 text-black font-semibold text-lg font-monserrat">
-                  $ 250.000
+                  {formatPrecioCompleto(propiedad.precio)}
                 </div>
 
                 <div className="mt-2">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Voluptatibus temporibus tempore libero veritatis, a nisi sunt,
-                  praesentium neque nesciunt, aspernatur doloremque dolore.
-                  Laboriosam, commodi aperiam. Esse vitae temporibus ut et!
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Voluptatibus temporibus tempore libero veritatis, a nisi sunt,
-                  praesentium neque nesciunt, aspernatur doloremque dolore.
-                  Laboriosam, commodi aperiam. Esse vitae temporibus ut et!
-                  <span className="font-semibold mx-2 text-black">
-                    Ver menos
-                  </span>
+                  {propiedad.description || propiedad.descripcion}
                 </div>
 
                 <div className="w-full bg-black/10 h-px mt-2 mb-2" />
                 <div className="items-center text-black/50 text-xs grid grid-cols-3 gap-2">
-                  <div className="flex gap-2 text-base items-center">
-                    <LiaBedSolid />
-                    <span>4 Hab.</span>
-                  </div>
-                  <div className="flex gap-2 text-base items-center">
-                    <PiBathtub />
-                    <span>3 Baños</span>
-                  </div>
-                  <div className="flex gap-2 text-base items-center">
-                    <RxRulerSquare />
-                    <span>140 m°2</span>
-                  </div>
-                  <div className="flex gap-2 text-base items-center">
-                    <FaRegBuilding />
-                    <span>3° Planta</span>
-                  </div>
+                  {propiedad.bedroom_count != null && (
+                    <div className="flex gap-2 text-base items-center">
+                      <LiaBedSolid />
+                      <span>{propiedad.bedroom_count} Alc.</span>
+                    </div>
+                  )}
+                  {propiedad.bathroom_count != null && (
+                    <div className="flex gap-2 text-base items-center">
+                      <PiBathtub />
+                      <span>{propiedad.bathroom_count} Baños</span>
+                    </div>
+                  )}
+                  {propiedad.constructed_area != null && (
+                    <div className="flex gap-2 text-base items-center">
+                      <RxRulerSquare />
+                      <span>{propiedad.constructed_area} m²</span>
+                    </div>
+                  )}
+                  {propiedad.estrato != null && (
+                    <div className="flex gap-2 text-base items-center">
+                      <FaRegBuilding />
+                      <span>Estrato {propiedad.estrato}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -1,213 +1,146 @@
-import { useState } from "react";
-import {
-  Field,
-  Label,
-  Input,
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-  RadioGroup,
-  Radio,
-} from "@headlessui/react";
-import { ChevronDown } from "lucide-react";
-import { useAppContext } from "@/context/AppContext";
+// src/pages/publicar-anuncio/paso-1/ContactForm.jsx
+//
+// Sección "Datos de contacto" (presentacional).
+// La lógica (teléfonos, preferencia, PATCH silencioso) vive en useDatosBasicos.
 
-const COUNTRY_CODES = [
-  { id: "es", code: "+34", flag: "🇪🇸", name: "España" },
-  { id: "mx", code: "+52", flag: "🇲🇽", name: "México" },
-  { id: "ar", code: "+54", flag: "🇦🇷", name: "Argentina" },
-  { id: "co", code: "+57", flag: "🇨🇴", name: "Colombia" },
-  { id: "us", code: "+1", flag: "🇺🇸", name: "Estados Unidos" },
-];
+import { X, Plus } from "lucide-react";
+import InputField from "@/pages/publicar-anuncio/components/InputField";
+import TipoSelect from "@/pages/publicar-anuncio/components/TipoSelect";
+import RadioGroupInput from "@/pages/publicar-anuncio/components/RadioGroupInput";
+import { CONTACT_PREFERENCES, COUNTRY_CODES } from "@/data/contact_options";
+import useDatosBasicos from "@/hooks/useDatosBasicos";
 
-const CONTACT_PREFERENCES = [
-  {
-    id: "telefono_chat",
-    label: "Teléfono y mensajes en nuestro chat (recomendado)",
-    description:
-      "Recibirás un aviso de los mensajes por email y notificaciones en nuestra app",
-  },
-  {
-    id: "solo_chat",
-    label: "Sólo por mensajes de chat",
-    description:
-      "Recibirás un aviso de los mensajes por email y notificaciones en nuestra app",
-  },
-  {
-    id: "solo_telefono",
-    label: "Sólo por teléfono",
-  },
-];
+const ContactForm = () => {
+  const {
+    usuario,
+    contactName,
+    handleNameChange,
+    phones,
+    handlePhoneChange,
+    handleAddPhone,
+    handleRemovePhone,
+    countryCode,
+    handleCountryCodeChange,
+    preference,
+    handleChangePreference,
+    opcionesTelefono,
+    selectedPhoneValue,
+    handleChangeSelectedPhone,
+    guardandoContacto,
+    handleContinuarContacto,
+  } = useDatosBasicos();
 
-// ---- Select de código de país (compacto, pegado al input) ----
-function CountryCodeSelect({ value, onChange }) {
+  const usaTelefono = preference.id !== "solo_chat";
+
   return (
-    <Listbox value={value} onChange={onChange}>
-      {({ open }) => (
-        <div className="relative">
-          <ListboxButton
-            className={`flex h-full items-center gap-1 rounded-l-md border border-r-0 bg-white px-3 py-3 text-base text-slate-900 focus:outline-none ${
-              open ? "border-slate-900" : "border-slate-300"
-            }`}
-          >
-            <span>{value.code}</span>
-            <ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
-          </ListboxButton>
+    <div className="flex max-w-xl flex-col gap-10 font-poppins">
+      <div className="flex max-w-xl flex-col gap-6">
+        <h2 className="text-2xl font-bold text-slate-900 mt-10">
+          Tus datos de contacto
+        </h2>
 
-          <ListboxOptions
-            anchor="bottom start"
-            transition
-            className="z-50 mt-1 max-h-64 w-56 overflow-y-auto rounded-md border border-slate-200 bg-white shadow-lg transition duration-100 ease-out data-leave:opacity-0 data-closed:opacity-0"
-          >
-            {COUNTRY_CODES.map((c) => (
-              <ListboxOption
-                key={c.id}
-                value={c}
-                className="flex cursor-pointer items-center gap-2 px-3 py-2.5 text-base text-slate-900 data-focus:bg-slate-50 data-selected:font-semibold"
-              >
-                <span>{c.flag}</span>
-                <span>{c.code}</span>
-                <span className="text-sm text-slate-500">{c.name}</span>
-              </ListboxOption>
+        <div>
+          <label className="mb-3 block text-xl font-semibold text-slate-900">
+            Tu email
+          </label>
+          <input
+            value={usuario?.email ?? ""}
+            readOnly
+            className="w-96 cursor-default rounded-md border border-slate-300 bg-slate-100 px-4 py-3 text-lg text-slate-900 focus:outline-none"
+          />
+          <p className="mt-2 text-sm text-slate-500">
+            Nunca se verá en el anuncio, solo para avisos y notificaciones.
+          </p>
+        </div>
+
+        <InputField
+          label="Tu nombre"
+          value={contactName}
+          onChange={handleNameChange}
+          placeholder="Tu nombre completo"
+        />
+
+        <div>
+          <label className="mb-3 block text-xl font-semibold text-slate-900">
+            Prefijo
+          </label>
+          <TipoSelect
+            placeholder="Selecciona"
+            options={COUNTRY_CODES}
+            value={countryCode}
+            onChange={handleCountryCodeChange}
+            getLabel={(o) => `${o.flag} ${o.code}`}
+          />
+        </div>
+
+        <div>
+          <label className="mb-3 block text-xl font-semibold text-slate-900">
+            Tus teléfonos
+          </label>
+          <div className="flex flex-col gap-3">
+            {phones.map((phone, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <InputField
+                  value={phone}
+                  onChange={(e) => handlePhoneChange(i, e.target.value)}
+                  placeholder="Ej: 300 123 4567"
+                />
+                {phones.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemovePhone(i)}
+                    aria-label="Quitar teléfono"
+                    className="mt-9 shrink-0 rounded-md border border-slate-300 bg-white p-2 text-slate-500 hover:bg-slate-100 hover:text-red-600"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                )}
+              </div>
             ))}
-          </ListboxOptions>
+          </div>
+          <button
+            type="button"
+            onClick={handleAddPhone}
+            className="mt-3 inline-flex items-center gap-1 text-base text-blue-600 hover:underline"
+          >
+            <Plus className="h-4 w-4" /> Añadir teléfono adicional
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-5">
+        <h3 className="text-xl font-semibold text-slate-900">
+          ¿Cómo prefieres que te contacten?
+        </h3>
+        <RadioGroupInput
+          options={CONTACT_PREFERENCES}
+          value={preference}
+          onChange={handleChangePreference}
+        />
+      </div>
+
+      {usaTelefono && opcionesTelefono.length > 1 && (
+        <div className="flex flex-col gap-5">
+          <h3 className="text-xl font-semibold text-slate-900">
+            ¿Por cuál número te contactamos?
+          </h3>
+          <RadioGroupInput
+            options={opcionesTelefono}
+            value={selectedPhoneValue}
+            onChange={handleChangeSelectedPhone}
+          />
         </div>
       )}
-    </Listbox>
-  );
-}
-
-// ---- Sección "Tus datos de contacto" ----
-function ContactDataSection({
-  email,
-  onSwitchAccountHref = "#",
-  name,
-  onNameChange,
-  phone,
-  onPhoneChange,
-  countryCode,
-  onCountryCodeChange,
-  onAddExtraPhone,
-}) {
-  return (
-    <div className="flex max-w-xl flex-col gap-6">
-      <h2 className="text-2xl font-bold text-slate-900 mt-10">
-        Tus datos de contacto
-      </h2>
-
-      {/* Email (solo lectura) */}
-      <Field>
-        <Label className="mb-2 block text-lg font-semibold text-slate-900">
-          Tu email
-        </Label>
-        <Input
-          value={email}
-          readOnly
-          className="block w-full cursor-default rounded-md border border-slate-300 bg-slate-100 px-3 py-3 text-base text-slate-900 focus:outline-none"
-        />
-        <p className="mt-2 text-sm text-slate-500">
-          Nunca se verá en el anuncio, solo para avisos y notificaciones.
-        </p>
-        <a
-          href={onSwitchAccountHref}
-          className="mt-2 inline-block text-base text-blue-600 hover:underline"
-        >
-          Entrar en otra cuenta
-        </a>
-      </Field>
-
-      {/* Teléfono */}
-      <Field>
-        <Label className="mb-2 block text-lg font-semibold text-slate-900">
-          Tu teléfono
-        </Label>
-        <div className="flex">
-          <CountryCodeSelect
-            value={countryCode}
-            onChange={onCountryCodeChange}
-          />
-          <Input
-            value={phone}
-            onChange={(e) => onPhoneChange(e.target.value)}
-            type="tel"
-            className="block w-full rounded-r-md border border-slate-300 px-3 py-3 text-base text-slate-900 focus:border-tercero focus:outline-none"
-          />
-        </div>
-        <button
-          type="button"
-          onClick={onAddExtraPhone}
-          className="mt-2 inline-block text-base text-blue-600 hover:underline"
-        >
-          Añadir teléfono adicional
-        </button>
-      </Field>
-
-      {/* Nombre */}
-      <Field>
-        <Label className="mb-2 block text-lg font-semibold text-slate-900">
-          Tu nombre
-        </Label>
-        <Input
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
-          className="block w-full rounded-md border border-slate-300 px-3 py-3 text-base text-slate-900 focus:border-tercero focus:outline-none"
-        />
-        <p className="mt-2 text-sm text-slate-500">
-          Aparecerá en tu anuncio y cuando escribas a otros usuarios
-        </p>
-      </Field>
-    </div>
-  );
-}
-
-// ---- Sección "¿Cómo prefieres que te contacten?" ----
-function ContactPreferenceSection({
-  value,
-  onChange,
-  options = CONTACT_PREFERENCES,
-  onSubmit,
-}) {
-  return (
-    <div className="flex max-w-xl flex-col gap-5">
-      <h3 className="text-xl font-semibold text-slate-900">
-        ¿Cómo prefieres que te contacten?
-      </h3>
-
-      <RadioGroup
-        value={value}
-        onChange={onChange}
-        className="flex flex-col gap-4"
-      >
-        {options.map((opt) => (
-          <Radio
-            key={opt.id}
-            value={opt}
-            className="group flex cursor-pointer items-start gap-3"
-          >
-            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-tercero">
-              <span className="h-2.5 w-2.5 rounded-full bg-tercero opacity-0 group-data-checked:opacity-100" />
-            </span>
-            <span>
-              <span className="block text-base text-slate-900 group-data-checked:text-tercero">
-                {opt.label}
-              </span>
-              {opt.description && (
-                <span className="mt-0.5 block text-sm text-slate-500">
-                  {opt.description}
-                </span>
-              )}
-            </span>
-          </Radio>
-        ))}
-      </RadioGroup>
 
       <button
         type="button"
-        onClick={onSubmit}
-        className="w-full rounded-md bg-tercero px-6 py-3 text-base font-semibold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none"
+        onClick={handleContinuarContacto}
+        disabled={guardandoContacto}
+        className="w-full rounded-md bg-tercero px-6 py-3 text-base font-semibold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
       >
-        Continuar a detalles del anuncio
+        {guardandoContacto
+          ? "Guardando..."
+          : "Continuar a detalles del anuncio"}
       </button>
 
       <p className="text-base text-slate-700">
@@ -215,42 +148,6 @@ function ContactPreferenceSection({
       </p>
     </div>
   );
-}
+};
 
-// ---- Ejemplo de uso combinado ----
-export default function ContactForm() {
-  const [name, setName] = useState("Mateo Lizcano Noriega");
-  const [phone, setPhone] = useState("675464502");
-  const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
-  const [preference, setPreference] = useState(CONTACT_PREFERENCES[0]);
-  const { usuario, setContentNumber } = useAppContext();
-
-  return (
-    <div className="flex flex-col gap-10">
-      <ContactDataSection
-        email={usuario?.email}
-        name={name}
-        onNameChange={setName}
-        phone={phone}
-        onPhoneChange={setPhone}
-        countryCode={countryCode}
-        onCountryCodeChange={setCountryCode}
-        onAddExtraPhone={() => console.log("añadir teléfono adicional")}
-      />
-
-      <ContactPreferenceSection
-        value={preference}
-        onChange={setPreference}
-        onSubmit={() => {
-          setContentNumber(1);
-          document.getElementById("top-detalles")?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }}
-      />
-    </div>
-  );
-}
-
-export { ContactDataSection, ContactPreferenceSection };
+export default ContactForm;

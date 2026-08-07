@@ -49,10 +49,12 @@ export function PropertyCard({ inmueble, onClose }) {
   const titulo = inmueble?.titulo || "Sin título";
   const ubicacion = inmueble?.city_name
     ? `${inmueble.city_name}, ${inmueble.state_name}`
-    : "";
-  const tipoLabel = TIPO_BADGE[inmueble?.tipo] || inmueble?.tipo || "";
+    : inmueble?.ciudad
+      ? `${inmueble.ciudad}${inmueble.departamento ? `, ${inmueble.departamento}` : ""}`
+      : "";
+  const tipoLabel = inmueble?.tipo_inmueble || TIPO_BADGE[inmueble?.tipo] || inmueble?.tipo || "";
   const operacionLabel =
-    OPERACION_LABEL[inmueble?.operacion] || inmueble?.operacion || "";
+    inmueble?.operacion || OPERACION_LABEL[inmueble?.operacion] || "";
 
   const galeria = inmueble?.galeria || [];
   const planos = inmueble?.planos || [];
@@ -227,14 +229,18 @@ export function PropertyCard({ inmueble, onClose }) {
             <p className="text-xl font-bold">
               {formatPrecioCompleto(inmueble.precio)}
             </p>
-            {inmueble.operacion === "alquiler" && (
+            {inmueble.operacion_slug === "arriendo" && (
               <p className="text-xs text-gray-500">/mes</p>
             )}
           </div>
-          {(inmueble.habitaciones || inmueble.area_m2) && (
+          {(inmueble.bedroom_count != null || inmueble.constructed_area != null) && (
             <p className="text-xs text-gray-700 mt-1">
-              {inmueble.habitaciones ? `${inmueble.habitaciones} hab. ` : ""}
-              {inmueble.area_m2 ? `${inmueble.area_m2} m²` : ""}
+              {inmueble.bedroom_count != null
+                ? `${inmueble.bedroom_count} alc. `
+                : ""}
+              {inmueble.constructed_area != null
+                ? `${inmueble.constructed_area} m²`
+                : ""}
             </p>
           )}
           {ubicacion && (

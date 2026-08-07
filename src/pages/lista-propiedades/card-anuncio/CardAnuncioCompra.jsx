@@ -59,7 +59,11 @@ const CardAnuncioCompra = ({
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "") || "";
 
-  let searchUrl = `/${slug(propiedad?.operacion)}-${slug(propiedad?.tipo)}`;
+  const operacionSlug =
+    propiedad?.operacion_slug || slug(propiedad?.operacion) || "venta";
+  const tipoSlug = propiedad?.tipo_slug || slug(propiedad?.tipo);
+
+  let searchUrl = `/${operacionSlug}-${tipoSlug}`;
   if (propiedad?.city_name && propiedad?.state_name) {
     searchUrl += `/${slug(propiedad.city_name)}-${slug(propiedad.state_name)}`;
   }
@@ -67,14 +71,16 @@ const CardAnuncioCompra = ({
   const navState = { listaIds, posicion, total, filtroLabel, searchUrl };
 
   const titulo =
-    propiedad?.titulo || "Piso en calle general Elorza, Milan-pumarin, Oviedo";
+    propiedad?.titulo || "Inmueble en venta";
   const ubicacion = propiedad?.city_name
     ? `${propiedad.city_name}, ${propiedad.state_name}`
-    : "Madrid, Asturias";
+    : propiedad?.ciudad
+      ? `${propiedad.ciudad}${propiedad.departamento ? `, ${propiedad.departamento}` : ""}`
+      : "Colombia";
   const tipoLabel =
-    TIPO_BADGE[propiedad?.tipo] || propiedad?.tipo || "Apartamento";
+    propiedad?.tipo_inmueble || TIPO_BADGE[propiedad?.tipo] || propiedad?.tipo || "Inmueble";
   const operacionLabel =
-    OPERACION_LABEL[propiedad?.operacion] || propiedad?.operacion || "Alquiler";
+    propiedad?.operacion || OPERACION_LABEL[propiedad?.operacion] || "Venta";
 
   const galeria = propiedad?.galeria || [];
   const planos = propiedad?.planos || [];
@@ -297,8 +303,25 @@ const CardAnuncioCompra = ({
             </div>
 
             <div className="text-sm flex md:items-center items-start gap-2 md:flex-row flex-col">
-              <p>2 hab. 85 m² 7ª planta exterior con ascensor</p>
-              <p className="text-red-600">5 horas</p>
+              <p>
+                {propiedad?.bedroom_count != null && (
+                  <span>{propiedad.bedroom_count} alc. </span>
+                )}
+                {propiedad?.constructed_area != null && (
+                  <span>{propiedad.constructed_area} m² </span>
+                )}
+                {propiedad?.zona && <span>{propiedad.zona}</span>}
+                {propiedad?.has_elevator && <span> con ascensor</span>}
+                {propiedad?.bedroom_count == null &&
+                  propiedad?.constructed_area == null && (
+                    <span>Inmueble en Colombia</span>
+                  )}
+              </p>
+              {propiedad?.price_per_sqm != null && (
+                <p className="text-red-600">
+                  {formatPrecioCompleto(propiedad.price_per_sqm)}/m²
+                </p>
+              )}
             </div>
 
             <div className="text-sm mt-2">
@@ -308,6 +331,11 @@ const CardAnuncioCompra = ({
             <div className="flex items-center gap-2 text-xs mt-2">
               <div className="bg-amber-100 px-2 py-0.5">{operacionLabel}</div>
               <div className="bg-amber-100 px-2 py-0.5">{tipoLabel}</div>
+              {propiedad?.estrato != null && (
+                <div className="bg-amber-100 px-2 py-0.5">
+                  Estrato {propiedad.estrato}
+                </div>
+              )}
             </div>
           </div>
         </div>

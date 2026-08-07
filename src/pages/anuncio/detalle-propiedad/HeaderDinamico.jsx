@@ -20,7 +20,7 @@ const HeaderDinamico = ({ onClose, inmueble, specsLinea }) => {
           </p>
           <p className="text-xs text-gray-600 truncate">
             {formatPrecioCompleto(inmueble.precio)}
-            {inmueble.operacion === "alquiler" ? "/mes" : ""}
+            {inmueble.operacion_slug === "arriendo" ? "/mes" : ""}
             {specsLinea.length > 0 ? ` · ${specsLinea.join(" · ")}` : ""}
           </p>
         </div>

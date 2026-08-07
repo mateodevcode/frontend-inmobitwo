@@ -95,7 +95,7 @@ const ListadoDePropiedades = ({
           </div>
         )}
         {properties.map((propiedad, index) =>
-          propiedad.operacion === "venta" ? (
+          propiedad.operacion_slug === "venta" ? (
             <CardAnuncioCompra
               propiedad={propiedad}
               key={propiedad.id}

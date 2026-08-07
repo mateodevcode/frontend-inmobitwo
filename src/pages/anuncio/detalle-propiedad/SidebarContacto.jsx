@@ -18,7 +18,7 @@ const SidebarContacto = ({ inmueble }) => {
       <div className="p-4">
         <h3 className="font-semibold text-gray-900 mb-3 text-center text-lg">
           Pregunta al{" "}
-          {inmueble.tipo === "organizacion" ? "anunciante" : "vendedor"}
+          {inmueble?.es_de_organizacion ? "anunciante" : "vendedor"}
         </h3>
 
         <div className="flex items-start gap-2 border-2 border-blue-300 bg-blue-50 rounded-sm p-3 mb-3">
@@ -53,14 +53,20 @@ const SidebarContacto = ({ inmueble }) => {
           <p className="text-sm text-gray-800">{inmueble.id}</p>
 
           <p className="text-xs text-gray-500 mt-4">Profesional</p>
-          <p className="text-sm text-gray-800">Sellmi</p>
+          <p className="text-sm text-gray-800">
+            {inmueble?.organizacion_nombre || "Inmobiliaria"}
+          </p>
 
           <div className="border-t border-black/20 mt-4">
             {inmueble?.es_de_organizacion && (
               <div className="flex items-center w-full justify-between pt-4">
                 <div className="">
-                  <p className="text-sm text-blue-600 font-medium">Sellmi</p>
-                  <p className="text-sm text-black/70 font-medium">Oviedo</p>
+                  <p className="text-sm text-blue-600 font-medium">
+                    {inmueble?.organizacion_nombre || "Inmobiliaria"}
+                  </p>
+                  <p className="text-sm text-black/70 font-medium">
+                    {inmueble?.ciudad || "Colombia"}
+                  </p>
                 </div>
 
                 <div className="border border-segundo/10 w-32 h-16">

@@ -6,8 +6,9 @@ import { BsCameraFill } from "react-icons/bs";
 import { HiOutlineFlag } from "react-icons/hi2";
 import UbicacionMapa from "../UbicacionMapa";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useScrollSentinel from "@/hooks/useScrollSentinel";
+import { apiBackend } from "@/api/apiBackend";
 
 const DetalleInmuble = ({
   inmueble,
@@ -17,15 +18,32 @@ const DetalleInmuble = ({
 }) => {
   const navigate = useNavigate();
 
-  const descripcionLarga = inmueble.descripcion || "";
-  const necesitaTruncar = descripcionLarga.length > 280;
+  const descripcionLarga = inmueble.description || "";
   const [descripcionAbierta, setDescripcionAbierta] = useState(false);
-  const mostrarDescripcion = true;
+  const mostrarDescripcion = !!descripcionLarga;
+
+  // Historial de precios
+  const [historialPrecios, setHistorialPrecios] = useState([]);
+  useEffect(() => {
+    let activo = true;
+    if (!inmueble?.id) return;
+    apiBackend(`/propiedades/${inmueble.id}/historial-precios`)
+      .then((res) => {
+        if (activo && res.success) setHistorialPrecios(res.data || []);
+      })
+      .catch(() => {});
+    return () => {
+      activo = false;
+    };
+  }, [inmueble?.id]);
 
   // Sentinel: cuando esto sale del viewport por arriba (scroll pasado el
   // bloque de precio), se activa la barra sticky del header. Único punto
   // de control de la barra sticky en todo el flujo.
   const sentinelRef = useScrollSentinel(setMostrarBarraSticky);
+
+  const caracteristicas = inmueble.caracteristicas || {};
+  const categorias = Object.keys(caracteristicas);
 
   return (
     <div className="min-w-0 bg-white font-poppins">
@@ -41,35 +59,27 @@ const DetalleInmuble = ({
         <div className="py-5 border-b border-gray-200">
           <h2 className="text-lg font-bold text-gray-900 mb-3">Descripción</h2>
           <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">
-            Piso en venta en zona Seminario, Oviedo (Asturias, España). Precio:
-            299.000 €. Superficie construida: 90 m². 3 habitaciones y 2 baños.
-            3ª planta exterior. Tour virtual 3D disponible. Piso en venta
-            situado muy cerca del Seminario y del Parque de Invierno, en Oviedo.
-            Está ubicado en la tercera planta de un edificio construido en 1991,
-            sin barreras arquitectónicas y que cuenta con portal reformado y
-            ascensor. La vivienda, que se encuentra en buen estado, tiene una
-            superficie construida de 90 m² distribuidos en hall de entrada,
-            salón comedor, cocina amueblada, tres habitaciones y dos baños
-            completos. Dispone de calefacción individual de gas natural, suelos
-            de parquet y gres, ventanas de doble acristalamiento, puerta de
-            seguridad, videoportero, etc. Es exterior y muy luminoso, con
-            orientación sureste. Gastos de comunidad: 77 € al mes.
+            {descripcionAbierta
+              ? descripcionLarga
+              : descripcionLarga.slice(0, 280)}
           </p>
-          {necesitaTruncar && (
+          {descripcionLarga.length > 280 && (
             <button
               onClick={() => setDescripcionAbierta((v) => !v)}
               className="text-sm font-semibold text-blue-600 hover:underline mt-2"
             >
-              {descripcionAbierta ? "Leer menos" : "Leer descripción completa"}
+              {descripcionAbierta
+                ? "Leer menos"
+                : "Leer descripción completa"}
             </button>
           )}
 
-          {mostrarDescripcion && (
+          {inmueble.usuario_nombre && (
             <div className="text-sm text-gray-600 mt-4 flex items-center gap-2 border-t border-black/10 pt-4">
               <PiChats className="text-base" />
               Si tenés alguna duda podés hablar con{" "}
               <span className="font-semibold">
-                {inmueble.contacto_nombre}
+                {inmueble.usuario_nombre}
               </span>{" "}
               por chat.
             </div>
@@ -79,42 +89,80 @@ const DetalleInmuble = ({
 
       {/* Características básicas */}
       <div className="py-5 border-b border-gray-200">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
-              Características básicas
-            </h2>
-            <ul className="text-sm text-gray-700 space-y-1.5">
-              {inmueble.area_m2 && <li>· {inmueble.area_m2} m² construidos</li>}
-              {inmueble.habitaciones != null && (
-                <li>· {inmueble.habitaciones} habitaciones</li>
-              )}
-              {inmueble.banos != null && <li>· {inmueble.banos} baños</li>}
-              {inmueble.balcon && <li>· Balcón</li>}
-              {inmueble.estado && <li>· {inmueble.estado}</li>}
-              {inmueble.armarios_empotrados && <li>· Armarios empotrados</li>}
-              {inmueble.orientacion && (
-                <li>· Orientación {inmueble.orientacion}</li>
-              )}
-              {inmueble.anno_construccion && (
-                <li>· Construido en {inmueble.anno_construccion}</li>
-              )}
-              {inmueble.amueblado && <li>· Amueblado y cocina equipada</li>}
-              {inmueble.calefaccion && (
-                <li>· Calefacción {inmueble.calefaccion}</li>
-              )}
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">
-              Certificado energético
-            </h2>
-            <ul className="text-sm text-gray-700 space-y-1.5">
-              <li>· {inmueble.certificado_energetico || "No indicado"}</li>
-            </ul>
-          </div>
-        </div>
+        <h2 className="text-lg font-bold text-gray-900 mb-3">
+          Características básicas
+        </h2>
+        <ul className="text-sm text-gray-700 space-y-1.5">
+          {inmueble.constructed_area != null && (
+            <li>· {inmueble.constructed_area} m² construidos</li>
+          )}
+          {inmueble.private_area != null && (
+            <li>· {inmueble.private_area} m² área privada</li>
+          )}
+          {inmueble.room_count != null && (
+            <li>· {inmueble.room_count} ambientes</li>
+          )}
+          {inmueble.bedroom_count != null && (
+            <li>· {inmueble.bedroom_count} alcobas</li>
+          )}
+          {inmueble.bathroom_count != null && (
+            <li>· {inmueble.bathroom_count} baños completos</li>
+          )}
+          {inmueble.social_bathroom_count != null && (
+            <li>· {inmueble.social_bathroom_count} baño social</li>
+          )}
+          {inmueble.estrato != null && <li>· Estrato {inmueble.estrato}</li>}
+          {inmueble.estado_conservacion && (
+            <li>· Estado: {inmueble.estado_conservacion}</li>
+          )}
+          {inmueble.construction_year != null && (
+            <li>· Construido en {inmueble.construction_year}</li>
+          )}
+          {inmueble.floor && <li>· Piso {inmueble.floor}</li>}
+          {inmueble.parqueadero_tipo && (
+            <li>
+              · Parqueadero {inmueble.parqueadero_tipo}
+              {inmueble.parqueadero_modo
+                ? ` (${inmueble.parqueadero_modo})`
+                : ""}
+            </li>
+          )}
+          {inmueble.parking_space_count != null && (
+            <li>· {inmueble.parking_space_count} parqueadero(s)</li>
+          )}
+          {inmueble.administracion != null && (
+            <li>· Administración: {formatPrecioCompleto(inmueble.administracion)}</li>
+          )}
+          {inmueble.zona && <li>· Zona: {inmueble.zona}</li>}
+          {inmueble.has_elevator && <li>· Ascensor</li>}
+          {inmueble.has_swimming_pool && <li>· Piscina</li>}
+          {inmueble.has_gym && <li>· Gimnasio</li>}
+          {inmueble.has_security_24h && <li>· Seguridad 24 horas</li>}
+          {inmueble.has_air_conditioning && <li>· Aire acondicionado</li>}
+          {inmueble.is_furnished && <li>· Amoblado</li>}
+        </ul>
       </div>
+
+      {/* Características N:M agrupadas por categoría */}
+      {categorias.length > 0 && (
+        <div className="py-5 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">
+            Características
+          </h2>
+          {categorias.map((categoria) => (
+            <div key={categoria} className="mb-3">
+              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-1">
+                {categoria}
+              </h3>
+              <p className="text-sm text-gray-700">
+                {caracteristicas[categoria]
+                  .map((f) => f.label_es)
+                  .join(", ")}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Fotos completas */}
       {totalImagenes > 0 && (
@@ -162,27 +210,45 @@ const DetalleInmuble = ({
           <span>Precio del inmueble:</span>
           <span className="font-bold text-gray-900">
             {formatPrecioCompleto(inmueble.precio)}
-            {inmueble.operacion === "alquiler" ? "/mes" : ""}
+            {inmueble.operacion === "arriendo" ? "/mes" : ""}
           </span>
         </div>
-        {inmueble.area_m2 > 0 && (
+        {inmueble.price_per_sqm != null && (
           <div className="flex items-center justify-between text-sm text-gray-700 mb-1">
             <span>Precio por m²:</span>
-            <span>
-              {(inmueble.precio / inmueble.area_m2).toLocaleString("es-CO", {
-                maximumFractionDigits: 0,
-              })}{" "}
-              /m²
-            </span>
+            <span>{formatPrecioCompleto(inmueble.price_per_sqm)} /m²</span>
           </div>
         )}
-        {inmueble.fianza_meses && (
-          <p className="text-sm text-gray-700">
-            Fianza de {inmueble.fianza_meses} mes
-            {inmueble.fianza_meses > 1 ? "es" : ""}
-          </p>
-        )}
       </div>
+
+      {/* Historial de precios */}
+      {historialPrecios.length > 0 && (
+        <div className="py-5 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">
+            Historial de precios
+          </h2>
+          <ul className="text-sm text-gray-700 space-y-1.5">
+            {historialPrecios.map((h) => (
+              <li key={h.id}>
+                {new Date(h.detected_at).toLocaleDateString("es-CO", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+                {": "}
+                {h.old_price != null
+                  ? `${formatPrecioCompleto(h.old_price)} → `
+                  : ""}
+                {formatPrecioCompleto(h.new_price)}
+                {h.change_percent != null &&
+                  ` (${h.change_percent > 0 ? "↑" : "↓"} ${Math.abs(
+                    h.change_percent,
+                  )}%)`}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Ubicación */}
       {inmueble.latitude && inmueble.longitude && (
@@ -190,11 +256,11 @@ const DetalleInmuble = ({
           <h2 className="text-lg font-bold text-gray-900 mb-3">Ubicación</h2>
           <div className="text-sm text-gray-700 space-y-0.5 mb-3">
             {inmueble.direccion && <p>{inmueble.direccion}</p>}
-            {inmueble.barrio_name && <p>Barrio {inmueble.barrio_name}</p>}
-            {inmueble.city_name && (
+            {inmueble.barrio && <p>Barrio {inmueble.barrio}</p>}
+            {inmueble.ciudad && (
               <p>
-                {inmueble.city_name}
-                {inmueble.state_name ? `, ${inmueble.state_name}` : ""}
+                {inmueble.ciudad}
+                {inmueble.departamento ? `, ${inmueble.departamento}` : ""}
               </p>
             )}
           </div>
@@ -205,13 +271,13 @@ const DetalleInmuble = ({
       {/* Estadísticas */}
       <div className="py-5">
         <h2 className="text-lg font-bold text-gray-900 mb-3">Estadísticas</h2>
-        {inmueble.fecha_actualizacion && (
+        {inmueble.updated_at && (
           <p className="text-sm text-gray-700">
             Anuncio actualizado el{" "}
-            {new Date(inmueble.fecha_actualizacion).toLocaleDateString(
-              "es-CO",
-              { day: "numeric", month: "long" },
-            )}
+            {new Date(inmueble.updated_at).toLocaleDateString("es-CO", {
+              day: "numeric",
+              month: "long",
+            })}
           </p>
         )}
       </div>

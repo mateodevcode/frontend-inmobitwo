@@ -15,7 +15,7 @@ import { X, AlertTriangle } from "lucide-react";
 
 const pinSvg = `
   <svg width="32" height="42" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 11 16 26 16 26s16-15 16-26C32 7.163 24.837 0 16 0z" fill="#9d174d"/>
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 11 16 26 16 26s16-15 16-26C32 7.163 24.837 0 16 0z" fill="#FF1B1C"/>
     <circle cx="16" cy="16" r="6" fill="white"/>
   </svg>
 `;
@@ -117,7 +117,7 @@ export default function AddressMapModal({
           layers: [{ id: "osm-tiles", type: "raster", source: "osm" }],
         },
         center: [initialLng, initialLat],
-        zoom: 16,
+        zoom: 17,
         attributionControl: false,
       });
 
@@ -165,14 +165,14 @@ export default function AddressMapModal({
 
   return (
     <Dialog open={open} onClose={onClose} className="relative z-50">
-      <DialogBackdrop className="fixed inset-0 bg-black/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150" />
+      <DialogBackdrop className="fixed inset-0 bg-black/80 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150" />
 
-      <div className="fixed inset-0 flex h-screen items-center justify-center font-poppins">
+      <div className="fixed inset-0 flex h-dvh items-center justify-center font-poppins">
         <DialogPanel
           transition
-          className="w-full max-w-xl h-[90svh] rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
+          className="w-full max-w-xl h-min rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
         >
-          <div className="mb-4 flex items-start justify-between gap-4">
+          <div className="mb-2 flex items-start justify-between gap-4">
             <DialogTitle className="text-xl font-semibold text-slate-900">
               Confirma la ubicacion
             </DialogTitle>
@@ -189,7 +189,7 @@ export default function AddressMapModal({
           {notFoundExact && (
             <div className="mb-4 flex items-start gap-3 rounded-md bg-amber-50 px-4 py-3">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-              <p className="text-base text-slate-900">
+              <p className="text-xs text-slate-900">
                 No pudimos localizar esa direccion exacta. Te mostramos el mapa
                 centrado en la ciudad que elegiste — arrastra el pin hasta la
                 ubicacion correcta.
@@ -198,29 +198,29 @@ export default function AddressMapModal({
           )}
 
           {!notFoundExact && lowConfidence && (
-            <div className="mb-4 flex items-start gap-3 rounded-md bg-amber-50 px-4 py-3">
-              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-              <p className="text-sm text-slate-900">
+            <div className="mb-2 flex items-center gap-3 rounded-md bg-amber-50 p-4">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
+              <p className="text-xs text-slate-900">
                 Verifica que el pin este en el lugar correcto antes de
                 confirmar.
               </p>
             </div>
           )}
 
-          <p className="mb-4 text-sm text-slate-700">
+          <p className="mb-2 text-xs text-slate-700">
             Arrastra el pin si necesitas ajustar la ubicacion exacta.
           </p>
 
-          <div className="mb-5 h-80 md:h-80 w-full overflow-hidden rounded-md border border-slate-200">
+          <div className="mb-5 h-60 w-full overflow-hidden rounded-md border border-slate-200">
             <div ref={mapContainerRef} className="w-full h-full" />
           </div>
 
-          <p className="mb-5 text-sm text-slate-500">
+          <p className="mb-5 text-xs text-slate-500">
             Coordenadas actuales: {position.lat.toFixed(6)},{" "}
             {position.lng.toFixed(6)}
           </p>
 
-          <div className="flex items-center justify-between md:justify-end gap-4 border-t border-slate-200 pt-5">
+          <div className="flex items-center justify-between md:justify-end gap-4 border-t border-slate-200 pt-2">
             <button
               type="button"
               onClick={onClose}

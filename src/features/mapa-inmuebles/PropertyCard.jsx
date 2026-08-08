@@ -20,17 +20,22 @@ import { fetchPropiedadResumen } from "./api";
 const AUTOPLAY_SECONDS = 10;
 
 const TIPO_BADGE = {
-  piso: "Piso",
-  chalet: "Casa o chalet",
-  rustica: "Casa rústica",
-  habitacion: "Habitación",
-  oficina: "Oficina",
+  apartamento: "Apartamento",
+  casa: "Casa",
+  casa_campestre: "Casa campestre",
+  apartaestudio: "Apartaestudio",
+  penthouse: "Penthouse",
+  casa_lote: "Casa lote",
   local: "Local",
-  garaje: "Garaje",
-  terreno: "Terreno",
+  oficina: "Oficina",
+  bodega: "Bodega",
+  consultorio: "Consultorio",
   edificio: "Edificio",
-  "obra-nueva": "Obra nueva",
-  vacacional: "Vacacional",
+  lote: "Lote / Terreno",
+  finca: "Finca",
+  parqueadero: "Parqueadero",
+  trastero: "Trastero",
+  habitacion: "Habitación",
 };
 
 const OPERACION_LABEL = {

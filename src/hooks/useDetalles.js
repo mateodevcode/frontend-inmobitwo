@@ -138,10 +138,10 @@ const useDetalles = ({ calcularPrecio = false } = {}) => {
 
   const onSubmit = (e) => {
     publicarDataAnuncio(e, setLoading, featuresSel);
-    document.getElementById("top-detalles")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    // document.getElementById("top-detalles")?.scrollIntoView({
+    //   behavior: "smooth",
+    //   block: "start",
+    // });
   };
 
   // ─────────────────────────────────────────────
@@ -223,7 +223,13 @@ const useDetalles = ({ calcularPrecio = false } = {}) => {
     let activo = true;
 
     // Todos los datos necesarios (la dirección es el último en llenarse)
-    if (!city_id || !state_id || !property_type_id || !direccion || !operacion) {
+    if (
+      !city_id ||
+      !state_id ||
+      !property_type_id ||
+      !direccion ||
+      !operacion
+    ) {
       console.log("[titulo] FALTAN DATOS:", {
         falta_city: !city_id,
         falta_state: !state_id,

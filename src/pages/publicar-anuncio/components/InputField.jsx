@@ -34,7 +34,7 @@ const InputField = ({
           placeholder={placeholder}
           inputMode={numeric ? "numeric" : undefined}
           readOnly={readOnly}
-          className={`w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-lg text-slate-900 transition-colors hover:border-rose-600/50 focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-600 ${
+          className={`w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 transition-colors hover:border-rose-600/50 focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-600 ${
             unit ? "pr-14" : ""
           } ${readOnly ? "cursor-default bg-slate-100 text-slate-600" : ""}`}
         />

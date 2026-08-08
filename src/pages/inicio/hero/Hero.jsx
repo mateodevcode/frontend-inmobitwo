@@ -5,7 +5,7 @@ import InputSearchPrincipal from "../modales/InputSearchPrincipal";
 import SelectorTipo from "../modales/SelectorTipo";
 import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 
-const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
+const TIPO_DEFAULT = { label: "Apartamento", slug: "apartamento" };
 
 const FRASES = {
   mobile: [
@@ -34,7 +34,6 @@ const Hero = ({
   tipo,
   setTipo,
 }) => {
-  const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [selectedGeo, setSelectedGeo] = useState(null);

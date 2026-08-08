@@ -124,7 +124,7 @@ const CollapsibleCheckboxGroup = ({
 
 const FormFiltros = () => {
   // Tipo de inmueble
-  const [tipoInmueble, setTipoInmueble] = useState("Viviendas");
+  const [tipoInmueble, setTipoInmueble] = useState("Apartamento");
 
   // Precio / Tamaño
   const [precioMin, setPrecioMin] = useState("");
@@ -183,21 +183,28 @@ const FormFiltros = () => {
       <div className="mb-6">
         <SectionTitle>Tipo de inmueble</SectionTitle>
         <SelectField
-          label="Viviendas"
+          label="Apartamento"
           value={tipoInmueble}
           onChange={setTipoInmueble}
           options={[
             "Obra nueva",
-            "Viviendas",
+            "Casa",
             "Habitación",
             "Vacacional",
-            "Oficinas",
-            "Locales o naves",
-            "Traspasos",
-            "Garajes",
-            "Terrenos",
-            "Trasteros",
-            "Edificios",
+            "Apartamento",
+            "Parqueadero",
+            "Oficina",
+            "Local comercial",
+            "Edificio",
+            "Casa campestre",
+            "Apartaestudio",
+            "Penthouse",
+            "Casa lote",
+            "Bodega",
+            "Consultorio",
+            "Lote / Terreno",
+            "Finca",
+            "Trastero",
           ]}
         />
       </div>

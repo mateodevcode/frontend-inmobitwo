@@ -6,6 +6,22 @@ import CardAnuncioCompra from "./card-anuncio/CardAnuncioCompra";
 import CardAnuncio from "./card-anuncio/CardAnuncio";
 
 const TYPE_LABELS = {
+  apartamento: "Apartamentos",
+  casa: "Casas",
+  casa_campestre: "Casas campestres",
+  apartaestudio: "Apartaestudios",
+  penthouse: "Penthouses",
+  casa_lote: "Casas lote",
+  local: "Locales",
+  oficina: "Oficinas",
+  bodega: "Bodegas",
+  consultorio: "Consultorios",
+  edificio: "Edificios",
+  lote: "Lotes",
+  finca: "Fincas",
+  parqueadero: "Parqueaderos",
+  trastero: "Trasteros",
+  habitacion: "Habitaciones",
   viviendas: "Viviendas",
   habitaciones: "Habitaciones",
   oficinas: "Oficinas",

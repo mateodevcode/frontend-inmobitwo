@@ -38,7 +38,7 @@ export default function UbicacionMapa({ lat, lng }) {
     );
 
     const el = document.createElement("div");
-    el.innerHTML = `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#e6007a"/><circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>`;
+    el.innerHTML = `<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.6 12.5 27 12.5 27s12.5-18.4 12.5-27C25 5.6 19.4 0 12.5 0z" fill="#FF1B1C"/><circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>`;
 
     new maplibregl.Marker({ element: el, anchor: "bottom" })
       .setLngLat([lng, lat])

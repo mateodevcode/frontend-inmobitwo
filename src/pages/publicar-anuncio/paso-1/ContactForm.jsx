@@ -46,7 +46,7 @@ const ContactForm = () => {
           <input
             value={usuario?.email ?? ""}
             readOnly
-            className="w-96 cursor-default rounded-md border border-slate-300 bg-slate-100 px-4 py-3 text-lg text-slate-900 focus:outline-none"
+            className="w-96 cursor-default rounded-md border border-slate-300 bg-slate-100 px-4 py-3 text-base text-slate-900 focus:outline-none"
           />
           <p className="mt-2 text-sm text-slate-500">
             Nunca se verá en el anuncio, solo para avisos y notificaciones.

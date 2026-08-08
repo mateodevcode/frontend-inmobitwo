@@ -2,6 +2,7 @@ import { useState } from "react";
 import Bloque from "@/pages/publicar-anuncio/components/Bloque";
 import TextareaField from "@/pages/publicar-anuncio/components/TextareaField";
 import useDetalles from "@/hooks/useDetalles";
+import { irArriba } from "@/utils/irArriba";
 
 const TituloDescripcion = () => {
   const {
@@ -45,17 +46,20 @@ const TituloDescripcion = () => {
           disabled={generandoIA}
           className="w-fit rounded-md border border-rose-300 bg-rose-50 px-6 py-3 text-base font-semibold text-rose-700 hover:bg-rose-100 disabled:opacity-50"
         >
-          {generandoIA
-            ? "Creando descripciones con IA..."
-            : "Generar con IA"}
+          {generandoIA ? "Creando descripciones con IA..." : "Generar con IA"}
         </button>
 
         {descripcionesIA && !formatoSeleccionado && (
           <div className="flex flex-col gap-5">
             {descripcionesIA.formatos.map((f) => (
-              <div key={f.id} className="rounded-md border border-slate-200 p-4">
+              <div
+                key={f.id}
+                className="rounded-md border border-slate-200 p-4"
+              >
                 <p className="text-base font-bold text-slate-900">{f.nombre}</p>
-                <p className="mt-0.5 text-sm text-slate-500">{f.caracteristicas}</p>
+                <p className="mt-0.5 text-sm text-slate-500">
+                  {f.caracteristicas}
+                </p>
                 <p className="mt-3 whitespace-pre-line text-sm text-slate-700">
                   {f.descripcion}
                 </p>
@@ -95,7 +99,11 @@ const TituloDescripcion = () => {
 
         <button
           type="button"
-          onClick={onSubmit}
+          onClick={async (e) => {
+            onSubmit(e);
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            irArriba();
+          }}
           disabled={loading}
           className="w-full rounded-md bg-tercero px-6 py-3 text-base font-bold text-white hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none disabled:opacity-50"
         >

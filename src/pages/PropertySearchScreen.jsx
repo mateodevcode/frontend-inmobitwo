@@ -14,20 +14,21 @@ const pinSvg = `
 
 const MAPPING_OPERACIONES = {
   venta: "venta",
-  alquiler: "alquiler",
+  alquiler: "arriendo",
 };
 
 const MAPPING_TIPOS = {
-  viviendas: "piso,chalet,rustica",
+  viviendas:
+    "apartamento,casa,casa_campestre,apartaestudio,penthouse,casa_lote",
   habitaciones: "habitacion",
   oficinas: "oficina",
   locales: "local",
-  garajes: "garaje",
+  garajes: "parqueadero",
   trasteros: "trastero",
-  terrenos: "terreno",
+  terrenos: "lote",
   edificios: "edificio",
-  "casa-o-chalet": "chalet",
-  "casa-rustica": "rustica",
+  "casa-o-chalet": "casa",
+  "casa-rustica": "casa_campestre,finca",
 };
 
 export default function PropertySearchScreen() {

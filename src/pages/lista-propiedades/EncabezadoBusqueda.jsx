@@ -5,6 +5,22 @@ import { useSlugParser } from "@/hooks/useSlugParser";
 import { getSelectedId, getTabs } from "@/data/tabs_busqueda";
 
 const TYPE_LABELS = {
+  apartamento: { singular: "apartamento", plural: "apartamentos" },
+  casa: { singular: "casa", plural: "casas" },
+  casa_campestre: { singular: "casa campestre", plural: "casas campestres" },
+  apartaestudio: { singular: "apartaestudio", plural: "apartaestudios" },
+  penthouse: { singular: "penthouse", plural: "penthouses" },
+  casa_lote: { singular: "casa lote", plural: "casas lote" },
+  local: { singular: "local", plural: "locales" },
+  oficina: { singular: "oficina", plural: "oficinas" },
+  bodega: { singular: "bodega", plural: "bodegas" },
+  consultorio: { singular: "consultorio", plural: "consultorios" },
+  edificio: { singular: "edificio", plural: "edificios" },
+  lote: { singular: "lote", plural: "lotes" },
+  finca: { singular: "finca", plural: "fincas" },
+  parqueadero: { singular: "parqueadero", plural: "parqueaderos" },
+  trastero: { singular: "trastero", plural: "trasteros" },
+  habitacion: { singular: "habitación", plural: "habitaciones" },
   viviendas: { singular: "casa y piso", plural: "casas y pisos" },
   habitaciones: { singular: "habitación", plural: "habitaciones" },
   oficinas: { singular: "oficina", plural: "oficinas" },

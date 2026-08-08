@@ -70,7 +70,11 @@ const ContactForm = () => {
             value={countryCode}
             onChange={handleCountryCodeChange}
             getLabel={(o) => `${o.flag} ${o.code}`}
+            disabled
           />
+          <p className="mt-2 text-sm text-slate-500">
+            Colombia por defecto. Se agregará automáticamente a tus teléfonos.
+          </p>
         </div>
 
         <div>

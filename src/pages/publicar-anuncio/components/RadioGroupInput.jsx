@@ -21,13 +21,13 @@ const RadioGroupInput = ({
             disabled={getDisabled(opt)}
             className="group flex cursor-pointer items-start gap-3 py-2 data-disabled:cursor-not-allowed data-disabled:opacity-40"
           >
-            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 group-data-checked:border-tercero">
-              <span className="h-2.5 w-2.5 rounded-full bg-rose-500 opacity-0 group-data-checked:opacity-100" />
+            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-slate-300 transition-colors group-data-checked:border-rose-600">
+              <span className="h-2.5 w-2.5 rounded-full bg-rose-600 opacity-0 group-data-checked:opacity-100" />
             </span>
             <span>
               <Label
                 as="p"
-                className="text-base group-data-checked:text-tercero text-slate-900"
+                className="text-base text-slate-900 group-data-checked:text-rose-700"
               >
                 {opt.label}
               </Label>

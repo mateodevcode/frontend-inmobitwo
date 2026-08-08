@@ -1,6 +1,7 @@
 // hooks/useDatosBasicos.js
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext";
 import useOrganizaciones from "@/hooks/useOrganizaciones";
 import { useGeo } from "@/hooks/useGeo";
@@ -22,6 +23,11 @@ import {
   CONTACT_PREFERENCES,
   COUNTRY_CODES,
 } from "@/data/contact_options";
+import { BARRIOS_POR_CIUDAD } from "@/data/barrios";
+import {
+  filtrarTelefonosValidosColombia,
+  validarTelefonoColombia,
+} from "@/utils/validatePhone";
 
 const useDatosBasicos = () => {
   const {
@@ -62,10 +68,6 @@ const useDatosBasicos = () => {
     };
     cargarCatalogos();
   }, [cargarMisOrganizaciones]);
-
-  useEffect(() => {
-    console.log("formDataPropiedad (paso 1):", formDataPropiedad);
-  }, [formDataPropiedad]);
 
   const esDeOrganizacion = !!formDataPropiedad?.es_de_organizacion;
 
@@ -161,30 +163,95 @@ const useDatosBasicos = () => {
     }
   }, [countries, country]);
 
-  // Reset en cascada: cambiar país limpia provincia y ciudad
+  // Reset en cascada: cambiar país limpia provincia y ciudad (y sus ids)
   const handleCountryChange = (newCountry) => {
     setCountry(newCountry);
     setState(null);
     setCity(null);
+    setBarrioModo("lista");
+    setFormDataPropiedad((prev) => ({
+      ...prev,
+      country_id: newCountry?.id ?? 0,
+      state_id: 0,
+      city_id: 0,
+      barrio_nombre: "",
+    }));
   };
 
-  // Reset en cascada: cambiar provincia limpia ciudad
+  // Reset en cascada: cambiar provincia limpia ciudad (y su id)
   const handleStateChange = (newState) => {
     setState(newState);
     setCity(null);
-  };
-
-  const handleCityChange = setCity;
-
-  // Persiste la selección geográfica en formDataPropiedad
-  useEffect(() => {
+    setBarrioModo("lista");
     setFormDataPropiedad((prev) => ({
       ...prev,
-      country_id: country?.id ?? 0,
-      state_id: state?.id ?? 0,
-      city_id: city?.id ?? 0,
+      state_id: newState?.id ?? 0,
+      city_id: 0,
+      barrio_nombre: "",
+    }));
+  };
+
+  const handleCityChange = (newCity) => {
+    setCity(newCity);
+    setBarrioModo("lista");
+    setFormDataPropiedad((prev) => ({
+      ...prev,
+      city_id: newCity?.id ?? 0,
+      barrio_nombre: "",
+    }));
+  };
+
+  // Persiste la selección geográfica en formDataPropiedad.
+  // Usa `prev` como fallback para que una instancia del hook que no fue la que
+  // seleccionó (ej. ContactForm, cuyo auto-Colombia solo setea país) NO pise
+  // los ids de state/city ya guardados con 0.
+  useEffect(() => {
+    if (!country && !state && !city) return;
+    setFormDataPropiedad((prev) => ({
+      ...prev,
+      country_id: country?.id ?? prev.country_id,
+      state_id: state?.id ?? prev.state_id,
+      city_id: city?.id ?? prev.city_id,
     }));
   }, [country, state, city, setFormDataPropiedad]);
+
+  // ─────────────────────────────────────────────
+  // Barrio (opcional, referencia por nombre)
+  // ─────────────────────────────────────────────
+  const [barrioModo, setBarrioModo] = useState("lista");
+
+  const barriosDeLaCiudad = city?.dane_code
+    ? (BARRIOS_POR_CIUDAD[String(city.dane_code)] ?? [])
+    : [];
+
+  const barrioOptions = [
+    ...barriosDeLaCiudad.map((b) => ({ id: b, label: b })),
+    { id: "__otro__", label: "Otro (escribir manualmente)..." },
+  ];
+
+  const barrioValue =
+    barrioModo === "otro"
+      ? barrioOptions[barrioOptions.length - 1]
+      : (barrioOptions.find((o) => o.id === formDataPropiedad.barrio_nombre) ??
+        null);
+
+  const handleBarrioChange = (opt) => {
+    if (opt.id === "__otro__") {
+      setBarrioModo("otro");
+      setFormDataPropiedad((prev) => ({ ...prev, barrio_nombre: "" }));
+    } else {
+      setBarrioModo("lista");
+      setFormDataPropiedad((prev) => ({ ...prev, barrio_nombre: opt.id }));
+    }
+  };
+
+  const handleBarrioManualChange = (e) =>
+    setFormDataPropiedad((prev) => ({
+      ...prev,
+      barrio_nombre: e.target.value,
+    }));
+
+  const barrioNombre = formDataPropiedad.barrio_nombre ?? "";
 
   const [streetName, setStreetName] = useState("");
   const [streetNumber, setStreetNumber] = useState("");
@@ -243,9 +310,18 @@ const useDatosBasicos = () => {
   };
 
   const handleConfirmLocation = ({ lat, lng }) => {
+    console.log("[ubicacion] confirmar lat/lng:", lat, lng);
+    const normalizar = (v) => {
+      const valor = Array.isArray(v) ? v[0] : v;
+      const n = Number(valor);
+      return isNaN(n) ? 0 : n;
+    };
+    const latNum = normalizar(lat);
+    const lngNum = normalizar(lng);
+
     const location = {
-      lat,
-      lng,
+      lat: latNum,
+      lng: lngNum,
       country,
       state,
       city,
@@ -255,8 +331,8 @@ const useDatosBasicos = () => {
     setConfirmedLocation(location);
     setFormDataPropiedad((prev) => ({
       ...prev,
-      latitude: lat ?? 0.0,
-      longitude: lng ?? 0.0,
+      latitude: latNum,
+      longitude: lngNum,
     }));
     setComprobarDireccion(true);
     setModalOpen(false);
@@ -279,7 +355,9 @@ const useDatosBasicos = () => {
     if (usuario?.telefono) return [usuario.telefono];
     return [""];
   });
-  const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
+  const [countryCode, setCountryCode] = useState(
+    () => COUNTRY_CODES.find((c) => c.id === "co") ?? COUNTRY_CODES[0],
+  );
   const [guardandoContacto, setGuardandoContacto] = useState(false);
 
   const preference =
@@ -320,21 +398,36 @@ const useDatosBasicos = () => {
       telefono_contacto: opt.id === "all" ? "" : opt.id,
     }));
 
-  // Al continuar: PATCH silencioso al usuario con nombre + teléfonos
+  // Al continuar: valida los teléfonos (10 dígitos empezando por 3). Si alguno
+  // es inválido, bloquea el avance. Si todos son válidos, PATCH al usuario.
   const handleContinuarContacto = async () => {
-    const numeros = phones
-      .map((p) => {
-        const t = (p ?? "").trim();
-        return t && !t.startsWith("+") ? `${countryCode.code}${t}` : t;
-      })
-      .filter(Boolean);
+    const numeros = phones.map((p) => (p ?? "").trim()).filter(Boolean);
+
+    if (numeros.length === 0) {
+      toast.error("Agrega al menos un teléfono de contacto.", {
+        position: "bottom-right",
+      });
+      return;
+    }
+
+    for (const num of numeros) {
+      if (!validarTelefonoColombia(num)) {
+        toast.error(
+          `El teléfono "${num}" no es válido: debe tener 10 dígitos y empezar por 3.`,
+          { position: "bottom-right" },
+        );
+        return;
+      }
+    }
+
+    const normalizados = filtrarTelefonosValidosColombia(numeros);
 
     setGuardandoContacto(true);
     if (usuario?.id) {
       try {
         await apiBackend(`/usuarios/${usuario.id}`, "PATCH", {
           name: contactName,
-          telefonos: numeros,
+          telefonos: normalizados,
         });
       } catch {
         // silencioso: no bloquear el avance
@@ -371,6 +464,13 @@ const useDatosBasicos = () => {
     handleCountryChange,
     handleStateChange,
     handleCityChange,
+    barriosDeLaCiudad,
+    barrioOptions,
+    barrioValue,
+    handleBarrioChange,
+    barrioModo,
+    handleBarrioManualChange,
+    barrioNombre,
     streetName,
     handleStreetNameChange,
     streetNumber,

@@ -10,14 +10,30 @@ import { apiBackendFormData } from "@/api/apiBackendFormData.js";
 // Agrega a un FormData todos los campos del schema v5.0 (Colombia).
 // Omite valores vacíos para no enviar "0" o "" innecesarios al backend.
 function appendCamposPropiedad(formData, datos) {
+  // Normaliza coordenadas: si llegan como array o string de Postgres "{a,b}",
+  // toma el primer valor numérico. Evita 500 en el INSERT.
+  const normalizarCoord = (v) => {
+    if (v === undefined || v === null || v === "") return null;
+    let valor = v;
+    if (Array.isArray(valor)) valor = valor[0];
+    if (typeof valor === "string" && valor.startsWith("{")) {
+      const match = valor.match(/[-\d.]+/);
+      valor = match?.[0];
+    }
+    const n = Number(valor);
+    return isNaN(n) ? null : n;
+  };
+
   const campos = [
     "operation_type_id",
     "property_type_id",
     "condition_type_id",
+    "rental_type_id",
     "country_id",
     "state_id",
     "city_id",
     "barrio_id",
+    "barrio_nombre",
     "direccion",
     "numero_direccion",
     "latitude",
@@ -54,10 +70,18 @@ function appendCamposPropiedad(formData, datos) {
     "has_air_conditioning",
     "is_furnished",
     "zona",
+    "how_to_contact",
+    "telefono_contacto",
   ];
   for (const campo of campos) {
     const valor = datos?.[campo];
     if (valor === undefined || valor === null || valor === "") continue;
+    if (campo === "latitude" || campo === "longitude") {
+      const limpio = normalizarCoord(valor);
+      if (limpio === null) continue;
+      formData.append(campo, limpio);
+      continue;
+    }
     formData.append(campo, valor);
   }
 }
@@ -214,23 +238,9 @@ const usePropiedades = () => {
 
       // ========================================
       // DATOS (schema v5.0: IDs de catálogos + campos Colombia)
+      // appendCamposPropiedad agrega todos los campos del formulario.
+      // Solo se agregan aquí los que NO están en esa lista.
       // ========================================
-      formData.append(
-        "operation_type_id",
-        formDataPropiedad.operation_type_id || "1",
-      );
-      formData.append(
-        "property_type_id",
-        formDataPropiedad.property_type_id || "1",
-      );
-      formData.append("country_id", formDataPropiedad.country_id);
-      formData.append("state_id", formDataPropiedad.state_id);
-      formData.append("city_id", formDataPropiedad.city_id);
-      formData.append("barrio_id", formDataPropiedad.barrio_id);
-      formData.append("direccion", formDataPropiedad.direccion);
-      formData.append("numero_direccion", formDataPropiedad.numero_direccion);
-      formData.append("latitude", formDataPropiedad.latitude);
-      formData.append("longitude", formDataPropiedad.longitude);
       formData.append("estado", formDataPropiedad.estado || "publicado");
       formData.append("publicado_por_id", usuario?.id);
       appendCamposPropiedad(formData, formDataPropiedad);
@@ -249,6 +259,7 @@ const usePropiedades = () => {
         );
       }
 
+      console.log("[publicar] lat/lng:", formDataPropiedad.latitude, formDataPropiedad.longitude);
       const data = await apiBackendFormData("/publicar-anuncios", formData);
 
       const { success, message, error, data: nuevaPropiedad } = data;

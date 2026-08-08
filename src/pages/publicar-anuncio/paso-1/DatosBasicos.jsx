@@ -54,9 +54,6 @@ const DatosBasicos = () => {
           {/* Form localizacion */}
           <LocationForm />
 
-          {/* Informacion del piso */}
-          {/* {comprobarDireccion && <FloorDoorBlockForm />} */}
-
           {/* Formulario de contacto */}
           {comprobarDireccion && <ContactForm />}
         </div>

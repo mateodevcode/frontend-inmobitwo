@@ -9,6 +9,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 const TipoSelect = ({
   label = "Elige el tipo de inmueble",
+  description,
   placeholder = "Selecciona",
   options = [],
   value,
@@ -23,12 +24,17 @@ const TipoSelect = ({
       <Listbox value={value} onChange={onChange} disabled={disabled}>
         {({ open }) => (
           <div className="relative">
-            <label className="mb-3 block text-xl font-semibold text-slate-900">
-              {label}
-            </label>
+            <div className="mb-3">
+              <label className="block text-lg font-semibold text-slate-900">
+                {label}
+              </label>
+              {description && (
+                <p className="mt-0.5 text-sm text-slate-500">({description})</p>
+              )}
+            </div>
 
             <ListboxButton
-              className={`flex w-96 items-center justify-between rounded-md border bg-white px-4 py-3 text-left text-lg text-slate-900 transition-colors focus:outline-none ${
+              className={`flex w-96 items-center justify-between rounded-md border bg-white px-4 py-3 text-left text-base text-slate-900 transition-colors focus:outline-none ${
                 disabled
                   ? "cursor-not-allowed opacity-40"
                   : open

@@ -53,7 +53,10 @@ export default function AddressMapModal({
 
   useEffect(() => {
     if (open) {
-      const t = setTimeout(() => setPosition({ lat: initialLat, lng: initialLng }), 0);
+      const t = setTimeout(
+        () => setPosition({ lat: initialLat, lng: initialLng }),
+        0,
+      );
       return () => clearTimeout(t);
     }
   }, [open, initialLat, initialLng]);
@@ -164,10 +167,10 @@ export default function AddressMapModal({
     <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop className="fixed inset-0 bg-black/40 transition-opacity data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150" />
 
-      <div className="fixed inset-0 flex w-screen items-center justify-center font-poppins">
+      <div className="fixed inset-0 flex h-screen items-center justify-center font-poppins">
         <DialogPanel
           transition
-          className="w-full max-w-2xl h-dvh rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
+          className="w-full max-w-xl h-[90svh] rounded-lg bg-white p-6 shadow-xl transition data-closed:scale-95 data-closed:opacity-0 data-enter:duration-200 data-leave:duration-150"
         >
           <div className="mb-4 flex items-start justify-between gap-4">
             <DialogTitle className="text-xl font-semibold text-slate-900">

@@ -6,6 +6,7 @@
 import LocationCascadeSelect from "@/pages/publicar-anuncio/paso-1/Locationcascadeselect.jsx";
 import AddressMapModal from "@/pages/publicar-anuncio/paso-1/Addressmapmodal.jsx";
 import InputField from "@/pages/publicar-anuncio/components/InputField";
+import TipoSelect from "@/pages/publicar-anuncio/components/TipoSelect";
 import UbicacionMapa from "@/pages/anuncio/UbicacionMapa";
 import useDatosBasicos from "@/hooks/useDatosBasicos";
 
@@ -23,6 +24,13 @@ const LocationForm = () => {
     handleCountryChange,
     handleStateChange,
     handleCityChange,
+    barriosDeLaCiudad,
+    barrioOptions,
+    barrioValue,
+    handleBarrioChange,
+    barrioModo,
+    handleBarrioManualChange,
+    barrioNombre,
     streetName,
     handleStreetNameChange,
     streetNumber,
@@ -55,6 +63,24 @@ const LocationForm = () => {
         onStateChange={handleStateChange}
         onCityChange={handleCityChange}
       />
+
+      {city && barriosDeLaCiudad.length > 0 && (
+        <TipoSelect
+          label="Barrio (opcional)"
+          placeholder="Selecciona"
+          options={barrioOptions}
+          value={barrioValue}
+          onChange={handleBarrioChange}
+        />
+      )}
+      {city && (barrioModo === "otro" || barriosDeLaCiudad.length === 0) && (
+        <InputField
+          label="Barrio (opcional)"
+          value={barrioNombre}
+          onChange={handleBarrioManualChange}
+          placeholder="Escribe el nombre del barrio"
+        />
+      )}
 
       <InputField
         label="Nombre de la vía"

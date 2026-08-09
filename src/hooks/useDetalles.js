@@ -138,10 +138,6 @@ const useDetalles = ({ calcularPrecio = false } = {}) => {
 
   const onSubmit = (e) => {
     publicarDataAnuncio(e, setLoading, featuresSel);
-    // document.getElementById("top-detalles")?.scrollIntoView({
-    //   behavior: "smooth",
-    //   block: "start",
-    // });
   };
 
   // ─────────────────────────────────────────────

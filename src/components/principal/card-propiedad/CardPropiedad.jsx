@@ -138,10 +138,12 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
               <span>{propiedades.bathroom_count} Baños</span>
             </div>
           )}
-          {propiedades.constructed_area != null && (
+          {(propiedades.private_area ?? propiedades.constructed_area) != null && (
             <div className="flex gap-2">
               <RxRulerSquare />
-              <span>{propiedades.constructed_area} m²</span>
+              <span>
+                {propiedades.private_area ?? propiedades.constructed_area} m²
+              </span>
             </div>
           )}
           {propiedades.estrato != null && (

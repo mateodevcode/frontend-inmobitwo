@@ -312,15 +312,17 @@ const CardAnuncioCompra = ({
                 {propiedad?.bedroom_count != null && (
                   <span>{propiedad.bedroom_count} alc. </span>
                 )}
-                {propiedad?.constructed_area != null && (
-                  <span>{propiedad.constructed_area} m² </span>
+                {(propiedad?.private_area ?? propiedad?.constructed_area) !=
+                  null && (
+                  <span>
+                    {propiedad?.private_area ?? propiedad?.constructed_area} m²{" "}
+                  </span>
                 )}
                 {propiedad?.zona && <span>{propiedad.zona}</span>}
                 {propiedad?.has_elevator && <span> con ascensor</span>}
                 {propiedad?.bedroom_count == null &&
-                  propiedad?.constructed_area == null && (
-                    <span>Inmueble en Colombia</span>
-                  )}
+                  (propiedad?.private_area ?? propiedad?.constructed_area) ==
+                    null && <span>Inmueble en Colombia</span>}
               </p>
               {propiedad?.price_per_sqm != null && (
                 <p className="text-red-600">

@@ -98,11 +98,14 @@ export function PropertyCard({ inmueble, onClose }) {
   }, [currentIndex]);
 
   useEffect(() => {
-    setCurrentIndex(0);
-    if (inmueble?.id) {
+    const t = setTimeout(() => {
+      setCurrentIndex(0);
       setExtra(null);
+    }, 0);
+    if (inmueble?.id) {
       fetchPropiedadResumen(inmueble.id).then(setExtra);
     }
+    return () => clearTimeout(t);
   }, [inmueble?.id]);
 
   if (!inmueble) return null;
@@ -243,8 +246,8 @@ export function PropertyCard({ inmueble, onClose }) {
               {inmueble.bedroom_count != null
                 ? `${inmueble.bedroom_count} alc. `
                 : ""}
-              {inmueble.constructed_area != null
-                ? `${inmueble.constructed_area} m²`
+              {(inmueble.private_area ?? inmueble.constructed_area) != null
+                ? `${inmueble.private_area ?? inmueble.constructed_area} m²`
                 : ""}
             </p>
           )}

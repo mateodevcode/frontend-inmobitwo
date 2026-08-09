@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import FiltrosPrincipal from "./FiltrosPrincipal";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import NavbarListaPropiedades from "./NavbarListaPropiedades";
 import ListadoDePropiedades from "./ListadoDePropiedades";
@@ -9,6 +8,7 @@ import { useLocationInfo } from "@/hooks/useLocationInfo";
 import { useSlugParser } from "@/hooks/useSlugParser";
 import { apiBackend } from "@/api/apiBackend";
 import { MAPPING_OPERACIONES, MAPPING_TIPOS } from "@/data/mappings_busqueda";
+import SidebarListaPropiedades from "./sidebar/SidebarListaPropiedades";
 
 const ListaPropiedades = () => {
   const {
@@ -113,7 +113,7 @@ const ListaPropiedades = () => {
       <HeadListaPropiedades locationInfo={effectiveLocationInfo} />
       <div className="w-full bg-gray-100">
         <div className="flex items-start w-full md:w-[90%] 2xl:w-10/12 mx-auto md:flex-row flex-col-reverse">
-          <FiltrosPrincipal
+          <SidebarListaPropiedades
             locationInfo={effectiveLocationInfo}
             operationSlug={operationSlug}
             typeSlug={typeSlug}

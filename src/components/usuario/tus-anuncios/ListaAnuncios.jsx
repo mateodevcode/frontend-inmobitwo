@@ -7,7 +7,7 @@ import { irArriba } from "@/utils/irArriba";
 
 const ListaAnuncios = ({ propiedades }) => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const { actualizarPropiedad } = usePropiedades();
 
   return (
@@ -86,10 +86,17 @@ const ListaAnuncios = ({ propiedades }) => {
               </div>
               <div className="h-full w-full flex flex-col justify-between">
                 <div className="flex flex-col p-4 text-sm">
-                  <p>400 €/mes 72 m² 2 hab. 2ª planta</p>
+                  <p>
+                    {(pro.private_area ?? pro.constructed_area) != null &&
+                      `${pro.private_area ?? pro.constructed_area} m² `}
+                    {pro.bedroom_count != null &&
+                      `${pro.bedroom_count} hab. `}
+                    {pro.bathroom_count != null &&
+                      `${pro.bathroom_count} baños`}
+                  </p>
                   <p>{pro.titulo}</p>
-                  <p>vaqueiros de alzada, 34, 2ª planta, Puerta A,</p>
-                  <p>Tineo (Cod. {pro.id})</p>
+                  <p>{pro.direccion}</p>
+                  <p>{pro.city_name ?? ""} (Cod. {pro.id})</p>
                 </div>
 
                 <div className="flex flex-col items-center p-2 my-2">

@@ -6,7 +6,7 @@ import ModalUser from "@/components/modales/ModalUser";
 import { useAppContext } from "@/context/AppContext";
 import NavbarHome from "@/pages/inicio/navbar/NavbarHome";
 
-const TIPO_DEFAULT = { label: "Viviendas", slug: "viviendas" };
+const TIPO_DEFAULT = { label: "Apartamento", slug: "apartamento" };
 
 const PageInicio = () => {
   const { usuario } = useAppContext();

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import FiltroRelevante from "./FiltroRelevante";
 import { useSlugParser } from "@/hooks/useSlugParser";
 import { usePropertySearch } from "@/hooks/usePropertySearch";
@@ -56,6 +57,7 @@ const ListadoDePropiedades = ({
 }) => {
   const { citySlug, deptSlug } = useSlugParser();
   const navigate = useNavigate();
+  const [orden, setOrden] = useState("relevante");
   const {
     properties: searchProperties,
     loading: searchLoading,
@@ -67,13 +69,61 @@ const ListadoDePropiedades = ({
     deptSlug: isCustomPolygon ? "" : deptSlug,
   });
 
-  const properties = isCustomPolygon
-    ? polygonProps?.propiedades || []
-    : searchProperties;
+  const properties = useMemo(
+    () =>
+      isCustomPolygon ? polygonProps?.propiedades || [] : searchProperties,
+    [isCustomPolygon, polygonProps, searchProperties],
+  );
   const loading = isCustomPolygon
     ? !polygonProps && !polygonMissing
     : searchLoading;
   const error = isCustomPolygon ? null : searchError;
+
+  // Ordenamiento por opción seleccionada
+  const propiedadesOrdenadas = useMemo(() => {
+    const lista = [...properties];
+    const area = (p) => p.private_area ?? p.constructed_area ?? 0;
+    const precioPm2 = (p) =>
+      p.price_per_sqm ??
+      (p.precio && area(p) ? p.precio / area(p) : null);
+
+    switch (orden) {
+      case "baratos":
+        lista.sort((a, b) => (a.precio ?? 0) - (b.precio ?? 0));
+        break;
+      case "precio_mas_alto":
+        lista.sort((a, b) => (b.precio ?? 0) - (a.precio ?? 0));
+        break;
+      case "recientes":
+        lista.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        break;
+      case "antiguos":
+        lista.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        break;
+      case "han_bajado_mas":
+        // Requiere historial de precios (price_history) aún no disponible
+        break;
+      case "baratos_pm2":
+        lista.sort(
+          (a, b) => (precioPm2(a) ?? Infinity) - (precioPm2(b) ?? Infinity),
+        );
+        break;
+      case "caros_pm2":
+        lista.sort(
+          (a, b) => (precioPm2(b) ?? 0) - (precioPm2(a) ?? 0),
+        );
+        break;
+      case "grandes":
+        lista.sort((a, b) => area(b) - area(a));
+        break;
+      case "pequenos":
+        lista.sort((a, b) => area(a) - area(b));
+        break;
+      default:
+        break; // relevante: mantiene el orden del backend
+    }
+    return lista;
+  }, [properties, orden]);
 
   const listaIds = properties.map((p) => p.id);
   const total = properties.length;
@@ -81,7 +131,7 @@ const ListadoDePropiedades = ({
 
   return (
     <div className="w-full md:w-[75%] h-full">
-      <FiltroRelevante />
+      <FiltroRelevante value={orden} onChange={setOrden} />
       <div className="flex flex-col gap-4 p-4">
         {loading && (
           <div className="text-center py-20 text-gray-400 min-h-96 flex items-center justify-center">
@@ -110,7 +160,7 @@ const ListadoDePropiedades = ({
             No se encontraron inmuebles en esta zona.
           </div>
         )}
-        {properties.map((propiedad, index) =>
+        {propiedadesOrdenadas.map((propiedad, index) =>
           propiedad.operacion_slug === "venta" ? (
             <CardAnuncioCompra
               propiedad={propiedad}

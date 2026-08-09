@@ -112,7 +112,7 @@ const EncabezadoBusqueda = ({ locationInfo }) => {
               className="px-4 cursor-pointer relative"
             >
               <p
-                className={`text-sm md:text-base font-semibold select-none hover:text-tercero text-cuarto ${
+                className={`text-sm md:text-base font-semibold select-none hover:text-tercero text-cuarto font-montserrat ${
                   isActive ? "text-tercero" : "text-cuarto"
                 }`}
               >

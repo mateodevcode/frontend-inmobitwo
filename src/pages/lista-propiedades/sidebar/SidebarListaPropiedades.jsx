@@ -1,7 +1,7 @@
 import MiniMapaUbicacion from "@/features/seleccionar-zona/components/MiniMapaUbicacion";
-import FormFiltros from "./FormFiltros";
+import FormFiltros from "./filtros/FormFiltros";
 
-const FiltrosPrincipal = ({ locationInfo, operationSlug, typeSlug }) => {
+const SidebarListaPropiedades = ({ locationInfo, operationSlug, typeSlug }) => {
   return (
     <div className="w-full md:w-[25%] h-full bg-primero p-6">
       <MiniMapaUbicacion
@@ -9,9 +9,9 @@ const FiltrosPrincipal = ({ locationInfo, operationSlug, typeSlug }) => {
         operationSlug={operationSlug}
         typeSlug={typeSlug}
       />
-      <FormFiltros />
+      <FormFiltros operationSlug={operationSlug} typeSlug={typeSlug} />
     </div>
   );
 };
 
-export default FiltrosPrincipal;
+export default SidebarListaPropiedades;

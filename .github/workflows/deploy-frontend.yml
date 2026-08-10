@@ -24,7 +24,7 @@ jobs:
 
             cd /var/www/inmobitwo/frontend-inmobitwo
 
-            echo "→ Descartando cambios locales no versionados..."
+            echo "→ Limpiando cambios locales..."
             git reset --hard HEAD
             git clean -fd
 
@@ -35,28 +35,49 @@ jobs:
             echo "→ Commit desplegado:"
             git log -1 --oneline
 
-            echo "→ Instalando dependencias..."
+            echo "→ Instalando dependencias de Node..."
             npm ci
 
             echo "→ Construyendo aplicación web..."
             npm run build
 
-            echo "→ Verificando que el build generó archivos nuevos..."
-            ls -la dist/assets/ | head -5
+            echo "→ Verificando build..."
+            if [ -d "dist/assets/" ]; then
+              echo "✅ Build generado correctamente"
+              ls -la dist/assets/ | head -5
+            else
+              echo "❌ Error: dist/assets/ no existe"
+              exit 1
+            fi
 
-            echo "→ Instalando Rust (si no está)..."
+            echo "→ Configurando Rust (si no está)..."
             if ! command -v cargo &> /dev/null; then
               curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
               source $HOME/.cargo/env
+            else
+              echo "✅ Rust ya está instalado:"
+              rustc --version
             fi
+
+            source $HOME/.cargo/env
 
             echo "→ Compilando Tauri para Linux..."
             npm run tauri build -- --target x86_64-unknown-linux-gnu
 
-            echo "→ Copiando .AppImage a /releases..."
-            cp src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/*.AppImage /var/www/inmobitwo/releases/app.AppImage 2>/dev/null || echo "⚠️ AppImage no encontrado"
+            echo "→ Preparando directorio de releases..."
+            mkdir -p /var/www/inmobitwo/releases
 
-            echo "→ Verificando archivos en /releases..."
-            ls -la /var/www/inmobitwo/releases/
+            echo "→ Buscando y copiando AppImage..."
+            APPIMAGE_PATH=$(find src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/ -name "*.AppImage" 2>/dev/null | head -1)
 
-            echo "✅ Despliegue completado!"
+            if [ -n "$APPIMAGE_PATH" ]; then
+              cp "$APPIMAGE_PATH" /var/www/inmobitwo/releases/
+              echo "✅ AppImage copiado exitosamente"
+            else
+              echo "⚠️  Advertencia: AppImage no encontrado"
+            fi
+
+            echo "→ Archivos finales en /releases:"
+            ls -lh /var/www/inmobitwo/releases/
+
+            echo "✅ Despliegue completado exitosamente!"

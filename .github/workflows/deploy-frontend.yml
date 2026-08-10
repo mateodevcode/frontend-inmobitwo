@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Deploy Frontend & Tauri
 
 on:
   push:
@@ -7,18 +7,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
 
     steps:
-      - name: Deploy Frontend to VPS
+      - name: Deploy Frontend & Tauri to VPS
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_KEY }}
+          command_timeout: 90m
           script: |
-            set -e  # detiene el script ante cualquier fallo
+            set -e
 
-            echo "🚀 Desplegando Frontend..."
+            echo "🚀 Desplegando Frontend y Tauri..."
 
             cd /var/www/inmobitwo/frontend-inmobitwo
 
@@ -36,16 +38,25 @@ jobs:
             echo "→ Instalando dependencias..."
             npm ci
 
-            echo "→ Construyendo aplicación..."
+            echo "→ Construyendo aplicación web..."
             npm run build
 
             echo "→ Verificando que el build generó archivos nuevos..."
             ls -la dist/assets/ | head -5
 
-            echo "→ Recargando servidor web (si aplica)..."
-            # Si usas nginx sirviendo estáticos directamente, normalmente no hace falta reload
-            # porque los archivos se sobreescriben. Pero si usas PM2 para servir el frontend
-            # (ej. con 'serve' o un server Node), descomenta:
-            # pm2 restart frontend-inmobitwo
+            echo "→ Instalando Rust (si no está)..."
+            if ! command -v cargo &> /dev/null; then
+              curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+              source $HOME/.cargo/env
+            fi
 
-            echo "✅ Frontend desplegado correctamente!"
+            echo "→ Compilando Tauri para Linux..."
+            npm run tauri build -- --target x86_64-unknown-linux-gnu
+
+            echo "→ Copiando .AppImage a /releases..."
+            cp src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/appimage/*.AppImage /var/www/inmobitwo/releases/app.AppImage 2>/dev/null || echo "⚠️ AppImage no encontrado"
+
+            echo "→ Verificando archivos en /releases..."
+            ls -la /var/www/inmobitwo/releases/
+
+            echo "✅ Despliegue completado!"

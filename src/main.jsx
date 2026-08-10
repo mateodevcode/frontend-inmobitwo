@@ -10,6 +10,7 @@ import App from "./App.jsx"; // ← NUEVO: ahora App.jsx sí se usa (puerta del 
 import LoaderGlobal from "./components/loader/LoaderGlobal.jsx";
 import ConsentimientoBanner from "./components/ConsentimientoBanner.jsx";
 import ModalContactoLead from "./components/ModalContactoLead.jsx";
+import { invoke } from "@tauri-apps/api/core";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

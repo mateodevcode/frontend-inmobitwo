@@ -37,6 +37,7 @@ import PageAnuncio from "@/pages/anuncio/PageAnuncio.jsx";
 import FotoVisor from "@/pages/anuncio/FotoVisor.jsx";
 import OlvidastePassword from "../pages/olvidaste-tu-password/OlvidastePassword";
 import NuevoProfesional from "../pages/nuevo-profesional/NuevoProfesional";
+import DescargarApp from "../pages/descargas/DescargarApp";
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -82,6 +83,7 @@ const AppRouter = () => {
           path="/info/publicar-anuncio"
           element={<InfoPublicarAnuncio />}
         />
+        <Route path="/descargas" element={<DescargarApp />} />
 
         {/* Pendiente de crear */}
         <Route path="/olvidaste-tu-password" element={<OlvidastePassword />} />

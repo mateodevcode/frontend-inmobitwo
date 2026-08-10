@@ -13,9 +13,9 @@ export default defineConfig({
       //   changeOrigin: true,
       // },
     },
-    allowedHosts: [
-      "https://extensions-activation-bathroom-shop.trycloudflare.com",
-    ],
+    // allowedHosts: [
+    //   "https://extensions-activation-bathroom-shop.trycloudflare.com",
+    // ],
   },
 
   resolve: {

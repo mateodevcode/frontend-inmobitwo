@@ -23,7 +23,23 @@ dist-ssr
 *.sln
 *.sw?
 
-
 # env files (can opt-in for committing if needed)
 .env*
+
+# Script de deploy (solo para VPS)
 scripts-descargas
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Binarios compilados
+*.AppImage
+*.deb
+*.rpm
+*.dmg
+*.msi
+*.exe
+
+# Releases locales
+releases/

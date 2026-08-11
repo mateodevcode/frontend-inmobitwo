@@ -16,13 +16,13 @@ jobs:
           username: root
           key: ${{ secrets.SSH_KEY }}
           script: |
-            set -e  # detiene el script ante cualquier fallo
+            set -e
 
             echo "🚀 Desplegando Frontend..."
 
             cd /var/www/inmobitwo/frontend-inmobitwo
 
-            echo "→ Descartando cambios locales no versionados..."
+            echo "→ Descartando cambios locales..."
             git reset --hard HEAD
             git clean -fd
 
@@ -34,18 +34,12 @@ jobs:
             git log -1 --oneline
 
             echo "→ Instalando dependencias..."
-            npm ci
+            time npm ci
 
             echo "→ Construyendo aplicación..."
-            npm run build
+            time npm run build
 
-            echo "→ Verificando que el build generó archivos nuevos..."
+            echo "→ Verificando build..."
             ls -la dist/assets/ | head -5
-
-            echo "→ Recargando servidor web (si aplica)..."
-            # Si usas nginx sirviendo estáticos directamente, normalmente no hace falta reload
-            # porque los archivos se sobreescriben. Pero si usas PM2 para servir el frontend
-            # (ej. con 'serve' o un server Node), descomenta:
-            # pm2 restart frontend-inmobitwo
 
             echo "✅ Frontend desplegado correctamente!"

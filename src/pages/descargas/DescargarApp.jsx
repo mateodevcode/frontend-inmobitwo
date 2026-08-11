@@ -17,16 +17,19 @@ export default function DescargarApp() {
     windows: {
       nombre: "Windows",
       url: "https://descargas.barbershopbbg.com/app.msi",
+      filename: "app.msi",
       icon: "🪟",
     },
     mac: {
       nombre: "macOS",
       url: "https://descargas.barbershopbbg.com/app.exe",
+      filename: "app.exe",
       icon: "🍎",
     },
     linux: {
       nombre: "Linux",
       url: "https://descargas.barbershopbbg.com/app.AppImage",
+      filename: "app.AppImage",
       icon: "🐧",
     },
   };
@@ -48,7 +51,7 @@ export default function DescargarApp() {
           <a
             key={key}
             href={desc.url}
-            download
+            download={desc.filename}
             className={`p-6 rounded-lg text-center transition ${
               so === key
                 ? "bg-green-500 text-white scale-105"
@@ -69,7 +72,7 @@ export default function DescargarApp() {
         <div className="mb-4">
           <p className="text-sm mb-1">Windows (PowerShell):</p>
           <code className="bg-black p-2 block text-xs">
-            curl -O https://descargas.barbershopbbg.com/app.exe; .\app.exe
+            curl -O https://descargas.barbershopbbg.com/app.msi; .\app.msi
           </code>
         </div>
 

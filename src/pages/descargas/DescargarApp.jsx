@@ -16,7 +16,7 @@ export default function DescargarApp() {
   const descargas = {
     windows: {
       nombre: "Windows",
-      url: "https://descargas.barbershopbbg.com/app.exe",
+      url: "https://descargas.barbershopbbg.com/app.msi",
       icon: "🪟",
     },
     mac: {

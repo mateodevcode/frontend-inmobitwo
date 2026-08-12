@@ -6,6 +6,7 @@
   --font-mono: ui-monospace, Consolas, monospace;
   --font-montserrat: 'Montserrat', system-ui, sans-serif;
   --font-poppins: 'Poppins', system-ui, sans-serif;
+  --font-display: var(--font-poppins);
     /* Colores paleta */
   --color-primero: #FFFFFF;
   --color-segundo: #050401;

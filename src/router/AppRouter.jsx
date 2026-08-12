@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext.js";
 import { useTenant } from "@/context/TenantContext.js";
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import useTracking from "@/hooks/useTracking";
 
 import { RutaPrivada, RutaAdmin, RutaPublica } from "@/router/guards.jsx";
@@ -17,7 +17,6 @@ import Admin from "@/pages/Admin.jsx";
 import NotFound from "@/pages/NotFound.jsx";
 import Login from "@/pages/login/Login.jsx";
 import Registro from "@/pages/registro/Registro.jsx";
-import PublicarAnuncio from "@/pages/publicar-anuncio/PublicarAnuncio.jsx";
 import InfoPublicarAnuncio from "@/pages/publicar-anuncio-info/InfoPublicarAnuncio.jsx";
 import MisAnuncios from "@/pages/MisAnuncios.jsx";
 import Anuncio from "@/pages/Anuncio.jsx";
@@ -30,14 +29,35 @@ import PagePropiedadId from "@/pages/PagePropiedadId";
 import MisFavoritos from "@/pages/MisFavoritos";
 import AdminRutasPage from "@/pages/admin/AdminRutasPages";
 import PageInicio from "@/pages/inicio/PagePrincipal";
-import ListaPropiedades from "@/pages/lista-propiedades/ListaPropiedades";
-import SeleccionarZonaPage from "@/features/seleccionar-zona/index.jsx";
-import MapaInmueblesPage from "@/pages/MapaInmueblesPage.jsx";
-import PageAnuncio from "@/pages/anuncio/PageAnuncio.jsx";
-import FotoVisor from "@/pages/anuncio/FotoVisor.jsx";
 import OlvidastePassword from "../pages/olvidaste-tu-password/OlvidastePassword";
 import NuevoProfesional from "../pages/nuevo-profesional/NuevoProfesional";
-import DescargarApp from "../pages/descargas/DescargarApp";
+
+// ─── Rutas pesadas cargadas bajo demanda (maplibre/geoman) ───────────────
+const DescargarApp = lazy(() => import("../pages/descargas/DescargarApp"));
+const PublicarAnuncio = lazy(() =>
+  import("@/pages/publicar-anuncio/PublicarAnuncio.jsx")
+);
+const ListaPropiedades = lazy(() =>
+  import("@/pages/lista-propiedades/ListaPropiedades")
+);
+const SeleccionarZonaPage = lazy(() =>
+  import("@/features/seleccionar-zona/index.jsx")
+);
+const MapaInmueblesPage = lazy(() => import("@/pages/MapaInmueblesPage.jsx"));
+const PageAnuncio = lazy(() => import("@/pages/anuncio/PageAnuncio.jsx"));
+const FotoVisor = lazy(() => import("@/pages/anuncio/FotoVisor.jsx"));
+
+const Suspenso = ({ children }) => (
+  <Suspense
+    fallback={
+      <div className="flex min-h-screen items-center justify-center bg-primero text-segundo">
+        Cargando...
+      </div>
+    }
+  >
+    {children}
+  </Suspense>
+);
 
 const AppRouter = () => {
   const { consentimientoTracking } = useAppContext();
@@ -77,13 +97,23 @@ const AppRouter = () => {
         <Route path="/" element={<PageInicio />} />
         <Route path="/" element={<PageInicio />} />
 
-        <Route path="/inmueble/:id" element={<PageAnuncio />} />
-        <Route path="/inmueble/:id/foto/:fotoIndex" element={<FotoVisor />} />
+        <Route path="/inmueble/:id" element={<Suspenso><PageAnuncio /></Suspenso>} />
+        <Route
+          path="/inmueble/:id/foto/:fotoIndex"
+          element={<Suspenso><FotoVisor /></Suspenso>}
+        />
         <Route
           path="/info/publicar-anuncio"
           element={<InfoPublicarAnuncio />}
         />
-        <Route path="/descargas" element={<DescargarApp />} />
+        <Route
+          path="/descargas"
+          element={
+            <Suspenso>
+              <DescargarApp />
+            </Suspenso>
+          }
+        />
 
         {/* Pendiente de crear */}
         <Route path="/olvidaste-tu-password" element={<OlvidastePassword />} />
@@ -94,7 +124,9 @@ const AppRouter = () => {
           path="/info/publicar-anuncio/publicar"
           element={
             <RutaPrivada>
-              <PublicarAnuncio />
+              <Suspenso>
+                <PublicarAnuncio />
+              </Suspenso>
             </RutaPrivada>
           }
         />
@@ -210,19 +242,35 @@ const AppRouter = () => {
         {/* ──────────────────────────────────────────────────────────── */}
         <Route
           path="/busqueda-multizona/:operationAndType"
-          element={<SeleccionarZonaPage />}
+          element={
+            <Suspenso>
+              <SeleccionarZonaPage />
+            </Suspenso>
+          }
         />
         <Route
           path="/:operationAndType/:cityAndDepartment/mapa"
-          element={<MapaInmueblesPage />}
+          element={
+            <Suspenso>
+              <MapaInmueblesPage />
+            </Suspenso>
+          }
         />
         <Route
           path="/:operationAndType/zona-personalizada"
-          element={<ListaPropiedades />}
+          element={
+            <Suspenso>
+              <ListaPropiedades />
+            </Suspenso>
+          }
         />
         <Route
           path="/:operationAndType/:cityAndDepartment"
-          element={<ListaPropiedades />}
+          element={
+            <Suspenso>
+              <ListaPropiedades />
+            </Suspenso>
+          }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

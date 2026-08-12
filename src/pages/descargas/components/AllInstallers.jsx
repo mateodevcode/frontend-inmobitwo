@@ -34,10 +34,12 @@ export function AllInstallers() {
               <a
                 href={d.url}
                 download={d.filename}
-                className="mt-5 inline-flex items-center justify-center gap-2 rounded-md border border-segundo/10 bg-primero px-4 py-2.5 text-sm font-semibold text-segundo transition-colors hover:bg-segundo/5"
+                className="group relative mt-5 inline-flex cursor-pointer select-none items-center justify-center gap-2 overflow-hidden rounded-md border border-segundo/10 bg-transparent px-4 py-2.5 text-sm font-semibold text-segundo before:absolute before:inset-0 before:z-0 before:w-0 before:bg-segundo before:transition-all before:duration-500 before:ease-in-out hover:before:w-full"
               >
-                <Download className="size-4 text-tercero" />
-                Descargar {d.extension}
+                <Download className="relative z-10 size-4 text-tercero group-hover:text-tercero" />
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                  Descargar {d.extension}
+                </span>
               </a>
             </div>
           );

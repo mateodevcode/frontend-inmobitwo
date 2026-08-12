@@ -5,6 +5,7 @@ import { CliInstall } from "./components/CliInstall";
 import { Audiences } from "./components/Audiences";
 import { MobileApp } from "./components/MobileApp";
 import { SiteFooter } from "./components/SiteFooter";
+import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 
 export default function DescargarApp() {
   return (
@@ -18,6 +19,8 @@ export default function DescargarApp() {
         <MobileApp />
       </main>
       <SiteFooter />
+
+      <style>{scrollbarStyles.default}</style>
     </div>
   );
 }

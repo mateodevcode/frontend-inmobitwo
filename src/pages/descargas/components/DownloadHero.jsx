@@ -37,7 +37,7 @@ export function DownloadHero() {
         <div className="mx-auto mt-10 max-w-xl">
           <div className="rounded-3xl border border-segundo/10 bg-primero p-6 shadow-lg shadow-tercero/5 sm:p-8">
             <div className="flex items-center justify-center gap-3">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-black/80 text-primero">
+              <span className="flex size-14 items-center justify-center rounded-full bg-segundo/5 text-segundo">
                 <Icon className="size-7" />
               </span>
               <div className="text-left text-montserrat">

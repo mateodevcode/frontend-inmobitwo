@@ -22,7 +22,7 @@ export default function DescargarApp() {
     },
     mac: {
       nombre: "macOS",
-      url: "https://descargas.barbershopbbg.com/app.exe",
+      url: "https://descargas.barbershopbbg.com/app.dmg",
       filename: "app.exe",
       icon: "🍎",
     },

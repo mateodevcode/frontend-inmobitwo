@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Inmobitwo",
+  "productName": "inmobitwo",
   "version": "0.1.0",
   "identifier": "com.inmobitwo.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Inmobitwo",
+        "title": "inmobitwo",
         "width": 800,
         "height": 600,
         "resizable": true,

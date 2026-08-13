@@ -8,13 +8,15 @@ export function DownloadHero() {
   const principal = descargas[so ?? "windows"];
   const { Icon } = principal;
 
+  const otrosSistemas = ordenSO.filter((k) => k !== (so ?? "windows"));
+
   return (
     <section className="relative overflow-hidden font-poppins">
       <div
         className="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-72 max-w-3xl rounded-full bg-tercero/20 blur-3xl"
         aria-hidden="true"
       />
-      <div className="relative mx-auto max-w-4xl px-4 pb-8 pt-16 text-center sm:px-6 sm:pt-24">
+      <div className="relative mx-auto max-w-4xl px-4 pb-8 xl:pt-20 text-center sm:px-6 pt-16">
         <span className="inline-flex items-center gap-2 rounded-full border border-tercero/20 bg-primero px-4 py-1.5 text-sm font-medium text-tercero">
           <span
             className="size-1.5 rounded-full bg-tercero"
@@ -79,18 +81,16 @@ export function DownloadHero() {
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm">
             <span className="text-segundo/60">¿Otro sistema?</span>
-            {ordenSO
-              .filter((k) => k !== (so ?? "windows"))
-              .map((k) => (
-                <a
-                  key={k}
-                  href={descargas[k].url}
-                  download={descargas[k].filename}
-                  className="font-semibold text-tercero underline-offset-4 hover:underline"
-                >
-                  {descargas[k].nombre}
-                </a>
-              ))}
+            {otrosSistemas.map((k) => (
+              <a
+                key={k}
+                href={descargas[k].url}
+                download={descargas[k].filename}
+                className="font-semibold text-tercero underline-offset-4 hover:underline"
+              >
+                {descargas[k].nombre}
+              </a>
+            ))}
           </div>
         </div>
       </div>

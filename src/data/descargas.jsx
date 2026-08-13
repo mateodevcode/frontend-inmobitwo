@@ -10,8 +10,6 @@ export const descargas = {
     extension: ".msi",
     url: "https://descargas.barbershopbbg.com/app.msi",
     filename: "app.msi",
-    cliLabel: "Windows (PowerShell)",
-    cli: "curl -O https://descargas.barbershopbbg.com/app.msi; .\\app.msi",
     Icon: PiWindowsLogoFill,
   },
   mac: {
@@ -21,8 +19,6 @@ export const descargas = {
     extension: ".dmg",
     url: "https://descargas.barbershopbbg.com/app.dmg",
     filename: "app.dmg",
-    cliLabel: "macOS",
-    cli: "curl -O https://descargas.barbershopbbg.com/app.dmg && open app.dmg",
     Icon: FaApple,
   },
   linux: {
@@ -32,11 +28,36 @@ export const descargas = {
     extension: ".AppImage",
     url: "https://descargas.barbershopbbg.com/app.AppImage",
     filename: "app.AppImage",
-    cliLabel: "Linux",
-    cli: "wget https://descargas.barbershopbbg.com/app.AppImage && chmod +x app.AppImage && ./app.AppImage",
     Icon: FaLinux,
   },
 };
+
+export const cliCommands = [
+  {
+    so: "windows",
+    nombre: "Windows",
+    cliLabel: "Windows (PowerShell)",
+    cli: "Invoke-WebRequest -Uri 'https://descargas.barbershopbbg.com/app.msi' -OutFile 'app.msi'; msiexec /i app.msi",
+  },
+  {
+    so: "windows",
+    nombre: "Windows",
+    cliLabel: "Windows (CMD)",
+    cli: "curl -O https://descargas.barbershopbbg.com/app.msi && msiexec /i app.msi",
+  },
+  {
+    so: "mac",
+    nombre: "macOS",
+    cliLabel: "macOS",
+    cli: "curl -O https://descargas.barbershopbbg.com/app.dmg && open app.dmg",
+  },
+  {
+    so: "linux",
+    nombre: "Linux",
+    cliLabel: "Linux",
+    cli: "wget https://descargas.barbershopbbg.com/app.AppImage && chmod +x app.AppImage && ./app.AppImage",
+  },
+];
 
 export const ordenSO = ["windows", "mac", "linux"];
 

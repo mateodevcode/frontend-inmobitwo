@@ -59,7 +59,7 @@ export default function EnlaceNav({
     <div className="relative inline-block">
       {/* Enlace */}
       <div
-        className="relative group cursor-pointer text-sm font-semibold text-cuarto hover:text-black transition-colors"
+        className={`relative group cursor-pointer text-sm font-semibold text-cuarto hover:text-black transition-colors`}
         onMouseEnter={open}
         onMouseLeave={scheduleClose}
       >

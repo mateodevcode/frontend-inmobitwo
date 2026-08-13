@@ -4,26 +4,9 @@ import AnimatedTitle from "./AnimatedTitle";
 import InputSearchPrincipal from "../modales/InputSearchPrincipal";
 import SelectorTipo from "../modales/SelectorTipo";
 import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
+import { FRASES } from "@/data/inicio/frases.hero";
 
 const TIPO_DEFAULT = { label: "Apartamento", slug: "apartamento" };
-
-const FRASES = {
-  mobile: [
-    "Encuentra tu hogar",
-    "Compra sin complicaciones",
-    "Alquila fácil",
-    "Tu inmueble ideal",
-    "Vivir mejor",
-  ],
-  desktop: [
-    "No vendemos casas. Conectamos personas.",
-    "Toda gran historia empieza con una llave",
-    "Cada inmueble espera a la persona correcta",
-    "Mudarse también es empezar de nuevo",
-    "Aquí las oportunidades tienen dirección",
-    "Donde comprar y vender vuelve a ser sencillo",
-  ],
-};
 
 const Hero = ({
   image = "/propiedades/chalet.jpg",
@@ -91,14 +74,14 @@ const Hero = ({
           </a>
         </div>
 
-        <div className="absolute z-20 left-1/2 -translate-x-1/2 bottom-1/2 translate-y-1/2 w-[95%] md:w-11/12 max-w-4xl bg-gray-100 px-6 py-6 md:px-10 md:py-8 rounded-sm shadow-xl border border-black/20">
+        <div className="absolute z-20 left-1/2 -translate-x-1/2 bottom-20 md:bottom-1/2 translate-y-1/2 w-[95%] md:w-11/12 max-w-4xl bg-gray-100 px-6 py-6 md:px-10 md:py-8 rounded-sm shadow-xl border border-black/20">
           <AnimatedTitle
             texts={frases}
             className="text-xl md:text-2xl font-semibold text-black text-center md:my-2 my-4 normal-case"
             wrapperClassName="mb-4 md:mb-5"
           />
 
-          <div className="flex flex-col md:flex-row items-stretch gap-4">
+          <div className="flex flex-col md:flex-row items-stretch gap-4 flex-wrap">
             <div className="flex">
               <button
                 onClick={() => {

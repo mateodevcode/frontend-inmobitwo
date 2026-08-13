@@ -8,6 +8,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import Logo from "../../components/logo/Logo";
 import { GoArrowLeft } from "react-icons/go";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
 
 const Login = () => {
   const {
@@ -36,7 +37,8 @@ const Login = () => {
   }, [emailActual, formDataUsuario, setFormDataUsuario]);
 
   return (
-    <div className="grid grid-cols-1 bg-gray-100">
+    <div className="grid grid-cols-1 bg-gray-100 relative">
+      <BarraNavegacionTauri />
       <div
         className="bg-gray-100 h-dvh flex flex-col items-center justify-center"
         id="form-login"

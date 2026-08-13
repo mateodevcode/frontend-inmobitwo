@@ -4,6 +4,7 @@ import useAuth from "@/hooks/useAuth.js";
 import { Link } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import Logo from "@/components/logo/Logo";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
 
 const Registro = () => {
   const { handleRegistro, handleChange, formDataUsuario } = useAuth();
@@ -11,6 +12,7 @@ const Registro = () => {
 
   return (
     <div className="h-dvh flex items-center justify-center px-4 relative bg-gray-100">
+      <BarraNavegacionTauri />
       <div className="max-w-md min-w-sm p-8 bg-white/80">
         <div className="flex items-center justify-center mb-4">
           <Logo />

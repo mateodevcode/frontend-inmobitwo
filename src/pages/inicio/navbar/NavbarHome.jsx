@@ -25,7 +25,7 @@ const NavbarHome = () => {
       <div className="mx-auto w-11/12 md:w-9/12 h-20 flex items-center justify-between">
         <div className="flex items-end gap-8">
           <Logo />
-          <nav className="md:flex items-center gap-8 h-full hidden">
+          <nav className="xl:flex items-center gap-8 h-full hidden">
             {Object.keys(MENUS).map((title) => (
               <EnlaceNav key={title} title={title}>
                 {MENUS[title].map((col) => (
@@ -40,9 +40,9 @@ const NavbarHome = () => {
           </nav>
         </div>
 
-        <div className="hidden md:flex items-center gap-5">
+        <div className="flex items-center gap-5">
           <button
-            className="relative flex items-center gap-2 px-4 bg-transparent text-black h-9 rounded-md cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-black before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 border border-black/30"
+            className="relative hidden md:flex items-center gap-2 px-4 bg-transparent text-black h-9 rounded-md cursor-pointer select-none overflow-hidden group before:absolute before:inset-0 before:bg-black before:w-0 hover:before:w-full before:transition-all before:duration-500 before:ease-in-out before:z-0 border border-black/30"
             onClick={() => navigate("/info/publicar-anuncio")}
           >
             <p className="text-sm relative z-10 group-hover:text-white transition-colors duration-300 font-semibold">
@@ -66,14 +66,13 @@ const NavbarHome = () => {
               Acceder
             </button>
           )}
+          <button
+            className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex xl:hidden"
+            onClick={() => setOpenModalHamburguesa(!openModalHamburguesa)}
+          >
+            <TbMenu4 className="text-2xl text-black" />
+          </button>
         </div>
-
-        <button
-          className="border border-black/20 p-2 rounded-sm hover:bg-gray-100 cursor-pointer select-none flex md:hidden"
-          onClick={() => setOpenModalHamburguesa(!openModalHamburguesa)}
-        >
-          <TbMenu4 className="text-2xl text-black" />
-        </button>
       </div>
 
       <ModalHamburguesa />

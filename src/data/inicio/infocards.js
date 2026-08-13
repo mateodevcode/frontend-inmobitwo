@@ -3,8 +3,7 @@ export const cards = [
     id: "zonas",
     image: "/home/baq.png",
     title: "Seleccionar zonas en el mapa",
-    description:
-      "Puedes buscar al mismo tiempo en varias zonas seleccionándolas directamente en el mapa.",
+    description: "Busca en varias zonas seleccionándolas en el mapa.",
     linkLabel: "Empezar a seleccionar zonas",
     linkUrl: "/busqueda-multizona/venta-viviendas",
   },

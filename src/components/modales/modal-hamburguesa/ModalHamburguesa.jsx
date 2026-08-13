@@ -32,7 +32,7 @@ const ModalHamburguesa = () => {
           onClick={() => setOpenModalHamburguesa(false)}
         >
           <motion.div
-            className="w-full h-svh flex flex-col bg-white"
+            className="w-full md:w-100 h-svh flex flex-col bg-white"
             initial={{ x: 200, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 200, opacity: 0 }}

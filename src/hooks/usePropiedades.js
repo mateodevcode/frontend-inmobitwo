@@ -6,12 +6,25 @@ import { apiBackend } from "@/api/apiBackend.js";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useResetForm from "@/hooks/useResetForm";
 import { apiBackendFormData } from "@/api/apiBackendFormData.js";
+import { feedActions, getFeedSnapshot } from "@/hooks/feedStore";
 import {
   guardarProgreso,
   leerProgreso,
   limpiarTodo,
   PASO_FOTOS,
 } from "@/pages/publicar-anuncio/anuncioProgreso";
+
+// Caché a nivel de módulo de GET /propiedades/:id. Se invalida tras PATCH/POST/DELETE.
+const propiedadCache = new Map();
+
+// Caché del contador de "mis anuncios" (badge del menú de usuario).
+// El endpoint devuelve la lista completa, así que solo se pide cada TTL.
+const COUNT_TTL = 30 * 1000;
+let countMisAnunciosCache = { key: null, count: 0, ts: 0 };
+
+const invalidarCountMisAnuncios = () => {
+  countMisAnunciosCache = { key: null, count: 0, ts: 0 };
+};
 
 // Lista de campos del schema v5.0 (Colombia).
 const CAMPOS_PROPIEDAD = [
@@ -105,7 +118,6 @@ function appendCamposPropiedad(formData, datos) {
 
 const usePropiedades = () => {
   const {
-    setPropiedades,
     formDataPropiedad,
     usuario,
     setFormDataPropiedad,
@@ -117,11 +129,6 @@ const usePropiedades = () => {
     terminarCarga,
     setContentNumber,
     setPropiedad,
-    cursor,
-    hasMore,
-    setLoadingPropiedades,
-    setCursor,
-    setHasMore,
   } = useAppContext();
   const cargandoPropiedades = useRef(false);
   const cargandoPropiedadesInicio = useRef(false);
@@ -307,6 +314,7 @@ const usePropiedades = () => {
           return;
         }
 
+        propiedadCache.delete(anuncioId);
         await guardarCaracteristicas(anuncioId);
         toast.success(message || "Anuncio actualizado", {
           position: "bottom-right",
@@ -378,6 +386,7 @@ const usePropiedades = () => {
       const { success, message, error } = data;
 
       if (success) {
+        propiedadCache.delete(id);
         await cargarPropiedadesMisAnuncios();
         toast.success(message);
         resetFormDataPropiedad();
@@ -415,7 +424,8 @@ const usePropiedades = () => {
       const { success, message, error } = res;
 
       if (success) {
-        setPropiedades((prev) =>
+        propiedadCache.delete(propiedadId);
+        feedActions.setPropiedades((prev) =>
           prev.filter((propiedad) => propiedad.id !== propiedadId),
         );
 
@@ -586,6 +596,7 @@ const usePropiedades = () => {
       const { success, message, error } = data;
 
       if (success) {
+        propiedadCache.delete(anuncioId);
         toast.success(message || "Fotos guardadas correctamente", {
           position: "bottom-right",
         });
@@ -629,11 +640,16 @@ const usePropiedades = () => {
   // cargar propiedad
   // --------------------------------
   const cargarPropiedad = async (anuncioId) => {
+    if (propiedadCache.has(anuncioId)) {
+      setPropiedad(propiedadCache.get(anuncioId));
+      return;
+    }
     try {
       iniciarCarga();
       const res = await apiBackend(`/propiedades/${anuncioId}`);
       const { success, data } = res;
       if (success) {
+        propiedadCache.set(anuncioId, data);
         setPropiedad(data);
       }
     } catch (error) {
@@ -646,18 +662,17 @@ const usePropiedades = () => {
   // Limpiar pripiedades
 
   const limpiarPropiedades = () => {
-    setPropiedades([]);
-    setCursor(null);
-    setHasMore(true);
+    feedActions.reset();
   };
 
   // --------------------------------
   // cargar propiedades home
   // --------------------------------
   const cargarPropiedades = async () => {
+    const { cursor, hasMore } = getFeedSnapshot();
     if (cargandoPropiedades.current || !hasMore) return;
     cargandoPropiedades.current = true;
-    iniciarCarga();
+    feedActions.setCargandoMas(true);
 
     try {
       const url = cursor
@@ -667,26 +682,25 @@ const usePropiedades = () => {
       const res = await apiBackend(url);
 
       if (res.success) {
-        setLoadingPropiedades(false);
-        setPropiedades((prev) => {
+        feedActions.setLoading(false);
+        feedActions.setPropiedades((prev) => {
           const combinadas = [...prev, ...res.data.data];
           return Array.from(new Map(combinadas.map((p) => [p.id, p])).values());
         });
-        setCursor(res.data.pagination.nextCursor);
-        setHasMore(res.data.pagination.hasMore);
+        feedActions.setCursor(res.data.pagination.nextCursor);
+        feedActions.setHasMore(res.data.pagination.hasMore);
       }
     } catch (error) {
       console.error("Error cargando propiedades:", error);
     } finally {
       cargandoPropiedades.current = false;
-      terminarCarga();
+      feedActions.setCargandoMas(false);
     }
   };
 
   const cargarPropiedadesInicio = async () => {
     if (cargandoPropiedadesInicio.current) return;
     cargandoPropiedadesInicio.current = true;
-    iniciarCarga();
 
     try {
       const url = `/propiedades/inicio?limit=10`;
@@ -694,8 +708,8 @@ const usePropiedades = () => {
       const res = await apiBackend(url);
 
       if (res.success) {
-        setLoadingPropiedades(false);
-        setPropiedades((prev) => {
+        feedActions.setLoading(false);
+        feedActions.setPropiedades((prev) => {
           const combinadas = [...prev, ...res.data.data];
           return Array.from(new Map(combinadas.map((p) => [p.id, p])).values());
         });
@@ -704,13 +718,12 @@ const usePropiedades = () => {
       console.error("Error cargando propiedades:", error);
     } finally {
       cargandoPropiedadesInicio.current = false;
-      terminarCarga();
     }
   };
 
   const cargarPropiedadesMisAnuncios = async () => {
     limpiarPropiedades();
-    iniciarCarga();
+    invalidarCountMisAnuncios();
 
     try {
       const url = `/propiedades/mis-anuncios?id=${usuario.id}`;
@@ -718,26 +731,38 @@ const usePropiedades = () => {
       const res = await apiBackend(url);
 
       if (res.success) {
-        setLoadingPropiedades(false);
-        setPropiedades(res.data);
+        feedActions.setLoading(false);
+        feedActions.setPropiedades(res.data);
       }
     } catch (error) {
       console.error("Error cargando propiedades:", error);
-    } finally {
-      terminarCarga();
     }
   };
 
   const cargarCountMisAnuncios = useCallback(async () => {
+    const key = usuario?.id ?? "anon";
+    if (
+      countMisAnunciosCache.key === key &&
+      Date.now() - countMisAnunciosCache.ts < COUNT_TTL
+    ) {
+      return countMisAnunciosCache.count;
+    }
     try {
-      const res = await apiBackend("/propiedades/mis-anuncios");
-      if (res.success) return res.data.length;
+      const res = await apiBackend("/propiedades/mis-anuncios/count");
+      if (res.success) {
+        countMisAnunciosCache = {
+          key,
+          count: res.data,
+          ts: Date.now(),
+        };
+        return countMisAnunciosCache.count;
+      }
       return 0;
     } catch (error) {
       console.error("Error cargando count mis anuncios:", error);
       return 0;
     }
-  }, []);
+  }, [usuario?.id]);
 
   // --------------------------------
   // Características N:M (feature_catalog)

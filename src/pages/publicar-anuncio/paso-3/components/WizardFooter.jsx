@@ -1,4 +1,5 @@
 import { ChevronLeft } from "lucide-react";
+import { irArriba } from "@/utils/irArriba";
 
 const WizardFooter = ({ onBack, onContinue, loading, continueLabel }) => {
   return (
@@ -15,7 +16,11 @@ const WizardFooter = ({ onBack, onContinue, loading, continueLabel }) => {
 
         <button
           type="button"
-          onClick={onContinue}
+          onClick={async (e) => {
+            onContinue(e);
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            irArriba();
+          }}
           disabled={loading}
           className="rounded-md border-2 border-tercero px-5 py-2.5 text-sm font-semibold text-tercero hover:text-white hover:bg-tercero active:scale-[0.99] cursor-pointer select-none disabled:opacity-50 transition duration-300"
         >

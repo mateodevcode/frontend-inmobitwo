@@ -62,10 +62,10 @@ export default function PropertySearchScreen() {
       if (!operacionLimpia) throw new Error("Operacion no valida");
 
       setSearchParams({
-        operation: operacionLimpia,
-        propertyType: tipoLimpio,
+        operationSlug: operacionLimpia,
+        typeSlug: tipoLimpio,
         citySlug: rawCity.toLowerCase(),
-        departmentSlug: rawDepartment.toLowerCase(),
+        deptSlug: rawDepartment.toLowerCase(),
       });
     } catch (error) {
       toast.error("La zona o tipo de busqueda no es valida.");

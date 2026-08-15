@@ -1,10 +1,12 @@
 import { toast } from "sonner";
 import { apiBackend } from "@/api/apiBackend.js";
-import { useAppContext } from "@/context/AppContext.js";
+import {
+  setFavoritosLoading,
+  setFavoritosStore,
+} from "@/hooks/favoritosStore";
 import useTracking from "./useTracking";
 
 const useFavoritos = () => {
-  const { iniciarCarga, terminarCarga, setFavoritos } = useAppContext();
   const { dispararEventoYRevisar } = useTracking();
 
   // ─────────────────────────────────────────────
@@ -17,8 +19,6 @@ const useFavoritos = () => {
     }
 
     try {
-      iniciarCarga();
-
       const res = await apiBackend("/favoritos/toggle", "POST", {
         propiedadId,
       });
@@ -39,8 +39,6 @@ const useFavoritos = () => {
       console.error("Error toggle favorito:", error);
       toast.error("Error al actualizar favoritos");
       return { success: false };
-    } finally {
-      terminarCarga();
     }
   };
 
@@ -49,19 +47,19 @@ const useFavoritos = () => {
   // ─────────────────────────────────────────────
 
   const cargarMisFavoritos = async () => {
+    setFavoritosLoading(true);
     try {
-      iniciarCarga();
       const url = `/favoritos/mis-favoritos`;
 
       const res = await apiBackend(url);
 
       if (res.success) {
-        setFavoritos(res.data);
+        setFavoritosStore(res.data);
       }
     } catch (error) {
       console.error("Error cargando propiedades:", error);
     } finally {
-      terminarCarga();
+      setFavoritosLoading(false);
     }
   };
 

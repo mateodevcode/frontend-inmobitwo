@@ -19,6 +19,6 @@ export const SUGGESTIONS = [
     id: "around-me",
     label: "Buscar a tu alrededor",
     icon: IoMdLocate,
-    route: "/point/alquiler-viviendas/43.40445/-6.54295/16/mapa-google",
+    route: "/point/alquiler-viviendas/:lat/:lng/16/mapa-google",
   },
 ];

@@ -6,6 +6,7 @@ import { useAppContext } from "@/context/AppContext";
 import useOrganizaciones from "@/hooks/useOrganizaciones";
 import { useGeo } from "@/hooks/useGeo";
 import { apiBackend } from "@/api/apiBackend";
+import { fetchStaticJson } from "@/hooks/staticCache";
 import {
   PROPERTY_TYPES_DESCRIPCIONES,
   PROPERTY_TYPES_FALLBACK,
@@ -54,19 +55,19 @@ const useDatosBasicos = () => {
     const cargarCatalogos = async () => {
       cargarMisOrganizaciones();
       try {
-        const res = await apiBackend("/catalogos/tipos-inmueble");
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-          const deApi = res.data.map((t) => ({
+        const deApi = await fetchStaticJson("/catalogos/tipos-inmueble");
+        if (Array.isArray(deApi) && deApi.length > 0) {
+          const mapeados = deApi.map((t) => ({
             id: t.id,
             code: t.code,
             label: t.label_es,
             description: PROPERTY_TYPES_DESCRIPCIONES[t.code],
           }));
-          const codigosApi = new Set(deApi.map((t) => t.code));
+          const codigosApi = new Set(mapeados.map((t) => t.code));
           const faltantes = PROPERTY_TYPES_FALLBACK.filter(
             (t) => !codigosApi.has(t.code),
           );
-          setPropertyTypes(ordenarPropertyTypes([...deApi, ...faltantes]));
+          setPropertyTypes(ordenarPropertyTypes([...mapeados, ...faltantes]));
         }
       } catch {
         // Se mantiene el fallback local

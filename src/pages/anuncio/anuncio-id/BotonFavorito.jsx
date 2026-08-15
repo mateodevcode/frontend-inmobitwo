@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { TiHeartFullOutline, TiHeartOutline } from "react-icons/ti";
 import useFavoritos from "@/hooks/useFavoritos";
-import { useAppContext } from "@/context/AppContext.js";
+import { useFavoritosStore } from "@/hooks/favoritosStore";
 
 const BotonFavorito = () => {
   const { id } = useParams();
-  const { favoritos } = useAppContext();
+  const favoritos = useFavoritosStore();
   const { handleFavorito, estaEnFavoritos } = useFavoritos();
   const isFavorited = estaEnFavoritos(favoritos, id);
 

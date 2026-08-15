@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderInmobitwo from "@/pages/publicar-anuncio-info/components/HeaderInmobitwo";
 import ListaAnuncios from "./ListaAnuncios";
 import { useAppContext } from "@/context/AppContext";
+import { useFeed } from "@/hooks/feedStore";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
@@ -14,7 +15,8 @@ import BarraNavegacionTauri from "../../../components/barra-navegacion/BarraNave
 
 const MisAnuncios = () => {
   const navigate = useNavigate();
-  const { propiedades, cargandoGlobal, usuario } = useAppContext();
+  const { usuario } = useAppContext();
+  const { propiedades, loading } = useFeed();
   const { cargarPropiedadesMisAnuncios } = usePropiedades();
 
   const mis_propiedades = propiedades?.filter(
@@ -47,7 +49,7 @@ const MisAnuncios = () => {
         </button>
       </div>
 
-      {cargandoGlobal ? (
+      {loading ? (
         <div className="flex justify-center items-center min-h-[30svh]">
           <Loading type="opcion2" />
         </div>
@@ -57,7 +59,7 @@ const MisAnuncios = () => {
         <ListaAnuncios propiedades={mis_propiedades} />
       )}
 
-      {cargandoGlobal ? null : (
+      {loading ? null : (
         <div className="w-full flex items-center justify-center my-10 md:px-0 px-4">
           <button
             type="button"

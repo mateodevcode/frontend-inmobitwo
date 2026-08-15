@@ -26,6 +26,7 @@ import { getInitials } from "@/lib/getInitials";
 import { agruparPorOrden } from "@/utils/galeriaUtils";
 import PropertyImage from "@/components/common/PropertyImage";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
+import SmartLoader from "@/components/loader/SmartLoader";
 
 const AUTOPLAY_SECONDS = 10;
 
@@ -144,9 +145,16 @@ const PropiedadId = () => {
     dispararEventoYRevisar(id, "click_telefono");
   };
 
+  const listo = String(propiedad?.id) === String(id);
+
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-end bg-black font-poppins backdrop-blur-sm">
       <div className="w-full h-svh flex flex-col overflow-hidden relative">
+        {!listo && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <SmartLoader delay={200} label="Cargando inmueble..." />
+          </div>
+        )}
         {/* Botón cerrar */}
         <button
           className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer select-none hover:bg-white/80 absolute top-2 left-2 z-10"

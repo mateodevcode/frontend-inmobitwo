@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
-import NavbarListaPropiedades from "./NavbarListaPropiedades";
-import ListadoDePropiedades from "./ListadoDePropiedades";
-import HeadListaPropiedades from "./HeadListaPropiedades";
+import NavbarListaPropiedades from "./header-lista/NavbarListaPropiedades";
+import ListadoDePropiedades from "./content/ListadoDePropiedades";
+import HeadListaPropiedades from "./header-lista/HeadListaPropiedades";
 import { useLocationInfo } from "@/hooks/useLocationInfo";
 import { useSlugParser } from "@/hooks/useSlugParser";
 import { apiBackend } from "@/api/apiBackend";
 import { MAPPING_OPERACIONES, MAPPING_TIPOS } from "@/data/mappings_busqueda";
 import SidebarListaPropiedades from "./sidebar/SidebarListaPropiedades";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
 
 const ListaPropiedades = () => {
   const {
@@ -128,6 +129,8 @@ const ListaPropiedades = () => {
           />
         </div>
       </div>
+
+      <BarraNavegacionTauri />
       <style>{scrollbarStyles.default}</style>
     </div>
   );

@@ -2,9 +2,11 @@
 import "./App.css";
 import { useTenant } from "@/context/TenantContext.js";
 import AppRouter from "@/router/AppRouter.jsx";
+import { usePreloadData } from "@/hooks/usePreloadData.js";
 
 function App() {
   const { cargandoTenant } = useTenant();
+  usePreloadData();
 
   // Mientras se resuelve si este host es la red social o el dominio
   // propio de una organización, no montamos el router todavía.

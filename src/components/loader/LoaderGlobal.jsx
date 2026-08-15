@@ -1,12 +1,25 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 
-const LoaderGlobal = () => {
+const LoaderGlobal = ({ delay = 250 }) => {
   const { cargandoGlobal } = useAppContext();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (!cargandoGlobal) return;
+
+    const timer = setTimeout(() => setVisible(true), delay);
+
+    return () => {
+      clearTimeout(timer);
+      setVisible(false);
+    };
+  }, [cargandoGlobal, delay]);
 
   return (
     <AnimatePresence>
-      {cargandoGlobal && (
+      {cargandoGlobal && visible && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

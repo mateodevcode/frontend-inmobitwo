@@ -12,6 +12,7 @@ import { FaArchway, FaMapMarkerAlt } from "react-icons/fa";
 import { Md3dRotation, MdMyLocation } from "react-icons/md";
 import useFavoritos from "@/hooks/useFavoritos";
 import { useAppContext } from "@/context/AppContext";
+import { useFavoritosStore } from "@/hooks/favoritosStore";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import { agruparPorOrden } from "@/utils/galeriaUtils";
 import PropertyImage from "@/components/common/PropertyImage";
@@ -24,7 +25,8 @@ export default function FotoVisor() {
   const { id, fotoIndex } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { favoritos, propiedad: inmueble } = useAppContext();
+  const { propiedad: inmueble } = useAppContext();
+  const favoritos = useFavoritosStore();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
 
   const [loading, setLoading] = useState(false);

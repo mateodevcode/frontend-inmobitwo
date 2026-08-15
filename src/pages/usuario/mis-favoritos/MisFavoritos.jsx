@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderInmobitwo from "@/pages/publicar-anuncio-info/components/HeaderInmobitwo";
-import { useAppContext } from "@/context/AppContext";
+import {
+  useFavoritosLoadingStore,
+  useFavoritosStore,
+} from "@/hooks/favoritosStore";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
@@ -13,7 +16,8 @@ import BarraNavegacionTauri from "../../../components/barra-navegacion/BarraNave
 
 const MisFavoritos = () => {
   const navigate = useNavigate();
-  const { cargandoGlobal, favoritos } = useAppContext();
+  const favoritos = useFavoritosStore();
+  const cargandoFavoritos = useFavoritosLoadingStore();
   const { cargarMisFavoritos } = useFavoritos();
 
   // Cargar favoritos al montar la página
@@ -35,7 +39,7 @@ const MisFavoritos = () => {
         </button>
       </div>
 
-      {cargandoGlobal ? (
+      {cargandoFavoritos ? (
         <div className="flex justify-center items-center min-h-[30svh]">
           <Loading type="opcion2" />
         </div>

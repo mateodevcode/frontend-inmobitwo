@@ -5,6 +5,8 @@ import usePropiedades from "../../hooks/usePropiedades";
 import { useAppContext } from "@/context/AppContext.js";
 import useTracking from "@/hooks/useTracking";
 import NavbarHome from "../inicio/navbar/NavbarHome";
+import SmartLoader from "@/components/loader/SmartLoader";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
 
 const PageAnuncio = () => {
   const { id } = useParams();
@@ -61,26 +63,35 @@ const PageAnuncio = () => {
     if (id) {
       cargarPropiedad(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  const listo = String(propiedad?.id) === String(id);
+
   return (
-    <div>
+    <div className="relative">
       <NavbarHome />
-      <DetallePropiedad
-        inmueble={propiedad}
-        onClose={() => {
-          if (searchUrl) {
-            navigate(searchUrl);
-          } else {
-            navigate(-1);
-          }
-        }}
-        listaIds={listaIds}
-        posicion={posicion}
-        total={total}
-        filtroLabel={filtroLabel}
-        onNavigateTo={onNavigateTo}
-      />
+      {listo ? (
+        <DetallePropiedad
+          inmueble={propiedad}
+          onClose={() => {
+            if (searchUrl) {
+              navigate(searchUrl);
+            } else {
+              navigate(-1);
+            }
+          }}
+          listaIds={listaIds}
+          posicion={posicion}
+          total={total}
+          filtroLabel={filtroLabel}
+          onNavigateTo={onNavigateTo}
+        />
+      ) : (
+        <SmartLoader delay={200} label="Cargando inmueble..." />
+      )}
+
+      <BarraNavegacionTauri />
     </div>
   );
 };

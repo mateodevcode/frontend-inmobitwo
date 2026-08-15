@@ -10,7 +10,7 @@ import { PiChats } from "react-icons/pi";
 import { BsFillGeoAltFill, BsTelephone, BsImage } from "react-icons/bs";
 import { TiHeartFullOutline, TiHeartOutline } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
-import { useAppContext } from "@/context/AppContext";
+import { useFavoritosStore } from "@/hooks/favoritosStore";
 import useFavoritos from "@/hooks/useFavoritos";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import { agruparPorOrden } from "@/utils/galeriaUtils";
@@ -45,7 +45,7 @@ const OPERACION_LABEL = {
 
 export function PropertyCard({ inmueble, onClose }) {
   const navigate = useNavigate();
-  const { favoritos } = useAppContext();
+  const favoritos = useFavoritosStore();
   const { estaEnFavoritos, handleFavorito } = useFavoritos();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [extra, setExtra] = useState(null);

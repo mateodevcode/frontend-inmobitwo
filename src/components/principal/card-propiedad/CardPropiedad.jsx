@@ -12,6 +12,7 @@ import { formatFirstTwoNames } from "@/lib/formatFirstTwoNames";
 import MenuOpciones from "@/components/principal/card-propiedad/MenuOpciones";
 import { getColorForOrg } from "@/lib/getRandomTailwindColors";
 import { useAppContext } from "@/context/AppContext";
+import { useFavoritosStore } from "@/hooks/favoritosStore";
 import { useTiempoRelativo } from "@/hooks/useTiempoRelativo";
 import useTracking from "@/hooks/useTracking";
 import useFavoritos from "@/hooks/useFavoritos";
@@ -27,8 +28,8 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
   const {
     setOpenModalConfirmarEliminarPropiedad,
     setPropiedadAEliminar,
-    favoritos,
   } = useAppContext();
+  const favoritos = useFavoritosStore();
 
   const esOrganizacion = publicador?.tipo === "organizacion";
   // usuario -> "name" | organizacion -> "nombre"

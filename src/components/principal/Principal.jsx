@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
+import { useFeed } from "@/hooks/feedStore";
 import CardPropiedad from "./card-propiedad/CardPropiedad";
 import usePropiedades from "@/hooks/usePropiedades";
 import { useRef } from "react";
 import useFavoritos from "@/hooks/useFavoritos";
 import HeaderPrincipal from "./header-principal/HeaderPrincipal";
 import HeaderFiltros from "./header-principal/HeaderFiltros";
+import SmartLoader from "@/components/loader/SmartLoader";
 
 const Principal = () => {
+  const { search, filtroSeleccionado } = useAppContext();
   const {
     propiedades,
-    loadingPropiedades,
-    search,
-    cargandoGlobal,
+    loading: loadingPropiedades,
     hasMore,
-    filtroSeleccionado,
-  } = useAppContext();
+    cargandoMas,
+  } = useFeed();
   const { cargarPropiedades } = usePropiedades();
   const [mostrarBotonCargar, setMostrarBotonCargar] = useState(false);
   const cargaInicialHecha = useRef(false); // 👈 nuevo
@@ -92,9 +93,7 @@ const Principal = () => {
       <HeaderFiltros />
 
       {loadingPropiedades ? (
-        <div className="text-center py-20 text-gray-400 min-h-96 flex items-center justify-center">
-          Cargando propiedades...
-        </div>
+        <SmartLoader delay={300} label="Cargando propiedades..." />
       ) : propiedades.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           No hay propiedades disponibles aún.
@@ -123,10 +122,10 @@ const Principal = () => {
       {mostrarBotonCargar && hasMore && (
         <button
           onClick={() => cargarPropiedades()}
-          disabled={cargandoGlobal}
+          disabled={cargandoMas}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-5 py-2.5 rounded-full shadow-lg hover:bg-black/80 active:scale-95 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {cargandoGlobal ? "Cargando..." : "Ver más"}
+          {cargandoMas ? "Cargando..." : "Ver más"}
         </button>
       )}
     </main>

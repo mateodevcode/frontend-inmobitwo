@@ -1,10 +1,10 @@
 // src/pages/Admin.jsx
-import { useAppContext } from "@/context/AppContext.js";
+import { useFeed } from "@/hooks/feedStore";
 import useAuth from "@/hooks/useAuth.js";
 import { Link } from "react-router-dom";
 
 const Admin = () => {
-  const { propiedades, loadingPropiedades } = useAppContext();
+  const { propiedades, loading: loadingPropiedades } = useFeed();
   const { handleCerrarSesion } = useAuth();
 
   return (

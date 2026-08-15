@@ -10,6 +10,7 @@ import SelectZonaMap from "./components/SelectZonaMap";
 import { fetchStatesGeoJSON, fetchInmueblesEnPoligono } from "./api";
 
 import InputSearchZona from "./components/InputSearchZona";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
 
 function parseOperationAndType(raw) {
   if (!raw) return { operation: "venta", tipoInmueble: "viviendas" };
@@ -223,6 +224,8 @@ export default function SeleccionarZonaPage() {
           </button>
         </div>
       )}
+
+      <BarraNavegacionTauri />
     </div>
   );
 }

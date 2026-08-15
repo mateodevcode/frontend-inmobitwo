@@ -4,6 +4,24 @@ import { toast } from "sonner";
 import { apiBackend } from "@/api/apiBackend.js";
 import { useAppContext } from "@/context/AppContext.js";
 
+// Caché a nivel de módulo para /organizaciones/mias: aunque cargarMisOrganizaciones
+// se dispare desde varias vistas a la vez (sidebar + página + wizard), solo se hace
+// 1 request y el resto lee caché/promise compartida. Keyed por usuario logueado.
+let misOrgCache = { key: null, promise: null, data: null };
+
+const misOrgCacheKey = () => {
+  try {
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+    return usuario?.id ?? "anon";
+  } catch {
+    return "anon";
+  }
+};
+
+const invalidarMisOrgCache = () => {
+  misOrgCache = { key: null, promise: null, data: null };
+};
+
 const useOrganizaciones = () => {
   const { iniciarCarga, terminarCarga, setOrganizaciones } = useAppContext();
 
@@ -39,6 +57,7 @@ const useOrganizaciones = () => {
 
       if (res.success) {
         toast.success(res.message, { position: "bottom-right" });
+        invalidarMisOrgCache();
         onSuccess?.(res.data);
       } else {
         console.warn("⚠️ Error:", res.error);
@@ -61,18 +80,43 @@ const useOrganizaciones = () => {
   // ─────────────────────────────────────────────
   // "Mi organización" — para el sidebar / dashboard del agency_admin
   // Trae todas las organizaciones donde el usuario logueado es miembro activo.
+  // Con caché a nivel de módulo (dedupe entre vistas simultáneas).
+  // `forceRefresh=true` ignora la caché (útil tras mutaciones).
   // ─────────────────────────────────────────────
-  const cargarMisOrganizaciones = useCallback(async () => {
+  const cargarMisOrganizaciones = useCallback(async (forceRefresh = false) => {
+    const key = misOrgCacheKey();
+
+    if (!forceRefresh && misOrgCache.key === key && misOrgCache.data) {
+      setOrganizaciones(misOrgCache.data);
+      return misOrgCache.data;
+    }
+
+    if (!forceRefresh && misOrgCache.key === key && misOrgCache.promise) {
+      const data = await misOrgCache.promise;
+      setOrganizaciones(data);
+      return data;
+    }
+
     try {
       iniciarCarga();
-      const res = await apiBackend("/organizaciones/mias");
-      if (res.success) setOrganizaciones(res.data ?? []);
+      const promise = apiBackend("/organizaciones/mias")
+        .then((res) => {
+          const data = res.success ? res.data ?? [] : [];
+          if (res.success) setOrganizaciones(data);
+          return data;
+        })
+        .finally(() => terminarCarga());
+
+      misOrgCache = { key, promise, data: null };
+      const data = await promise;
+      misOrgCache = { key, promise: null, data };
+      return data;
     } catch (error) {
+      invalidarMisOrgCache();
       console.error("Error cargando organizaciones:", error);
-    } finally {
-      terminarCarga();
+      return [];
     }
-  }, []);
+  }, [setOrganizaciones]);
 
   // ─────────────────────────────────────────────
   // Consultar organización por slug (para /inmobiliarias/:slug)

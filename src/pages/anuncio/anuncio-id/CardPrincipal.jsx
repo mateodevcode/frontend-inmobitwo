@@ -10,7 +10,6 @@ import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import { useTiempoRelativo } from "@/hooks/useTiempoRelativo";
 import BotonFavorito from "./BotonFavorito";
 import BotonDescartar from "./BotonDescartar";
-import useFavoritos from "../../../hooks/useFavoritos";
 
 const CardPrincipal = ({
   inmueble,
@@ -20,7 +19,6 @@ const CardPrincipal = ({
 }) => {
   const navigate = useNavigate();
   const { dispararEventoYRevisar } = useTracking();
-  const { isFavorited, toggleFavorito } = useFavoritos(inmueble.id);
   const tiempo = useTiempoRelativo(inmueble?.created_at);
 
   const handleCompartirClick = () => {
@@ -150,7 +148,7 @@ const CardPrincipal = ({
         )}
 
         <div className="flex items-center gap-4 mt-4">
-          <BotonFavorito isFavorited={isFavorited} onClick={toggleFavorito} />
+          <BotonFavorito />
           <BotonDescartar />
           <button
             onClick={handleCompartirClick}

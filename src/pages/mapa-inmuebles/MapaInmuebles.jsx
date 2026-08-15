@@ -12,6 +12,7 @@ import {
 import InputSearchZona from "../seleccionar-zona/components/InputSearchZona";
 import { useSelectZona } from "@/hooks/useSelectZona";
 import { apiBackend } from "@/api/apiBackend.js";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
 
 function slugify(text) {
   if (!text) return "";
@@ -351,6 +352,10 @@ export default function MapaInmuebles({
           className="w-80 border-2"
           showX={true}
         />
+      </div>
+
+      <div className="absolute bottom-2 left-2 z-50 bg-amber-400">
+        <BarraNavegacionTauri />
       </div>
     </div>
   );

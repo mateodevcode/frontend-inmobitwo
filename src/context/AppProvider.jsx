@@ -7,6 +7,8 @@ import {
   FORM_DATA_PROPIEDAD_INICIAL,
   FORM_DATA_USUARIO_INICIAL,
 } from "@/hooks/useResetForm";
+import { feedActions } from "@/hooks/feedStore";
+import { setFavoritosStore } from "@/hooks/favoritosStore";
 
 export const AppProvider = ({ children }) => {
   // ─────────────────────────────────────────────
@@ -46,7 +48,8 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem("usuario");
     localStorage.removeItem("access_token");
     setUsuario(null);
-    setPropiedades([]);
+    feedActions.reset();
+    setFavoritosStore([]);
   };
 
   const estaAutenticado = !!usuario;
@@ -64,13 +67,10 @@ export const AppProvider = ({ children }) => {
   const resetFormDataUsuario = () => setFormDataUsuario(formDataUsuarioInicial);
 
   // ─────────────────────────────────────────────
-  // PROPIEDADES
+  // PROPIEDADES (el feed vive en hooks/feedStore; aquí solo lo CRUD de edición)
   // ─────────────────────────────────────────────
-  const [propiedades, setPropiedades] = useState([]);
   const [propiedad, setPropiedad] = useState({});
   const [organizaciones, setOrganizaciones] = useState([]);
-  // const [loadingPropiedades, setLoadingPropiedades] = useState(true);
-  const [loadingPropiedades, setLoadingPropiedades] = useState(true);
   const [search, setSearch] = useState("");
   const [openModalUser, setOpenModalUser] = useState(false);
   const [openModalAgregarPropiedad, setOpenModalAgregarPropiedad] =
@@ -95,10 +95,6 @@ export const AppProvider = ({ children }) => {
   const [openModalActividades, setOpenModalActividades] = useState(false);
   const [openModalUserPropiedadId, setModalUserPropiedadId] = useState(false);
 
-  // Cargar Home
-  const [cursor, setCursor] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-
   const [formDataPropiedad, setFormDataPropiedad] = useState(
     FORM_DATA_PROPIEDAD_INICIAL,
   );
@@ -109,7 +105,6 @@ export const AppProvider = ({ children }) => {
   const [loadingLogsTracking, setLoadingLogsTracking] = useState(false);
   const [openModalContactoLead, setOpenModalContactoLead] = useState(false);
   const [leadPendienteContacto, setLeadPendienteContacto] = useState(null);
-  const [favoritos, setFavoritos] = useState([]);
   const [filtroSeleccionado, setFiltroSeleccionado] = useState("todo");
   const [openModalInformativo, setOpenModalInformativo] = useState(false);
 
@@ -166,11 +161,6 @@ export const AppProvider = ({ children }) => {
         resetFormDataUsuario,
 
         // Propiedades
-        propiedades,
-        setPropiedades,
-        loadingPropiedades,
-        setLoadingPropiedades,
-        // refreshPropiedades: cargarPropiedades,
         formDataPropiedad,
         setFormDataPropiedad,
         propiedadAEliminar,
@@ -225,12 +215,6 @@ export const AppProvider = ({ children }) => {
         confirmedLocation,
         setConfirmedLocation,
 
-        // Home
-        cursor,
-        setCursor,
-        hasMore,
-        setHasMore,
-
         // Tracking / consentimiento
         consentimientoTracking,
         aceptarTracking,
@@ -249,10 +233,6 @@ export const AppProvider = ({ children }) => {
         setLoadingLogsTracking,
         leadPendienteContacto,
         setLeadPendienteContacto,
-
-        // Favoritos
-        favoritos,
-        setFavoritos,
 
         // Filtros
         filtroSeleccionado,

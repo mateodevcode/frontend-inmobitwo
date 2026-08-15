@@ -1,12 +1,12 @@
 # Graph Report - frontend-inmobitwo  (2026-08-15)
 
 ## Corpus Check
-- 371 files · ~293,172 words
+- 371 files · ~292,984 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1157 nodes · 1332 edges · 189 communities (138 shown, 51 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.54)
+- 1153 nodes · 1314 edges · 189 communities (138 shown, 51 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.54)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -22,13 +22,13 @@
 - DetallePropiedad.jsx
 - SelectZonaMap.jsx
 - dependencies
-- BarraNavegacionTauri.jsx
+- usePropiedades
 - descargas/DescargarApp.jsx
 - devDependencies
 - tauri.conf.json
 - useFavoritos.js
 - galeriaUtils.js
-- MisFavoritos.jsx
+- BarraNavegacionTauri.jsx
 - MapaInmuebles.jsx
 - DatosBasicos.jsx
 - Fotos.jsx
@@ -102,7 +102,6 @@
 - Leads.jsx
 - CrearOrganizacionForm.jsx
 - organizacionRoutes.jsx
-- ListaPropiedades.jsx
 - PropertyMap.jsx
 - staticCache.js
 - config.js
@@ -132,14 +131,14 @@
 ## God Nodes (most connected - your core abstractions)
 1. `Architecture` - 16 edges
 2. `SectionTitle()` - 13 edges
-3. `BarraNavegacionTauri()` - 12 edges
-4. `usePropiedades()` - 12 edges
-5. `Page layout` - 11 edges
-6. `CheckboxFiltro()` - 10 edges
+3. `usePropiedades()` - 11 edges
+4. `Page layout` - 11 edges
+5. `CheckboxFiltro()` - 10 edges
+6. `BarraNavegacionTauri()` - 8 edges
 7. `Loading()` - 8 edges
 8. `scripts` - 7 edges
-9. `Optimización de Rendimiento — InmobiTwo` - 7 edges
-10. `icon` - 6 edges
+9. `Logo()` - 7 edges
+10. `Optimización de Rendimiento — InmobiTwo` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `MapaInmuebles()` --references--> `supercluster`  [EXTRACTED]
@@ -167,12 +166,12 @@ Cohesion: 0.05
 Nodes (36): Admin pages (`/admin/*`) — requires superadmin, API layer ([src/api/](src/api/)), Architecture, Auth flow, Commands, Custom hooks ([src/hooks/](src/hooks/)), Data files ([src/data/](src/data/)), Directory structure (`src/`) (+28 more)
 
 ### Community 3 - "ModalHamburguesa.jsx"
-Cohesion: 0.16
-Nodes (7): Logo(), ConLogin(), DescargarApp(), EnlacesHamburguesa(), SinLogin(), steps, irArriba()
+Cohesion: 0.05
+Nodes (28): Logo(), ConLogin(), DescargarApp(), EnlacesHamburguesa(), SinLogin(), OPCIONES_ORDEN, BotonGuardarBusqueda(), BreadcrumbUbicacion() (+20 more)
 
 ### Community 4 - "DetallePropiedad.jsx"
-Cohesion: 0.17
-Nodes (10): BarraNavegacion(), BotonDescartar(), BotonFavorito(), CardPrincipal(), DetalleInmuble(), DetallePropiedad(), GaleriaInmuebles(), HeaderDinamico() (+2 more)
+Cohesion: 0.18
+Nodes (9): BarraNavegacion(), BotonDescartar(), BotonFavorito(), CardPrincipal(), DetalleInmuble(), GaleriaInmuebles(), HeaderDinamico(), SidebarContacto() (+1 more)
 
 ### Community 5 - "SelectZonaMap.jsx"
 Cohesion: 0.11
@@ -182,9 +181,9 @@ Nodes (23): expandTipoInmueble(), fetchBarrios(), fetchCitiesGeoJSON(), fetchGeo
 Cohesion: 0.06
 Nodes (31): @geoman-io/maplibre-geoman-free, gsap, @gsap/react, @headlessui/react, lucide-react, maplibre-gl, motion, dependencies (+23 more)
 
-### Community 7 - "BarraNavegacionTauri.jsx"
-Cohesion: 0.07
-Nodes (22): BarraNavegacionTauri(), ModalInformativo(), ModalUserPropiedadId(), HeaderPropiedadId(), PropiedadId(), appendCamposPropiedad(), CAMPOS_PROPIEDAD, camposPropiedad() (+14 more)
+### Community 7 - "usePropiedades"
+Cohesion: 0.10
+Nodes (18): ModalUserPropiedadId(), HeaderPropiedadId(), PropiedadId(), appendCamposPropiedad(), CAMPOS_PROPIEDAD, camposPropiedad(), normalizarCoord(), propiedadCache (+10 more)
 
 ### Community 8 - "descargas/DescargarApp.jsx"
 Cohesion: 0.12
@@ -202,9 +201,9 @@ Nodes (24): icons/128x128@2x.png, icons/128x128.png, icons/32x32.png, icons/icon
 Cohesion: 0.16
 Nodes (13): PropertyImage(), CardPropiedad(), ImagenesCard(), HeaderFiltros(), HeaderPrincipal(), InputSearchPrincipal(), agruparPorOrden(), ANCHOS_PX (+5 more)
 
-### Community 13 - "MisFavoritos.jsx"
-Cohesion: 0.13
-Nodes (5): ESTADOS, OrganizacionNav(), Loading(), ListaFavoritos(), SinFavoritos()
+### Community 13 - "BarraNavegacionTauri.jsx"
+Cohesion: 0.08
+Nodes (8): BarraNavegacionTauri(), ModalInformativo(), ESTADOS, OrganizacionNav(), Loading(), ListaFavoritos(), SinFavoritos(), isTauri()
 
 ### Community 14 - "MapaInmuebles.jsx"
 Cohesion: 0.18
@@ -383,12 +382,8 @@ Cohesion: 0.83
 Nodes (3): generarSessionId(), generarUUIDFallback(), getSessionId()
 
 ### Community 76 - "favoritosStore.js"
-Cohesion: 0.31
-Nodes (6): favoritos, getFavoritosSnapshot(), listeners, subscribeFavoritos(), useFavoritosLoadingStore(), useFavoritosStore()
-
-### Community 94 - "ListaPropiedades.jsx"
-Cohesion: 0.08
-Nodes (21): OPCIONES_ORDEN, CardAnuncio(), OPERACION_LABEL, TIPO_BADGE, CardAnuncioCompra(), OPERACION_LABEL, TIPO_BADGE, CHIPS (+13 more)
+Cohesion: 0.38
+Nodes (5): favoritos, getFavoritosSnapshot(), listeners, subscribeFavoritos(), useFavoritosStore()
 
 ### Community 99 - "PropertyMap.jsx"
 Cohesion: 0.38
@@ -407,24 +402,24 @@ Cohesion: 0.67
 Nodes (3): preloadStaticData(), STATIC_ENDPOINTS, usePreloadData()
 
 ## Knowledge Gaps
-- **265 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+260 more)
+- **264 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+259 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **51 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `BarraNavegacionTauri()` connect `BarraNavegacionTauri.jsx` to `MisFavoritos.jsx`, `SelectZonaMap.jsx`, `ListaPropiedades.jsx`, `MapaInmuebles.jsx`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
-- **Why does `supercluster` connect `MapaInmuebles.jsx` to `dependencies`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+- **Why does `Logo()` connect `ModalHamburguesa.jsx` to `BarraNavegacionTauri.jsx`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `BarraNavegacionTauri()` connect `BarraNavegacionTauri.jsx` to `usePropiedades`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
-  _265 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _264 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `FormFiltros.jsx` be split into smaller, more focused modules?**
   _Cohesion score 0.07547169811320754 - nodes in this community are weakly interconnected._
 - **Should `Architecture` be split into smaller, more focused modules?**
   _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
 - **Should `temaRegistry.js` be split into smaller, more focused modules?**
   _Cohesion score 0.05555555555555555 - nodes in this community are weakly interconnected._
-- **Should `SelectZonaMap.jsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.10795454545454546 - nodes in this community are weakly interconnected._
+- **Should `ModalHamburguesa.jsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.054426705370101594 - nodes in this community are weakly interconnected._

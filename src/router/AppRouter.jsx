@@ -270,6 +270,14 @@ const AppRouter = () => {
           }
         />
         <Route
+          path="/point/:operationAndType/:lat/:lng/:zoom/:mapa"
+          element={
+            <Suspenso>
+              <MapaInmueblesPage />
+            </Suspenso>
+          }
+        />
+        <Route
           path="/:operationAndType/zona-personalizada"
           element={
             <Suspenso>

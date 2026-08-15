@@ -3,8 +3,9 @@ import FiltroRelevante from "./FiltroRelevante";
 import { useSlugParser } from "@/hooks/useSlugParser";
 import { usePropertySearch } from "@/hooks/usePropertySearch";
 import { useNavigate } from "react-router-dom";
-import CardAnuncioCompra from "./card-anuncio/CardAnuncioCompra";
-import CardAnuncio from "./card-anuncio/CardAnuncio";
+import SmartLoader from "@/components/loader/SmartLoader";
+import CardAnuncioCompra from "../card-anuncio/CardAnuncioCompra";
+import CardAnuncio from "../card-anuncio/CardAnuncio";
 
 const TYPE_LABELS = {
   apartamento: "Apartamentos",
@@ -84,8 +85,7 @@ const ListadoDePropiedades = ({
     const lista = [...properties];
     const area = (p) => p.private_area ?? p.constructed_area ?? 0;
     const precioPm2 = (p) =>
-      p.price_per_sqm ??
-      (p.precio && area(p) ? p.precio / area(p) : null);
+      p.price_per_sqm ?? (p.precio && area(p) ? p.precio / area(p) : null);
 
     switch (orden) {
       case "baratos":
@@ -109,9 +109,7 @@ const ListadoDePropiedades = ({
         );
         break;
       case "caros_pm2":
-        lista.sort(
-          (a, b) => (precioPm2(b) ?? 0) - (precioPm2(a) ?? 0),
-        );
+        lista.sort((a, b) => (precioPm2(b) ?? 0) - (precioPm2(a) ?? 0));
         break;
       case "grandes":
         lista.sort((a, b) => area(b) - area(a));
@@ -133,11 +131,7 @@ const ListadoDePropiedades = ({
     <div className="w-full md:w-[75%] h-full">
       <FiltroRelevante value={orden} onChange={setOrden} />
       <div className="flex flex-col gap-4 p-4">
-        {loading && (
-          <div className="text-center py-20 text-gray-400 min-h-96 flex items-center justify-center">
-            Cargando propiedades...
-          </div>
-        )}
+        {loading && <SmartLoader delay={300} label="Buscando inmuebles..." />}
         {error && <div className="text-center py-20 text-red-400">{error}</div>}
         {isCustomPolygon && polygonMissing && !loading && (
           <div className="text-center py-20 min-h-96 flex flex-col items-center justify-center gap-4">

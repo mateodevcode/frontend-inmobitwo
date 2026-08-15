@@ -11,8 +11,13 @@ import { items_menu } from "@/data/items_menu";
 import { irArriba } from "@/utils/irArriba";
 
 const ConLogin = ({ tamano = "lg" }) => {
-  const { setOpenModalHamburguesa, openModalHamburguesa, usuario } =
-    useAppContext();
+  const {
+    setOpenModalHamburguesa,
+    openModalHamburguesa,
+    openModalUser,
+    usuario,
+    setOpenModalUser,
+  } = useAppContext();
   const { cargarCountMisAnuncios } = usePropiedades();
   const navigate = useNavigate();
 
@@ -30,12 +35,12 @@ const ConLogin = ({ tamano = "lg" }) => {
   const sizeClass = TAMANOS[tamano] || TAMANOS.md;
 
   useEffect(() => {
-    if (!openModalHamburguesa || !usuario?.id) return;
+    if (!usuario?.id) return;
     (async () => {
       const count = await cargarCountMisAnuncios();
       setCountMisAnuncios(count);
     })();
-  }, [openModalHamburguesa, usuario?.id, cargarCountMisAnuncios]);
+  }, [openModalHamburguesa, openModalUser, usuario?.id, cargarCountMisAnuncios]);
 
   const avatar = usuario?.image_url ? (
     <img
@@ -58,6 +63,7 @@ const ConLogin = ({ tamano = "lg" }) => {
         className="flex gap-2 items-center mb-4 p-3 rounded-md hover:bg-black/5 text-black cursor-pointer select-none"
         onClick={() => {
           setOpenModalHamburguesa(false);
+          setOpenModalUser(false);
           navigate("/usuario/tus-datos/perfil");
         }}
       >
@@ -81,6 +87,7 @@ const ConLogin = ({ tamano = "lg" }) => {
               className="flex items-center gap-4 p-4 rounded-md hover:bg-black/5 text-black cursor-pointer select-none text-sm"
               onClick={() => {
                 setOpenModalHamburguesa(false);
+                setOpenModalUser(false);
                 navigate(`/usuario/${item.id}`);
                 irArriba();
               }}
@@ -101,6 +108,7 @@ const ConLogin = ({ tamano = "lg" }) => {
         className="flex items-center gap-2 p-4 rounded-md hover:bg-black/5 text-black cursor-pointer select-none text-sm mt-4"
         onClick={() => {
           setOpenModalHamburguesa(false);
+          setOpenModalUser(false);
           handleCerrarSesion();
         }}
       >

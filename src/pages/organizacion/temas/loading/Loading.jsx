@@ -28,9 +28,9 @@ const Loading = ({ logo = "/logo/logo.png", type = "opcion1" }) => {
       case "opcion2":
         return (
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-rose-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
-            <span className="w-3 h-3 bg-rose-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
-            <span className="w-3 h-3 bg-rose-600 rounded-full animate-bounce" />
+            <span className="w-2 h-2 bg-rose-600 rounded-full animate-bounce [animation-delay:-0.5s]" />
+            <span className="w-2 h-2 bg-rose-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
+            <span className="w-2 h-2 bg-rose-600 rounded-full animate-bounce" />
           </div>
         );
 
@@ -65,8 +65,8 @@ const Loading = ({ logo = "/logo/logo.png", type = "opcion1" }) => {
   };
 
   return (
-    <div className="bg-white h-[50svh] w-full flex flex-col items-center justify-center gap-8 font-poppins">
-      <div className={`w-14 ${type === "opcion3" ? "animate-pulse" : ""}`}>
+    <div className="bg-white h-[50svh] w-full flex flex-col items-center justify-center gap-4 font-poppins">
+      <div className={`w-12 h-12 ${type === "opcion3" ? "animate-pulse" : ""}`}>
         <img src={logo} alt="logo" className="h-full w-full object-contain" />
       </div>
 

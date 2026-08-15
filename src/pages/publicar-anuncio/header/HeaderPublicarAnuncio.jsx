@@ -46,7 +46,7 @@ const HeaderPublicarAnuncio = () => {
       {/* Navegación de pasos con flechas */}
       <nav
         aria-label="Progreso del anuncio"
-        className="grid grid-cols-1 md:grid-cols-3 w-full border-b border-t border-neutral-200 bg-white font-poppins sticky top-0 z-50"
+        className="grid grid-cols-1 md:grid-cols-3 w-full border-b border-t border-neutral-200 bg-white font-poppins sticky top-0 z-30"
       >
         {steps.map((step, index) => {
           const isActive = step.id === contentNumber;

@@ -94,7 +94,7 @@ const LocationForm = () => {
         onChange={handleStreetNumberChange}
       />
 
-      {checkError && <p className="text-base text-red-600">{checkError}</p>}
+      {checkError && <p className="text-base text-tercero">{checkError}</p>}
 
       <button
         type="button"

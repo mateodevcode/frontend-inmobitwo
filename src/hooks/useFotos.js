@@ -4,6 +4,11 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import usePropiedades from "@/hooks/usePropiedades";
+import {
+  actualizarPaso,
+  leerProgreso,
+  PASO_DETALLES,
+} from "@/pages/publicar-anuncio/anuncioProgreso";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 
@@ -11,7 +16,7 @@ const useFotos = () => {
   const { setContentNumber } = useAppContext();
   const { subirFotosAnuncio, continuarSinFotos } = usePropiedades();
   const [searchParams] = useSearchParams();
-  const anuncioId = searchParams.get("id");
+  const anuncioId = searchParams.get("id") ?? leerProgreso()?.id ?? null;
 
   // Imagen principal
   const [imagenPrincipal, setImagenPrincipal] = useState(null);
@@ -144,6 +149,8 @@ const useFotos = () => {
   };
 
   const handleBack = () => {
+    // Al volver al paso 2 el anuncio ya existe: la lógica cambia a "actualizar".
+    actualizarPaso(PASO_DETALLES);
     setContentNumber(1);
   };
 

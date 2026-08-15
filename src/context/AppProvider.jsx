@@ -85,6 +85,7 @@ export const AppProvider = ({ children }) => {
   const [cargandoGlobal, setCargandoGlobal] = useState(false);
   const contadorPeticiones = useRef(0);
   const [contentNumber, setContentNumber] = useState(0);
+  const [featuresSel, setFeaturesSel] = useState([]);
   const [comprobarDireccion, setComprobarDireccion] = useState(false);
   const [confirmedLocation, setConfirmedLocation] = useState(null);
   const [openModalHamburguesa, setOpenModalHamburguesa] = useState(false);
@@ -110,6 +111,7 @@ export const AppProvider = ({ children }) => {
   const [leadPendienteContacto, setLeadPendienteContacto] = useState(null);
   const [favoritos, setFavoritos] = useState([]);
   const [filtroSeleccionado, setFiltroSeleccionado] = useState("todo");
+  const [openModalInformativo, setOpenModalInformativo] = useState(false);
 
   // Se llama AL INICIO de cualquier petición
   const iniciarCarga = useCallback(() => {
@@ -201,6 +203,8 @@ export const AppProvider = ({ children }) => {
         setOpenModalContactoLead,
         openModalUserPropiedadId,
         setModalUserPropiedadId,
+        openModalInformativo,
+        setOpenModalInformativo,
 
         // Organizaciones
         organizaciones,
@@ -214,6 +218,8 @@ export const AppProvider = ({ children }) => {
         // publicar anuncio
         contentNumber,
         setContentNumber,
+        featuresSel,
+        setFeaturesSel,
         comprobarDireccion,
         setComprobarDireccion,
         confirmedLocation,

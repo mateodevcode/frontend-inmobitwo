@@ -28,6 +28,12 @@ import {
   filtrarTelefonosValidosColombia,
   validarTelefonoColombia,
 } from "@/utils/validatePhone";
+import {
+  guardarProgreso,
+  guardarSnapshot,
+  leerProgreso,
+  PASO_DETALLES,
+} from "@/pages/publicar-anuncio/anuncioProgreso";
 
 const useDatosBasicos = () => {
   const {
@@ -434,6 +440,11 @@ const useDatosBasicos = () => {
       }
     }
     setGuardandoContacto(false);
+
+    // Registrar el paso y guardar un snapshot del formulario (paso 1 → 2)
+    const progreso = leerProgreso();
+    guardarProgreso({ id: progreso?.id ?? null, step: PASO_DETALLES });
+    guardarSnapshot(formDataPropiedad);
 
     setContentNumber(1);
     document.getElementById("top-detalles")?.scrollIntoView({

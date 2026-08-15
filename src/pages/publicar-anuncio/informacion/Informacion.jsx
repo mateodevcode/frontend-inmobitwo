@@ -3,7 +3,7 @@ import { FiFileText } from "react-icons/fi";
 
 const Informacion = () => {
   return (
-    <div className="border border-black/10 w-full md:w-150 mx-auto mt-20 font-montserrat text-black">
+    <div className="border border-black/10 w-full lg:w-110 xl:w-120 mx-auto mt-20 font-montserrat text-black">
       <div className="md:p-8 p-6">
         <h2 className="text-xl font-bold">Información útil</h2>
         <p className="text-base mt-2">

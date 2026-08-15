@@ -19,11 +19,11 @@ const InputField = ({
   return (
     <div>
       <div className="mb-3">
-        <label className="block text-lg font-semibold text-slate-900">
+        <label className="block text-lg font-semibold text-segundo/80">
           {label}
         </label>
         {description && (
-          <p className="mt-0.5 text-sm text-slate-500">({description})</p>
+          <p className="mt-0.5 text-sm text-segundo/20">({description})</p>
         )}
       </div>
       <div className="relative w-96">
@@ -34,12 +34,12 @@ const InputField = ({
           placeholder={placeholder}
           inputMode={numeric ? "numeric" : undefined}
           readOnly={readOnly}
-          className={`w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 transition-colors hover:border-rose-600/50 focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-600 ${
+          className={`w-full rounded-md border border-segundo/20 bg-primero px-4 py-3 text-base text-segundo/80 transition-colors hover:border-tercero/50 focus:border-tercero focus:outline-none focus:ring-1 focus:ring-tercero ${
             unit ? "pr-14" : ""
-          } ${readOnly ? "cursor-default bg-slate-100 text-slate-600" : ""}`}
+          } ${readOnly ? "cursor-default bg-primero text-segundo/30" : ""}`}
         />
         {unit && (
-          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-base text-slate-500">
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-base text-segundo/30">
             {unit}
           </span>
         )}

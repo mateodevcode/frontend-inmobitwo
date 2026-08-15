@@ -1,52 +1,10 @@
-import { useEffect } from "react";
-import { useAppContext } from "@/context/AppContext";
-import { apiBackend } from "@/api/apiBackend";
-import { mapearApiAFormDataPropiedad } from "@/hooks/useResetForm";
+// src/components/modales/ModalContinuarAnuncio.jsx
+//
+// Modal presentacional: pregunta si continuar el anuncio guardado o empezar uno
+// nuevo. No hace fetch por sí mismo; al continuar se navega a ?id= y el resto
+// lo resuelve PublicarAnuncio (cargarPropiedad).
 
 export const ModalContinuarAnuncio = ({ anuncio, onContinuar, onNuevo }) => {
-  const {
-    terminarCarga,
-    iniciarCarga,
-    setFormDataPropiedad,
-    setContentNumber,
-  } = useAppContext();
-
-  const cargarPropiedad = async (anuncioId) => {
-    try {
-      iniciarCarga();
-      const res = await apiBackend(`/propiedades/${anuncioId}`);
-      const { success, data } = res;
-      if (success) {
-        localStorage.setItem(
-          "ultimoAnuncioId",
-          JSON.stringify({
-            id: anuncioId,
-            timestamp: new Date().toISOString(),
-          }),
-        );
-        setFormDataPropiedad(mapearApiAFormDataPropiedad(data));
-        setContentNumber(2);
-      } else {
-        localStorage.removeItem("ultimoAnuncioId");
-        // navigate("/info/publicar-anuncio/publicar");
-        setContentNumber(0);
-      }
-    } catch (error) {
-      console.error("Error cargando propiedad:", error);
-      setContentNumber(0);
-    } finally {
-      terminarCarga();
-    }
-  };
-
-  useEffect(() => {
-    if (anuncio.id) {
-      // Hay id en la URL => flujo normal, traer datos y saltar a paso 2
-      cargarPropiedad(anuncio.id);
-      return;
-    }
-  }, [anuncio.id]);
-
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 font-poppins">
       <div className="bg-white rounded-md p-6 max-w-md w-full">

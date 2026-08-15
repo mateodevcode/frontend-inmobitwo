@@ -3,85 +3,102 @@ import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { useAppContext } from "@/context/AppContext.js";
 import { apiBackend } from "@/api/apiBackend.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useResetForm from "@/hooks/useResetForm";
 import { apiBackendFormData } from "@/api/apiBackendFormData.js";
+import {
+  guardarProgreso,
+  leerProgreso,
+  limpiarTodo,
+  PASO_FOTOS,
+} from "@/pages/publicar-anuncio/anuncioProgreso";
 
-// Agrega a un FormData todos los campos del schema v5.0 (Colombia).
-// Omite valores vacíos para no enviar "0" o "" innecesarios al backend.
-function appendCamposPropiedad(formData, datos) {
-  // Normaliza coordenadas: si llegan como array o string de Postgres "{a,b}",
-  // toma el primer valor numérico. Evita 500 en el INSERT.
-  const normalizarCoord = (v) => {
-    if (v === undefined || v === null || v === "") return null;
-    let valor = v;
-    if (Array.isArray(valor)) valor = valor[0];
-    if (typeof valor === "string" && valor.startsWith("{")) {
-      const match = valor.match(/[-\d.]+/);
-      valor = match?.[0];
-    }
-    const n = Number(valor);
-    return isNaN(n) ? null : n;
-  };
+// Lista de campos del schema v5.0 (Colombia).
+const CAMPOS_PROPIEDAD = [
+  "operation_type_id",
+  "property_type_id",
+  "condition_type_id",
+  "rental_type_id",
+  "country_id",
+  "state_id",
+  "city_id",
+  "barrio_id",
+  "barrio_nombre",
+  "direccion",
+  "numero_direccion",
+  "latitude",
+  "longitude",
+  "estrato",
+  "cedula_catastral",
+  "matricula_inmobiliaria",
+  "description",
+  "precio",
+  "administracion",
+  "constructed_area",
+  "private_area",
+  "plot_area",
+  "room_count",
+  "bedroom_count",
+  "bathroom_count",
+  "social_bathroom_count",
+  "construction_year",
+  "antiguedad_anios",
+  "is_new_construction",
+  "parqueadero_tipo",
+  "parqueadero_modo",
+  "parking_space_count",
+  "parking_space_included",
+  "parking_space_price",
+  "tiene_agua",
+  "tiene_luz",
+  "tiene_gas",
+  "tiene_alcantarillado",
+  "has_elevator",
+  "has_swimming_pool",
+  "has_gym",
+  "has_security_24h",
+  "has_air_conditioning",
+  "is_furnished",
+  "zona",
+  "how_to_contact",
+  "telefono_contacto",
+];
 
-  const campos = [
-    "operation_type_id",
-    "property_type_id",
-    "condition_type_id",
-    "rental_type_id",
-    "country_id",
-    "state_id",
-    "city_id",
-    "barrio_id",
-    "barrio_nombre",
-    "direccion",
-    "numero_direccion",
-    "latitude",
-    "longitude",
-    "estrato",
-    "cedula_catastral",
-    "matricula_inmobiliaria",
-    "description",
-    "precio",
-    "administracion",
-    "constructed_area",
-    "private_area",
-    "plot_area",
-    "room_count",
-    "bedroom_count",
-    "bathroom_count",
-    "social_bathroom_count",
-    "construction_year",
-    "antiguedad_anios",
-    "is_new_construction",
-    "parqueadero_tipo",
-    "parqueadero_modo",
-    "parking_space_count",
-    "parking_space_included",
-    "parking_space_price",
-    "tiene_agua",
-    "tiene_luz",
-    "tiene_gas",
-    "tiene_alcantarillado",
-    "has_elevator",
-    "has_swimming_pool",
-    "has_gym",
-    "has_security_24h",
-    "has_air_conditioning",
-    "is_furnished",
-    "zona",
-    "how_to_contact",
-    "telefono_contacto",
-  ];
-  for (const campo of campos) {
+// Normaliza coordenadas: si llegan como array o string de Postgres "{a,b}",
+// toma el primer valor numérico. Evita 500 en el INSERT.
+const normalizarCoord = (v) => {
+  if (v === undefined || v === null || v === "") return null;
+  let valor = v;
+  if (Array.isArray(valor)) valor = valor[0];
+  if (typeof valor === "string" && valor.startsWith("{")) {
+    const match = valor.match(/[-\d.]+/);
+    valor = match?.[0];
+  }
+  const n = Number(valor);
+  return isNaN(n) ? null : n;
+};
+
+// Devuelve un objeto con solo los campos llenos (omite ""/null/undefined).
+// Se usa tanto para el FormData de creación como para el PATCH de actualización.
+function camposPropiedad(datos) {
+  const resultado = {};
+  for (const campo of CAMPOS_PROPIEDAD) {
     const valor = datos?.[campo];
     if (valor === undefined || valor === null || valor === "") continue;
     if (campo === "latitude" || campo === "longitude") {
       const limpio = normalizarCoord(valor);
       if (limpio === null) continue;
-      formData.append(campo, limpio);
+      resultado[campo] = limpio;
       continue;
     }
+    resultado[campo] = valor;
+  }
+  return resultado;
+}
+
+// Agrega a un FormData todos los campos del schema v5.0 (Colombia).
+function appendCamposPropiedad(formData, datos) {
+  for (const [campo, valor] of Object.entries(camposPropiedad(datos))) {
     formData.append(campo, valor);
   }
 }
@@ -108,7 +125,9 @@ const usePropiedades = () => {
   } = useAppContext();
   const cargandoPropiedades = useRef(false);
   const cargandoPropiedadesInicio = useRef(false);
+  const enviandoAnuncio = useRef(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { resetFormDataPropiedad } = useResetForm();
 
   // ─────────────────────────────────────────────
@@ -225,77 +244,106 @@ const usePropiedades = () => {
 
   // ─────────────────────────────────────────────
   // Publicar un anuncio
+  // Si ya existe un anuncio (URL ?id o progreso guardado) ACTUALIZA (PATCH).
+  // Si no existe, CREA (POST /publicar-anuncios) y guarda el id para el paso 3.
   // ok loader
-  // pendiente de revision
   // ─────────────────────────────────────────────
   const publicarDataAnuncio = async (e, setLoading, caracteristicasSeleccionadas = []) => {
     e.preventDefault();
 
+    // Protección anti doble-click: si ya hay una petición en curso, ignorar.
+    if (enviandoAnuncio.current) return;
+    enviandoAnuncio.current = true;
+
     try {
       iniciarCarga();
       setLoading(true);
-      const formData = new FormData();
 
-      // ========================================
-      // DATOS (schema v5.0: IDs de catálogos + campos Colombia)
-      // appendCamposPropiedad agrega todos los campos del formulario.
-      // Solo se agregan aquí los que NO están en esa lista.
-      // ========================================
-      formData.append("estado", formDataPropiedad.estado || "publicado");
-      formData.append("publicado_por_id", usuario?.id);
-      appendCamposPropiedad(formData, formDataPropiedad);
+      // Resuelve el id del anuncio: URL > progreso guardado > ninguno (crear).
+      const idEnUrl = searchParams.get("id");
+      const anuncioId = idEnUrl ?? leerProgreso()?.id ?? null;
 
+      // Datos del wizard (schema v5.0) en un objeto plano reutilizable.
+      const cuerpo = camposPropiedad(formDataPropiedad);
+      cuerpo.estado = formDataPropiedad.estado || "publicado";
+      cuerpo.publicado_por_id = usuario?.id;
       if (
         formDataPropiedad.organizacion_id &&
         formDataPropiedad.organizacion_id !== "null"
       ) {
-        formData.append("organizacion_id", formDataPropiedad.organizacion_id);
+        cuerpo.organizacion_id = formDataPropiedad.organizacion_id;
       }
-
       if (formDataPropiedad.es_de_organizacion) {
-        formData.append(
-          "es_de_organizacion",
-          formDataPropiedad.es_de_organizacion,
-        );
+        cuerpo.es_de_organizacion = formDataPropiedad.es_de_organizacion;
       }
 
-      console.log("[publicar] lat/lng:", formDataPropiedad.latitude, formDataPropiedad.longitude);
+      const guardarCaracteristicas = async (propiedadId) => {
+        if (!propiedadId) return;
+        try {
+          await apiBackend(
+            `/propiedades/${propiedadId}/caracteristicas`,
+            "POST",
+            {
+              features: caracteristicasSeleccionadas.map((id) => ({
+                feature_id: id,
+                bool_value: true,
+              })),
+            },
+          );
+        } catch (featError) {
+          console.warn("⚠️ No se guardaron las características:", featError);
+        }
+      };
+
+      // ========================================
+      // MODO ACTUALIZAR (la propiedad ya existe)
+      // ========================================
+      if (anuncioId) {
+        const data = await apiBackend(`/propiedades/${anuncioId}`, "PATCH", cuerpo);
+        const { success, message, error } = data;
+
+        if (!success) {
+          console.warn("⚠️ Error:", error);
+          return;
+        }
+
+        await guardarCaracteristicas(anuncioId);
+        toast.success(message || "Anuncio actualizado", {
+          position: "bottom-right",
+        });
+
+        guardarProgreso({ id: anuncioId, step: PASO_FOTOS });
+        setContentNumber(2);
+
+        // Si el id venía solo del storage (sin ?id en la URL), normalizar la URL.
+        if (!idEnUrl) {
+          navigate(`/info/publicar-anuncio/publicar?id=${anuncioId}`, {
+            replace: true,
+          });
+        }
+        return;
+      }
+
+      // ========================================
+      // MODO CREAR
+      // ========================================
+      const formData = new FormData();
+      for (const [campo, valor] of Object.entries(cuerpo)) {
+        formData.append(campo, valor);
+      }
+
       const data = await apiBackendFormData("/publicar-anuncios", formData);
 
       const { success, message, error, data: nuevaPropiedad } = data;
 
       if (success) {
-        // Características N:M (feature_catalog) — segunda llamada
-        if (nuevaPropiedad?.id && caracteristicasSeleccionadas.length > 0) {
-          try {
-            await apiBackend(
-              `/propiedades/${nuevaPropiedad.id}/caracteristicas`,
-              "POST",
-              {
-                features: caracteristicasSeleccionadas.map((id) => ({
-                  feature_id: id,
-                  bool_value: true,
-                })),
-              },
-            );
-          } catch (featError) {
-            console.warn("⚠️ No se guardaron las características:", featError);
-          }
-        }
-
+        await guardarCaracteristicas(nuevaPropiedad?.id);
         toast.success(message);
         resetFormDataPropiedad();
         setOpenModalAgregarPropiedad(false);
         setContentNumber(2);
 
-        localStorage.setItem(
-          "ultimoAnuncioId",
-          JSON.stringify({
-            id: nuevaPropiedad.id,
-            timestamp: new Date().toISOString(),
-          }),
-        );
-
+        guardarProgreso({ id: nuevaPropiedad.id, step: PASO_FOTOS });
         navigate(`/info/publicar-anuncio/publicar?id=${nuevaPropiedad.id}`);
       } else {
         console.warn("⚠️ Error:", error);
@@ -305,6 +353,7 @@ const usePropiedades = () => {
       console.error("❌ Error:", error);
       toast.error("Error creando la propiedad", { position: "bottom-right" });
     } finally {
+      enviandoAnuncio.current = false;
       terminarCarga();
       setLoading(false);
     }
@@ -499,6 +548,13 @@ const usePropiedades = () => {
     galeriaFiles,
     planosFiles,
   ) => {
+    if (!anuncioId) {
+      toast.error("No se encontró el anuncio para subir las fotos", {
+        position: "bottom-right",
+      });
+      return { success: false };
+    }
+
     try {
       iniciarCarga();
       setLoading(true);
@@ -563,7 +619,7 @@ const usePropiedades = () => {
   // Limpieza común al terminar el wizard (con o sin fotos)
   // ─────────────────────────────────────────────
   const finalizarPublicacion = () => {
-    localStorage.removeItem("ultimoAnuncioId");
+    limpiarTodo();
     resetFormDataPropiedad();
     setContentNumber(0);
     navigate("/usuario/mis-anuncios", { replace: true });

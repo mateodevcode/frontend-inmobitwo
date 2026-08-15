@@ -38,7 +38,6 @@ const Login = () => {
 
   return (
     <div className="grid grid-cols-1 bg-gray-100 relative">
-      <BarraNavegacionTauri />
       <div
         className="bg-gray-100 h-dvh flex flex-col items-center justify-center"
         id="form-login"
@@ -170,6 +169,7 @@ const Login = () => {
         </div>
       </div>
 
+      <BarraNavegacionTauri />
       <style>{scrollbarStyles.default}</style>
     </div>
   );

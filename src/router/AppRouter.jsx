@@ -14,19 +14,19 @@ import {
 // Páginas
 import Home from "@/pages/Home.jsx";
 import Admin from "@/pages/Admin.jsx";
-import NotFound from "@/pages/NotFound.jsx";
+import NotFound from "@/pages/not-found/NotFound.jsx";
 import Login from "@/pages/login/Login.jsx";
 import Registro from "@/pages/registro/Registro.jsx";
 import InfoPublicarAnuncio from "@/pages/publicar-anuncio-info/InfoPublicarAnuncio.jsx";
-import MisAnuncios from "@/pages/MisAnuncios.jsx";
+import MisAnuncios from "@/pages/usuario/mis-anuncios/MisAnuncios.jsx";
 import Anuncio from "@/pages/Anuncio.jsx";
-import MiPerfil from "@/pages/MiPerfil.jsx";
-import SeguridadAcceso from "@/pages/SeguridadAcceso";
+import MiPerfil from "@/pages/usuario/tus-datos/perfil/MiPerfil.jsx";
+import SeguridadAcceso from "@/pages/usuario/tus-datos/acceso/SeguridadAcceso";
 import Leads from "@/pages/Leads";
 import Logs from "@/pages/Logs";
 import ListaPruebaPropiedades from "@/pages/ListaPruebaPropiedades";
 import PagePropiedadId from "@/pages/PagePropiedadId";
-import MisFavoritos from "@/pages/MisFavoritos";
+import MisFavoritos from "@/pages/usuario/mis-favoritos/MisFavoritos";
 import AdminRutasPage from "@/pages/admin/AdminRutasPages";
 import PageInicio from "@/pages/inicio/PagePrincipal";
 import OlvidastePassword from "../pages/olvidaste-tu-password/OlvidastePassword";
@@ -34,18 +34,20 @@ import NuevoProfesional from "../pages/nuevo-profesional/NuevoProfesional";
 
 // ─── Rutas pesadas cargadas bajo demanda (maplibre/geoman) ───────────────
 const DescargarApp = lazy(() => import("../pages/descargas/DescargarApp"));
-const PublicarAnuncio = lazy(() =>
-  import("@/pages/publicar-anuncio/PublicarAnuncio.jsx")
+const PublicarAnuncio = lazy(
+  () => import("@/pages/publicar-anuncio/PublicarAnuncio.jsx"),
 );
-const ListaPropiedades = lazy(() =>
-  import("@/pages/lista-propiedades/ListaPropiedades")
+const ListaPropiedades = lazy(
+  () => import("@/pages/lista-propiedades/ListaPropiedades"),
 );
-const SeleccionarZonaPage = lazy(() =>
-  import("@/features/seleccionar-zona/index.jsx")
+const SeleccionarZonaPage = lazy(
+  () => import("@/pages/seleccionar-zona/SeleccionarZonaPage.jsx"),
 );
-const MapaInmueblesPage = lazy(() => import("@/pages/MapaInmueblesPage.jsx"));
+const MapaInmueblesPage = lazy(
+  () => import("@/pages/mapa-inmuebles/MapaInmueblesPage.jsx"),
+);
 const PageAnuncio = lazy(() => import("@/pages/anuncio/PageAnuncio.jsx"));
-const FotoVisor = lazy(() => import("@/pages/anuncio/FotoVisor.jsx"));
+const FotoVisor = lazy(() => import("@/pages/anuncio/foto-visor/FotoVisor.jsx"));
 
 const Suspenso = ({ children }) => (
   <Suspense
@@ -97,10 +99,21 @@ const AppRouter = () => {
         <Route path="/" element={<PageInicio />} />
         <Route path="/" element={<PageInicio />} />
 
-        <Route path="/inmueble/:id" element={<Suspenso><PageAnuncio /></Suspenso>} />
+        <Route
+          path="/inmueble/:id"
+          element={
+            <Suspenso>
+              <PageAnuncio />
+            </Suspenso>
+          }
+        />
         <Route
           path="/inmueble/:id/foto/:fotoIndex"
-          element={<Suspenso><FotoVisor /></Suspenso>}
+          element={
+            <Suspenso>
+              <FotoVisor />
+            </Suspenso>
+          }
         />
         <Route
           path="/info/publicar-anuncio"

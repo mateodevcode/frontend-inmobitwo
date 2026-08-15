@@ -2,28 +2,35 @@ import { isTauri } from "../../utils/isTauri.js";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BarraNavegacionTauri = () => {
   const isDesktop = isTauri();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const lista_exclusion = ["/info/publicar-anuncio/publicar"];
 
   if (!isDesktop) return;
 
-  return (
-    <div className="h-10 absolute top-0 z-50 right-0 left-0 flex items-center justify-between px-2">
-      <button
-        className="text-segundo/60 p-2 bg-segundo/3 rounded-md hover:bg-segundo/7 cursor-pointer select-none active:scale-95 duration-75 transition"
-        onClick={() => navigate(-1)}
-      >
-        <IoArrowBackSharp className="text-xl" />
-      </button>
+  const mostrarBarra = !lista_exclusion.includes(pathname);
 
-      <div className="flex items-center gap-2">
-        <button className="text-segundo/60 p-2 bg-segundo/3 rounded-md hover:bg-segundo/7 cursor-pointer select-none active:scale-95 duration-75 transition">
+  return (
+    <div className="fixed bottom-1 z-50 right-2 left-2 flex items-center justify-between">
+      {mostrarBarra && (
+        <button
+          className="text-segundo p-2 bg-segundo/3 rounded-md hover:bg-segundo/7 cursor-pointer select-none active:scale-95 duration-75 transition border border-black/10"
+          onClick={() => navigate(-1)}
+        >
+          <IoArrowBackSharp className="text-xl" />
+        </button>
+      )}
+
+      <div className="items-center gap-2 hidden">
+        <button className="text-segundo/60 p-2 bg-segundo/3 rounded-md hover:bg-segundo/7 cursor-pointer select-none active:scale-95 duration-75 transition border border-black/10">
           <MdKeyboardArrowLeft className="text-2xl" />
         </button>
-        <button className="text-segundo/60 p-2 bg-segundo/3 rounded-md hover:bg-segundo/7 cursor-pointer select-none active:scale-95 duration-75 transition">
+        <button className="text-segundo/60 p-2 bg-segundo/3 rounded-md hover:bg-segundo/7 cursor-pointer select-none active:scale-95 duration-75 transition border border-black/10">
           <MdKeyboardArrowRight className="text-2xl" />
         </button>
       </div>

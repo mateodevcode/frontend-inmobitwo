@@ -6,12 +6,25 @@ import HeaderPublicarAnuncio from "@/pages/publicar-anuncio/header/HeaderPublica
 import { useAppContext } from "@/context/AppContext";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { apiBackend } from "@/api/apiBackend";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ModalContinuarAnuncio } from "@/components/modales/ModalContinuarAnuncio";
 import useResetForm, {
   mapearApiAFormDataPropiedad,
 } from "@/hooks/useResetForm";
 import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
+import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
+import {
+  guardarProgreso,
+  guardarSnapshot,
+  leerProgreso,
+  leerSnapshot,
+  limpiarTodo,
+  PASO_DATOS_BASICOS,
+  PASO_DETALLES,
+  PASO_FOTOS,
+} from "@/pages/publicar-anuncio/anuncioProgreso";
+import { AiOutlineFileSearch } from "react-icons/ai";
+import ModalInformativo from "../../components/modales/ModalInformativo";
 
 const PublicarAnuncio = () => {
   const {
@@ -21,15 +34,24 @@ const PublicarAnuncio = () => {
     formDataPropiedad,
     iniciarCarga,
     terminarCarga,
+    openModalInformativo,
+    setOpenModalInformativo,
   } = useAppContext();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
   const { resetFormDataPropiedad } = useResetForm();
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get("id");
+  // Progreso guardado (aplica solo cuando NO hay ?id en la URL). Se lee una vez
+  // al montar; los cambios de ?id se manejan en el efecto de abajo.
+  const [progresoInicial] = useState(() => (id ? null : leerProgreso()));
 
-  const [modalContinuar, setModalContinuar] = useState(false);
-  const [anuncioGuardado, setAnuncioGuardado] = useState(null);
+  const [modalContinuar, setModalContinuar] = useState(
+    () => !!progresoInicial?.id,
+  );
+  const [anuncioGuardado] = useState(() =>
+    progresoInicial?.id ? progresoInicial : null,
+  );
 
   const cargarPropiedad = async (anuncioId) => {
     try {
@@ -41,22 +63,19 @@ const PublicarAnuncio = () => {
         // 🔑 Si ya tiene imagen principal, el proceso ya terminó.
         // No tiene sentido volver al wizard — mandar a la lista.
         if (data.imagen_principal_url) {
-          localStorage.removeItem("ultimoAnuncioId");
+          limpiarTodo();
           navigate("/usuario/mis-anuncios", { replace: true });
           return;
         }
 
-        localStorage.setItem(
-          "ultimoAnuncioId",
-          JSON.stringify({
-            id: anuncioId,
-            timestamp: new Date().toISOString(),
-          }),
-        );
+        // Respeta el paso guardado (ej: si el usuario iba de vuelta a "Detalles").
+        const progreso = leerProgreso();
+        const paso = progreso?.step ?? PASO_FOTOS;
+        guardarProgreso({ id: anuncioId, step: paso });
         setFormDataPropiedad(mapearApiAFormDataPropiedad(data));
-        setContentNumber(2);
+        setContentNumber(paso - 1);
       } else {
-        localStorage.removeItem("ultimoAnuncioId");
+        limpiarTodo();
         navigate("/info/publicar-anuncio/publicar", { replace: true });
         setContentNumber(0);
       }
@@ -70,26 +89,48 @@ const PublicarAnuncio = () => {
 
   useEffect(() => {
     if (id) {
-      // Hay id en la URL => flujo normal, traer datos y saltar a paso 2
+      // Hay id en la URL => flujo normal, traer datos y ubicarse según el paso
       cargarPropiedad(id);
       return;
     }
 
-    // No hay id en la URL => revisar si hay uno guardado en localStorage
-    const guardado = localStorage.getItem("ultimoAnuncioId");
-    if (guardado) {
-      try {
-        const parsed = JSON.parse(guardado);
-        setAnuncioGuardado(parsed);
-        setModalContinuar(true); // mostrar modal de "¿quieres continuar?"
-      } catch {
-        localStorage.removeItem("ultimoAnuncioId");
-        setContentNumber(0);
-      }
-    } else {
-      setContentNumber(0);
+    // Sin id: si aún no hay propiedad creada, retomar el paso guardado
+    // restaurando el snapshot. El caso "modal" ya quedó inicializado arriba.
+    if (
+      progresoInicial &&
+      !progresoInicial.id &&
+      (progresoInicial.step === PASO_DATOS_BASICOS ||
+        progresoInicial.step === PASO_DETALLES)
+    ) {
+      const snapshot = leerSnapshot();
+      const paso = progresoInicial.step;
+      queueMicrotask(() => {
+        if (snapshot) setFormDataPropiedad(snapshot);
+        setContentNumber(paso - 1);
+      });
+      return;
     }
-  }, [id]);
+
+    // Sin progreso pero con snapshot: estaba a mitad del paso 1 → restaurar.
+    if (!progresoInicial) {
+      const snapshot = leerSnapshot();
+      if (snapshot) {
+        queueMicrotask(() => setFormDataPropiedad(snapshot));
+      }
+      // contentNumber se queda en 0 (paso 1)
+    }
+  }, [id, progresoInicial]);
+
+  // Autosave: mientras esté en pasos 1-2 (sin propiedad creada), guarda un
+  // snapshot del formulario para sobrevivir un refresh/cierre del navegador.
+  useEffect(() => {
+    if (modalContinuar) return;
+    if (contentNumber >= PASO_FOTOS - 1) return;
+    const t = setTimeout(() => {
+      guardarSnapshot(formDataPropiedad);
+    }, 500);
+    return () => clearTimeout(t);
+  }, [contentNumber, formDataPropiedad, modalContinuar]);
 
   const handleContinuarAnuncio = () => {
     setModalContinuar(false);
@@ -101,7 +142,7 @@ const PublicarAnuncio = () => {
   };
 
   const handleNuevoAnuncio = () => {
-    localStorage.removeItem("ultimoAnuncioId");
+    limpiarTodo();
     setModalContinuar(false);
     resetFormDataPropiedad(); // resetea el form si aplica
     setContentNumber(0);
@@ -109,7 +150,7 @@ const PublicarAnuncio = () => {
   };
 
   return (
-    <div className="">
+    <div className="bg-primero min-h-dvh">
       <HeaderPublicarAnuncio />
 
       {modalContinuar && (
@@ -126,6 +167,15 @@ const PublicarAnuncio = () => {
       {!modalContinuar && contentNumber === 2 && <Fotos />}
 
       <ModalHamburguesa />
+      <div
+        className="w-10 h-10 bg-segundo/5 rounded-xl fixed right-2 bottom-2 flex items-center justify-center border border-segundo/5 hover:bg-segundo/10 cursor-pointer select-none active:scale-95 duration-75 transition z-50 lg:hidden"
+        onClick={() => setOpenModalInformativo(!openModalInformativo)}
+      >
+        <AiOutlineFileSearch className="text-xl text-segundo" />
+      </div>
+
+      <BarraNavegacionTauri />
+      <ModalInformativo />
 
       <style>{scrollbarStyles.default}</style>
     </div>

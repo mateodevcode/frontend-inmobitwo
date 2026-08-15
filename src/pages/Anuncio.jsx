@@ -1,4 +1,4 @@
-import DetalleDeAnuncio from "@/components/usuario/tus-anuncios/anuncio/DetalleDeAnuncio";
+import DetalleDeAnuncio from "@/pages/usuario/mis-anuncios/anuncio/DetalleDeAnuncio";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar";
 import { SiteFooter } from "@/pages/publicar-anuncio-info/components/SiteFooter";
 

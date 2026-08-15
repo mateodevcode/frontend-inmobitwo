@@ -10,15 +10,43 @@ const ParqueaderoServicios = () => {
   const { formDataPropiedad, setCampo } = useDetalles();
 
   const parqTipoValue =
-    PARQUEADERO_TIPOS.find((o) => o.id === formDataPropiedad.parqueadero_tipo) ??
-    null;
+    PARQUEADERO_TIPOS.find(
+      (o) => o.id === formDataPropiedad.parqueadero_tipo,
+    ) ?? null;
   const parqModoValue =
-    PARQUEADERO_MODOS.find((o) => o.id === formDataPropiedad.parqueadero_modo) ??
-    null;
+    PARQUEADERO_MODOS.find(
+      (o) => o.id === formDataPropiedad.parqueadero_modo,
+    ) ?? null;
 
   return (
     <Bloque numero={4} titulo="Parqueadero y servicios">
       <div className="flex max-w-96 flex-col gap-6">
+        <div>
+          <h3 className="mb-2 text-xl font-semibold text-slate-900">
+            Servicios públicos
+          </h3>
+          <CheckBoxUnico
+            checked={!!formDataPropiedad.tiene_agua}
+            onChange={(c) => setCampo("tiene_agua")(c)}
+            label="Agua"
+          />
+          <CheckBoxUnico
+            checked={!!formDataPropiedad.tiene_luz}
+            onChange={(c) => setCampo("tiene_luz")(c)}
+            label="Energía eléctrica"
+          />
+          <CheckBoxUnico
+            checked={!!formDataPropiedad.tiene_gas}
+            onChange={(c) => setCampo("tiene_gas")(c)}
+            label="Gas natural"
+          />
+          <CheckBoxUnico
+            checked={!!formDataPropiedad.tiene_alcantarillado}
+            onChange={(c) => setCampo("tiene_alcantarillado")(c)}
+            label="Alcantarillado"
+          />
+        </div>
+
         <RadioGroupInput
           label="Tipo de parqueadero"
           options={PARQUEADERO_TIPOS}
@@ -62,32 +90,6 @@ const ParqueaderoServicios = () => {
           unit="COP"
           numeric
         />
-
-        <div>
-          <h3 className="mb-2 text-xl font-semibold text-slate-900">
-            Servicios públicos
-          </h3>
-          <CheckBoxUnico
-            checked={!!formDataPropiedad.tiene_agua}
-            onChange={(c) => setCampo("tiene_agua")(c)}
-            label="Agua"
-          />
-          <CheckBoxUnico
-            checked={!!formDataPropiedad.tiene_luz}
-            onChange={(c) => setCampo("tiene_luz")(c)}
-            label="Energía eléctrica"
-          />
-          <CheckBoxUnico
-            checked={!!formDataPropiedad.tiene_gas}
-            onChange={(c) => setCampo("tiene_gas")(c)}
-            label="Gas natural"
-          />
-          <CheckBoxUnico
-            checked={!!formDataPropiedad.tiene_alcantarillado}
-            onChange={(c) => setCampo("tiene_alcantarillado")(c)}
-            label="Alcantarillado"
-          />
-        </div>
       </div>
     </Bloque>
   );

@@ -1,7 +1,7 @@
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { IoNotifications } from "react-icons/io5";
 import { IoApps } from "react-icons/io5";
-import BotonUsuario from "@/components/usuario/BotonUsuario";
+import BotonUsuario from "@/pages/usuario/BotonUsuario";
 import { useAppContext } from "@/context/AppContext";
 
 const HeaderPropiedadId = () => {

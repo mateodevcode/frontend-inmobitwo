@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useSearchParams } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import usePropiedades from "@/hooks/usePropiedades";
 import { apiBackend } from "@/api/apiBackend";
+import { leerProgreso } from "@/pages/publicar-anuncio/anuncioProgreso";
 
 // ─────────────────────────────────────────────
 // Caché a nivel de módulo: los catálogos y el título se piden UNA sola vez
@@ -60,16 +62,52 @@ function getTituloSugerido(key, url) {
   return p;
 }
 
+// ─────────────────────────────────────────────
+// Caché de características N:M por propiedad: aunque useDetalles se instancie
+// en varios bloques del paso 2, las características se piden UNA sola vez.
+// ─────────────────────────────────────────────
+let featuresCache = { key: "", ids: null, promise: null };
+
+function cargarFeaturesDePropiedad(id) {
+  if (featuresCache.key === id && featuresCache.ids) {
+    return Promise.resolve(featuresCache.ids);
+  }
+  if (featuresCache.key === id && featuresCache.promise) {
+    return featuresCache.promise;
+  }
+  featuresCache.key = id;
+  featuresCache.promise = apiBackend(`/propiedades/${id}/caracteristicas`)
+    .then((res) => {
+      const ids = res.success
+        ? Object.values(res.data || {}).flat().map((f) => f.id)
+        : [];
+      featuresCache.ids = ids;
+      featuresCache.promise = null;
+      return ids;
+    })
+    .catch(() => {
+      featuresCache.ids = [];
+      featuresCache.promise = null;
+      return [];
+    });
+  return featuresCache.promise;
+}
+
 const useDetalles = ({ calcularPrecio = false } = {}) => {
-  const { formDataPropiedad, setFormDataPropiedad } = useAppContext();
+  const {
+    formDataPropiedad,
+    setFormDataPropiedad,
+    featuresSel,
+    setFeaturesSel,
+  } = useAppContext();
   const { publicarDataAnuncio } = usePropiedades();
+  const [searchParams] = useSearchParams();
+  const anuncioId = searchParams.get("id") ?? leerProgreso()?.id ?? null;
 
   const [conditionTypes, setConditionTypes] = useState([]);
   const [features, setFeatures] = useState({});
   const [cargandoCatalogos, setCargandoCatalogos] = useState(true);
 
-  // Características N:M seleccionadas (ids de feature_catalog)
-  const [featuresSel, setFeaturesSel] = useState([]);
   const [loading, setLoading] = useState(false);
   const [precioSugerido, setPrecioSugerido] = useState(null);
   const [descripcionesIA, setDescripcionesIA] = useState(null);
@@ -92,6 +130,19 @@ const useDetalles = ({ calcularPrecio = false } = {}) => {
       activo = false;
     };
   }, []);
+
+  // Modo actualizar: precargar las características ya guardadas de la propiedad
+  // (ej: al volver del paso 3 al paso 2, los checkboxes muestran lo guardado).
+  useEffect(() => {
+    let activo = true;
+    if (!anuncioId) return;
+    cargarFeaturesDePropiedad(anuncioId).then((ids) => {
+      if (activo) setFeaturesSel((prev) => (prev.length ? prev : ids));
+    });
+    return () => {
+      activo = false;
+    };
+  }, [anuncioId, setFeaturesSel]);
 
   useEffect(() => {
     console.log("formDataPropiedad (paso 2):", formDataPropiedad);

@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import DetallePropiedad from "./DetallePropiedad";
+import DetallePropiedad from "./anuncio-id/DetallePropiedad";
 import { useEffect, useRef, useCallback } from "react";
 import usePropiedades from "../../hooks/usePropiedades";
 import { useAppContext } from "@/context/AppContext.js";

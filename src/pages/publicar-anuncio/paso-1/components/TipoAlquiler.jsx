@@ -3,8 +3,8 @@ import { RENTAL_TYPE_OPTIONS } from "@/data/rental_type_options";
 
 const TipoAlquiler = ({ value, onChange }) => {
   return (
-    <div>
-      <h2 className="mb-1 text-2xl font-semibold text-slate-900">
+    <div className="mt-5">
+      <h2 className="mb-1 text-lg font-semibold text-slate-900">
         Tipo de alquiler
       </h2>
       <a
@@ -13,7 +13,11 @@ const TipoAlquiler = ({ value, onChange }) => {
       >
         Más información sobre tipos de alquiler
       </a>
-      <RadioGroupInput options={RENTAL_TYPE_OPTIONS} value={value} onChange={onChange} />
+      <RadioGroupInput
+        options={RENTAL_TYPE_OPTIONS}
+        value={value}
+        onChange={onChange}
+      />
     </div>
   );
 };

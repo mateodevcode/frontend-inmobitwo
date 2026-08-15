@@ -23,10 +23,10 @@ const DatosBasicos = () => {
   } = useDatosBasicos();
 
   return (
-    <div className="flex items-center md:items-start mb-40 md:flex-row flex-col">
+    <div className="flex items-center md:items-start pb-40 lg:flex-row flex-col">
       {/* FormData */}
-      <div className="w-11/12 md:w-1/2 h-full text-black font-montserrat">
-        <div className="flex flex-col w-full md:w-120 mx-auto">
+      <div className="w-11/12 lg:w-1/2 h-full text-segundo font-montserrat mx-auto">
+        <div className="flex flex-col w-full md:w-120 lg:w-120 items-start mx-auto">
           <TipoInmueble propertyTypes={propertyTypes} />
 
           {organizaciones.length > 0 && (
@@ -37,19 +37,21 @@ const DatosBasicos = () => {
             />
           )}
 
-          {/* Operación */}
-          <Operacion
-            value={operacionValue}
-            onChange={handleChangeOperacion}
-            getDisabled={getOperacionDisabled}
-          />
-          {(formDataPropiedad.operacion === "alquiler" ||
-            formDataPropiedad.operacion === "alquiler-vacacional") && (
-            <TipoAlquiler
-              value={rentalTypeValue}
-              onChange={handleChangeRentalType}
+          <>
+            {/* Operación */}
+            <Operacion
+              value={operacionValue}
+              onChange={handleChangeOperacion}
+              getDisabled={getOperacionDisabled}
             />
-          )}
+            {(formDataPropiedad.operacion === "alquiler" ||
+              formDataPropiedad.operacion === "alquiler-vacacional") && (
+              <TipoAlquiler
+                value={rentalTypeValue}
+                onChange={handleChangeRentalType}
+              />
+            )}
+          </>
 
           {/* Form localizacion */}
           <LocationForm />
@@ -59,7 +61,7 @@ const DatosBasicos = () => {
         </div>
       </div>
       {/* Informativo */}
-      <div className="w-full md:w-1/2 h-full">
+      <div className="w-full lg:w-1/2 h-full hidden lg:flex">
         <Informacion />
       </div>
     </div>

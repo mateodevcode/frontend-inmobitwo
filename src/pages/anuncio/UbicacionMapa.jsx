@@ -83,7 +83,7 @@ export default function UbicacionMapa({ lat, lng }) {
       </div>
       <button
         onClick={handleAmpliar}
-        className="text-sm text-blue-600 hover:underline mt-2 flex items-center gap-2 font-semibold font-montserrat"
+        className="text-base text-blue-600 hover:underline mt-2 flex items-center gap-2 font-poppins"
       >
         <BsArrowsAngleExpand /> Ampliar mapa
       </button>

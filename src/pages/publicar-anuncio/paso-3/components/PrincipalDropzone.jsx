@@ -47,7 +47,7 @@ const PrincipalDropzone = ({ preview, onFileSelected }) => {
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 rounded-md bg-tercero px-5 py-3 text-base font-semibold text-white hover:bg-tercero active:scale-[0.99] cursor-pointer select-none"
+          className="flex items-center gap-2 rounded-md bg-tercero px-5 py-2.5 text-sm font-semibold text-primero hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none"
         >
           <Plus className="h-5 w-5" />
           Elegir foto principal

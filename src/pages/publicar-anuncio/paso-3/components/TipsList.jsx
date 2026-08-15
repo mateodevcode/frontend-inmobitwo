@@ -1,6 +1,6 @@
 const TipsList = ({ title, tips }) => {
   return (
-    <div className="rounded-md border border-slate-200 px-5 py-5">
+    <div className="rounded-md border border-slate-200 px-5 py-5 w-11/12 mx-auto">
       <h3 className="mb-4 text-lg md:text-xl font-bold text-slate-900">
         {title}
       </h3>

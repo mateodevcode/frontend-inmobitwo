@@ -22,7 +22,7 @@ export function HowToPublishHero() {
 
   return (
     <section className="bg-septimo/50 md:py-10 py-5">
-      <div className="mx-auto w-11/12 md:w-8/12 flex flex-col gap-4 rounded-lg bg-white md:p-10 p-7 md:flex-row md:items-center md:justify-between md:gap-12 shadow-lg shadow-black/20">
+      <div className="mx-auto w-11/12 md:w-8/12 lg:w-9/12 max-w-4xl flex flex-col gap-4 rounded-lg bg-primero md:p-10 p-7 lg:flex-row md:items-center md:justify-between md:gap-12 shadow-lg shadow-segundo/20">
         <div className="flex-1">
           <h1 className="mb-4 font-bold text-slate-900 md:text-3xl text-2xl">
             Cómo poner un anuncio en inmobitwo

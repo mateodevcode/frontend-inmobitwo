@@ -21,7 +21,7 @@ const TituloDescripcion = () => {
 
   return (
     <Bloque numero={8} titulo="Título y descripción">
-      <div className="flex max-w-96 flex-col gap-6">
+      <div className="flex max-w-96 flex-col gap-4">
         <div>
           <label className="mb-3 block text-xl font-semibold text-slate-900">
             Título
@@ -44,7 +44,7 @@ const TituloDescripcion = () => {
           type="button"
           onClick={generarDescripcionesIA}
           disabled={generandoIA}
-          className="w-fit rounded-md border border-rose-300 bg-rose-50 px-6 py-3 text-base font-semibold text-rose-700 hover:bg-rose-100 disabled:opacity-50"
+          className="rounded-md border border-segundo bg-segundo px-6 py-3 text-base font-semibold text-primero hover:bg-segundo/80 disabled:opacity-50 cursor-pointer select-none active:scale-95 duration-75 transition w-full"
         >
           {generandoIA ? "Creando descripciones con IA..." : "Generar con IA"}
         </button>

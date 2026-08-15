@@ -31,12 +31,12 @@ const Fotos = () => {
   } = useFotos();
 
   return (
-    <div className="flex max-w-2xl flex-col gap-6 font-montserrat relative mb-40">
+    <div className="flex max-w-2xl flex-col gap-6 font-montserrat relative pb-40">
       <div className="rounded-lg md:p-8 p-6">
-        <h2 className="mb-2 text-2xl font-bold text-slate-900">
+        <h2 className="mb-2 text-2xl font-semibold text-segundo">
           Añadir fotos a tu anuncio
         </h2>
-        <p className="mb-6 text-base text-slate-500">
+        <p className="mb-6 text-base text-segundo/60">
           La primera foto que subas será tu foto principal — puedes cambiarla
           más tarde marcando otra con la estrella.
         </p>

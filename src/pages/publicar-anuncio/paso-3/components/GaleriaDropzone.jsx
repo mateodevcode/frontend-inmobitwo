@@ -1,10 +1,5 @@
 import { useRef, useState } from "react";
-import {
-  Plus,
-  Image as ImageIcon,
-  FileText,
-  Camera,
-} from "lucide-react";
+import { Plus, Image as ImageIcon, FileText, Camera } from "lucide-react";
 
 const GaleriaDropzone = ({
   titulo = "Galería de fotos",
@@ -46,7 +41,7 @@ const GaleriaDropzone = ({
           isDragging ? "border-tercero bg-tercero" : "border-slate-300"
         }`}
       >
-        <div className="flex items-center gap-3 text-tercero">
+        <div className="flex items-center gap-3 text-tercero/80">
           <ImageIcon className="h-10 w-10" strokeWidth={1.5} />
           <FileText className="h-10 w-10" strokeWidth={1.5} />
           <Camera className="h-10 w-10" strokeWidth={1.5} />
@@ -68,7 +63,7 @@ const GaleriaDropzone = ({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 rounded-md bg-tercero px-6 py-3 text-base font-semibold text-white hover:bg-tercero active:scale-[0.99] cursor-pointer select-none"
+          className="flex items-center gap-2 rounded-md bg-tercero px-6 py-2.5 text-sm font-semibold text-primero hover:bg-tercero/80 active:scale-[0.99] cursor-pointer select-none"
         >
           <Plus className="h-5 w-5" />
           Añadir a la galería

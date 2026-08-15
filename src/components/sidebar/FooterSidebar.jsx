@@ -1,5 +1,5 @@
 import { SlOptionsVertical } from "react-icons/sl";
-import BotonUsuario from "@/components/usuario/BotonUsuario";
+import BotonUsuario from "@/pages/usuario/BotonUsuario";
 import { useAppContext } from "@/context/AppContext";
 
 const FooterSidebar = () => {

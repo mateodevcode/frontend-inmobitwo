@@ -3,7 +3,7 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TbMenu4 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
-import BotonUsuario from "@/components/usuario/BotonUsuario";
+import BotonUsuario from "@/pages/usuario/BotonUsuario";
 import ModalHamburguesa from "@/components/modales/modal-hamburguesa/ModalHamburguesa";
 import EnlaceNav from "@/pages/inicio/modales/EnlaceNav";
 import Logo from "../../components/logo/Logo";

@@ -16,7 +16,11 @@ function App() {
     );
   }
 
-  return <AppRouter />;
+  return (
+    <div className="relative">
+      <AppRouter />
+    </div>
+  );
 }
 
 export default App;

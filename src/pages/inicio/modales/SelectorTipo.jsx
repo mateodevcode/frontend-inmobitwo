@@ -9,7 +9,7 @@ import {
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { TIPO_OPTIONS } from "@/data/search_tipo_options";
 
-const DEFAULT = { label: "Apartamento", slug: "apartamento" };
+const DEFAULT = { label: "Casa", slug: "casa" };
 
 const SelectorTipo = ({ tab, value, onChange }) => {
   const options = TIPO_OPTIONS[tab] || TIPO_OPTIONS.comprar;

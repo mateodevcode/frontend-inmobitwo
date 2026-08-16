@@ -6,7 +6,7 @@ import SelectorTipo from "../modales/SelectorTipo";
 import { MAPPING_OPERACIONES } from "@/data/mappings_busqueda";
 import { FRASES } from "@/data/inicio/frases.hero";
 
-const TIPO_DEFAULT = { label: "Apartamento", slug: "apartamento" };
+const TIPO_DEFAULT = { label: "Casa", slug: "casa" };
 
 const Hero = ({
   image = "/propiedades/chalet.jpg",

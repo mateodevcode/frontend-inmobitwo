@@ -1,4 +1,4 @@
-# .github/workflows/deploy-frontend.yml — Frontend → VPS /srv/infra/inmobitwo/frontend-inmobitwo
+# .github/workflows/deploy-frontend.yml — Frontend → VPS /srv/infra/inmobitwo/frontend-inmobitwo ** 
 name: Deploy Frontend Inmobitwo
 
 on:

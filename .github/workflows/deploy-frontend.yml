@@ -1,4 +1,5 @@
-name: Deploy Frontend
+# .github/workflows/deploy-frontend.yml — Frontend → VPS /srv/infra/inmobitwo/frontend-inmobitwo
+name: Deploy Frontend Inmobitwo
 
 on:
   push:
@@ -7,39 +8,68 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
     steps:
-      - name: Deploy Frontend to VPS
+      - name: SSH Deploy to VPS
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: root
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 20m
           script: |
             set -e
 
-            echo "🚀 Desplegando Frontend..."
+            echo "🚀 Despliegue Frontend → inmobitwo.seventwo.tech"
 
-            cd /var/www/inmobitwo/frontend-inmobitwo
+            # 0. Asegurar repo en /srv/infra/inmobitwo/frontend-inmobitwo
+            if [ ! -d /srv/infra/inmobitwo/frontend-inmobitwo/.git ]; then
+              echo "→ Clonando repo por primera vez..."
+              mkdir -p /srv/infra/inmobitwo
+              git clone ${{ github.server_url }}/${{ github.repository }}.git /srv/infra/inmobitwo/frontend-inmobitwo
+            fi
+            cd /srv/infra/inmobitwo/frontend-inmobitwo
 
-            echo "→ Descartando cambios locales..."
-            git reset --hard HEAD
-            git clean -fd
+            echo "→ Preservando .env.production..."
+            cp .env.production /tmp/inmobitwo-frontend.env.bak 2>/dev/null || true
 
             echo "→ Actualizando código..."
             git fetch origin main
             git reset --hard origin/main
+            git clean -fd -e .env.production
 
-            echo "→ Commit desplegado:"
-            git log -1 --oneline
+            cp /tmp/inmobitwo-frontend.env.bak .env.production 2>/dev/null || true
+            rm -f /tmp/inmobitwo-frontend.env.bak
+
+            if [ ! -f .env.production ]; then
+              echo "❌ Falta .env.production — créalo desde .env.production.example en el VPS y vuelve a deployar"
+              exit 1
+            fi
 
             echo "→ Instalando dependencias..."
-            time npm ci
+            npm ci
 
             echo "→ Construyendo aplicación..."
-            time npm run build
+            npm run build
 
             echo "→ Verificando build..."
+            ls dist/index.html
             ls -la dist/assets/ | head -5
 
-            echo "✅ Frontend desplegado correctamente!"
+            echo "→ SSL (certbot, certificado independiente)..."
+            if [ ! -f /etc/letsencrypt/live/inmobitwo.seventwo.tech/fullchain.pem ]; then
+              echo "→ Certificado no existe — generándolo con plugin nginx (cero downtime)..."
+              sudo certbot certonly --nginx -d inmobitwo.seventwo.tech --non-interactive --agree-tos -m admin@seventwo.tech
+            else
+              echo "→ Certificado ya existe — renovando si es necesario..."
+              sudo certbot renew --quiet
+            fi
+
+            echo "→ Nginx (inmobitwo.seventwo.tech)..."
+            sudo cp nginx/inmobitwo.conf /etc/nginx/sites-available/inmobitwo
+            sudo ln -sf ../sites-available/inmobitwo /etc/nginx/sites-enabled/inmobitwo
+            sudo nginx -t && sudo systemctl reload nginx
+
+            echo "→ Estado..."
+            curl -sf https://inmobitwo.seventwo.tech/ || echo "⚠️ el frontend no responde aún (revisa: sudo nginx -t y ls /srv/infra/inmobitwo/frontend-inmobitwo/dist)"
+            echo "✅ Deploy Frontend OK"

@@ -154,6 +154,11 @@ const CardPropiedad = ({ propiedades, ultimaCardRef, esLaUltima }) => {
             </div>
           )}
         </div>
+        {propiedades.description && (
+          <p className="text-sm text-black/70 mt-2 line-clamp-2">
+            {propiedades.description}
+          </p>
+        )}
         <div className="w-full bg-black/10 h-px mt-2"></div>
       </div>
 

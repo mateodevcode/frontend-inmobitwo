@@ -13,7 +13,7 @@ const ModalUser = () => {
     <AnimatePresence>
       {openModalUser && (
         <motion.div
-          className="fixed inset-0 z-40 flex items-center justify-end bg-black/30 font-poppins"
+          className="fixed inset-0 z-40 flex items-center justify-end bg-segundo/30 font-poppins"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -22,7 +22,7 @@ const ModalUser = () => {
         >
           <div className="absolute top-16 right-56 z-50">
             <motion.div
-              className="bg-white w-96 rounded-md border-2 border-segundo origin-center"
+              className="bg-primero w-96 rounded-md border-2 border-segundo origin-center shadow-xl"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0 }}
@@ -32,7 +32,7 @@ const ModalUser = () => {
               <div className="flex flex-col justify-between h-full">
                 <div className="flex-1 overflow-y-auto">
                   {/* Nav */}
-                  <div className="border border-black/10 rounded-md p-4">
+                  <div className="border border-segundo/10 rounded-md p-4">
                     {usuario ? <ConLogin /> : <SinLogin />}
                   </div>
                 </div>

@@ -77,7 +77,7 @@ const Hero = ({
         <div className="absolute z-20 left-1/2 -translate-x-1/2 bottom-20 md:bottom-1/2 translate-y-1/2 w-[95%] md:w-11/12 max-w-4xl bg-gray-100 px-6 py-6 md:px-10 md:py-8 rounded-sm shadow-xl border border-black/20">
           <AnimatedTitle
             texts={frases}
-            className="text-xl md:text-2xl font-semibold text-black text-center md:my-2 my-4 normal-case"
+            className="text-xl md:text-2xl font-semibold text-black text-center md:my-2 my-4 normal-case font-pt_serif"
             wrapperClassName="mb-4 md:mb-5"
           />
 

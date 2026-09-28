@@ -16,32 +16,11 @@ import useFavoritos from "@/hooks/useFavoritos";
 import { formatPrecioCompleto } from "@/utils/formatPrecio";
 import { agruparPorOrden } from "@/utils/galeriaUtils";
 import PropertyImage from "@/components/common/PropertyImage";
-
-const AUTOPLAY_SECONDS = 10;
-
-const TIPO_BADGE = {
-  apartamento: "Apartamento",
-  casa: "Casa",
-  casa_campestre: "Casa campestre",
-  apartaestudio: "Apartaestudio",
-  penthouse: "Penthouse",
-  casa_lote: "Casa lote",
-  local: "Local",
-  oficina: "Oficina",
-  bodega: "Bodega",
-  consultorio: "Consultorio",
-  edificio: "Edificio",
-  lote: "Lote / Terreno",
-  finca: "Finca",
-  parqueadero: "Parqueadero",
-  trastero: "Trastero",
-  habitacion: "Habitación",
-};
-
-const OPERACION_LABEL = {
-  venta: "Venta",
-  alquiler: "Alquiler",
-};
+import {
+  TIPO_BADGE,
+  AUTOPLAY_SECONDS,
+  OPERACION_LABEL,
+} from "@/data/lista-propiedades/lista_propiedades";
 
 const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
   const navigate = useNavigate();
@@ -69,13 +48,15 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
 
   const navState = { listaIds, posicion, total, filtroLabel, searchUrl };
 
-  const titulo =
-    propiedad?.titulo || "Inmueble en venta";
+  const titulo = propiedad?.titulo || "Inmueble en venta";
   const ubicacion = propiedad?.city_name
     ? `${propiedad.city_name}, ${propiedad.state_name}`
     : "Colombia";
   const tipoLabel =
-    propiedad?.tipo_inmueble || TIPO_BADGE[propiedad?.tipo] || propiedad?.tipo || "Inmueble";
+    propiedad?.tipo_inmueble ||
+    TIPO_BADGE[propiedad?.tipo] ||
+    propiedad?.tipo ||
+    "Inmueble";
   const operacionLabel =
     propiedad?.operacion || OPERACION_LABEL[propiedad?.operacion] || "Venta";
 
@@ -287,6 +268,12 @@ const CardAnuncio = ({ propiedad, listaIds, posicion, total, filtroLabel }) => {
                 </div>
               )}
             </div>
+
+            {propiedad?.description && (
+              <p className="text-sm text-black/70 mt-2 line-clamp-2">
+                {propiedad.description}
+              </p>
+            )}
           </div>
         </div>
 

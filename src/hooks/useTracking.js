@@ -92,10 +92,11 @@ const useTracking = () => {
   const actualizarContactoLead = useCallback(
     async (leadId, { nombre, email, telefono }) => {
       try {
+        const session_id = getSessionId();
         const data = await apiBackend(
           `/tracking/lead/${leadId}/contacto`,
           "PATCH",
-          { nombre, email, telefono },
+          { nombre, email, telefono, session_id },
         );
         return data;
       } catch (error) {

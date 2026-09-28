@@ -4,7 +4,7 @@ import useAuth from "@/hooks/useAuth.js";
 import { Link } from "react-router-dom";
 import { scrollbarStyles } from "@/data/data.styles.scrollbar.js";
 import Logo from "@/components/logo/Logo";
-import BarraNavegacionTauri from "../../components/barra-navegacion/BarraNavegacionTauri";
+import BarraNavegacionTauri from "@/components/barra-navegacion/BarraNavegacionTauri";
 
 const Registro = () => {
   const { handleRegistro, handleChange, formDataUsuario } = useAuth();

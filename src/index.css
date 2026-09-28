@@ -1,11 +1,13 @@
 /* ✅ 1. Primero siempre los @import externos */
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
   --font-montserrat: 'Montserrat', system-ui, sans-serif;
   --font-poppins: 'Poppins', system-ui, sans-serif;
+  --font-pt_serif: "PT Serif", serif;
   --font-display: var(--font-poppins);
     /* Colores paleta */
   --color-primero: #FFFFFF;

@@ -1,4 +1,4 @@
-# .github/workflows/deploy-frontend.yml — Frontend → VPS /srv/infra/inmobitwo/frontend-inmobitwo ** 
+# .github/workflows/deploy-frontend.yml — Frontend Vite (futuro CRM) → VPS /srv/infra/inmobitwo/frontend-inmobitwo
 name: Deploy Frontend Inmobitwo
 
 on:
@@ -20,7 +20,7 @@ jobs:
           script: |
             set -e
 
-            echo "🚀 Despliegue Frontend → inmobitwo.seventwo.tech"
+            echo "🚀 Despliegue Frontend Vite (CRM) → app.inmobitwo.seventwo.tech"
 
             # 0. Asegurar repo en /srv/infra/inmobitwo/frontend-inmobitwo
             if [ ! -d /srv/infra/inmobitwo/frontend-inmobitwo/.git ]; then
@@ -57,19 +57,19 @@ jobs:
             ls -la dist/assets/ | head -5
 
             echo "→ SSL (certbot, certificado independiente)..."
-            if [ ! -f /etc/letsencrypt/live/inmobitwo.seventwo.tech/fullchain.pem ]; then
+            if [ ! -f /etc/letsencrypt/live/app.inmobitwo.seventwo.tech/fullchain.pem ]; then
               echo "→ Certificado no existe — generándolo con plugin nginx (cero downtime)..."
-              sudo certbot certonly --nginx -d inmobitwo.seventwo.tech --non-interactive --agree-tos -m admin@seventwo.tech
+              sudo certbot certonly --nginx -d app.inmobitwo.seventwo.tech --non-interactive --agree-tos -m admin@seventwo.tech
             else
               echo "→ Certificado ya existe — renovando si es necesario..."
               sudo certbot renew --quiet
             fi
 
-            echo "→ Nginx (inmobitwo.seventwo.tech)..."
-            sudo cp nginx/inmobitwo.conf /etc/nginx/sites-available/inmobitwo
-            sudo ln -sf ../sites-available/inmobitwo /etc/nginx/sites-enabled/inmobitwo
+            echo "→ Nginx (app.inmobitwo.seventwo.tech)..."
+            sudo cp nginx/app-inmobitwo.conf /etc/nginx/sites-available/app-inmobitwo
+            sudo ln -sf ../sites-available/app-inmobitwo /etc/nginx/sites-enabled/app-inmobitwo
             sudo nginx -t && sudo systemctl reload nginx
 
             echo "→ Estado..."
-            curl -sf https://inmobitwo.seventwo.tech/ || echo "⚠️ el frontend no responde aún (revisa: sudo nginx -t y ls /srv/infra/inmobitwo/frontend-inmobitwo/dist)"
+            curl -sf https://app.inmobitwo.seventwo.tech/ || echo "⚠️ el frontend no responde aún (revisa: sudo nginx -t y ls /srv/infra/inmobitwo/frontend-inmobitwo/dist)"
             echo "✅ Deploy Frontend OK"
